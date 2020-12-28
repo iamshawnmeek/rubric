@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^0.19.1  
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -44,7 +45,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-fonts:
+  fonts:
     - family: Avenir-Black
       fonts:
         - asset: assets/custom_fonts/Avenir-Black.ttf
@@ -56,11 +57,11 @@ fonts:
     - family: Avenir-Light
       fonts:
         - asset: assets/custom_fonts/Avenir-Light.ttf
-          weight: 100          
+          weight: 100      
 
   # To add assets to your application, add an assets section, like this:
-assets:
-  - assets/images/logo.svg
+  assets:
+    - assets/images/logo.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
