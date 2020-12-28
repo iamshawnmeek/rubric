@@ -44,10 +44,23 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+fonts:
+    - family: Avenir-Black
+      fonts:
+        - asset: assets/custom_fonts/Avenir-Black.ttf
+          weight: 900
+    - family: Avenir-Heavy
+      fonts:
+        - asset: assets/custom_fonts/Avenir-Heavy.ttf
+          weight: 800  
+    - family: Avenir-Light
+      fonts:
+        - asset: assets/custom_fonts/Avenir-Light.ttf
+          weight: 100          
+
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+assets:
+  - assets/images/logo.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
