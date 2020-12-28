@@ -6,6 +6,13 @@ class Landing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        foregroundColor: primaryDark,
+        backgroundColor: accent,
+        child: Icon(Icons.add),
+        onPressed: () {},
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
