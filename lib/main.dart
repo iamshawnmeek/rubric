@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: Colors.transparent,
+        ),
         scaffoldBackgroundColor: secondary,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
