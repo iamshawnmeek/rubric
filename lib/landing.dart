@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rubric/colors.dart';
 import 'package:rubric/onboard.dart';
+import 'package:rubric/rubric_logo.dart';
 
 class Landing extends StatelessWidget {
   @override
@@ -16,7 +16,9 @@ class Landing extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
-              context: context, builder: (context) => Onboard());
+            context: context,
+            builder: (context) => Onboard(),
+          );
         },
       ),
       body: SafeArea(
@@ -25,13 +27,7 @@ class Landing extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: height * .3), //MQ Use
-            SvgPicture.asset(
-              'assets/images/logo.svg',
-              color: primary,
-              semanticsLabel: 'rubric logo',
-              width: 295,
-              height: 89,
-            ),
+            RubricLogo(),
           ],
         ),
       ),

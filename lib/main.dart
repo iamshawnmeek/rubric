@@ -22,6 +22,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         scaffoldBackgroundColor: secondary,
         primarySwatch: Colors.blue,
