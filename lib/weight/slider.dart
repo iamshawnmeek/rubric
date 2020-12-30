@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:rubric/weight/rubric_group.dart';
 
@@ -15,7 +14,7 @@ class Slider {
     @required this.previous,
     @required this.next,
     @required double initialLocation,
-  });
+  }) : _currentLocation = initialLocation;
 
   void handleAdjustment(double location) {
     _setLocation(location);
@@ -35,8 +34,8 @@ class Slider {
   /// Use the previous and current location to determine the direction the
   /// slider is moving
   void _setDirection() {
-    final isMovingUp = _previousLocation < _currentLocation;
-    final isMovingDown = _previousLocation > _currentLocation;
+    final isMovingUp = _previousLocation > _currentLocation;
+    final isMovingDown = _previousLocation < _currentLocation;
 
     if (isMovingUp) {
       _direction = Direction.up;

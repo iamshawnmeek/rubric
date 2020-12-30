@@ -10,19 +10,19 @@ class RubricGroup extends ChangeNotifier {
   /// The percentage this group is worth in the overall grade
   double _weightBacking = 0.0;
 
-  bool get _isLocked => _isLockedBacking;
-  double get _weight => _weightBacking;
+  bool get isLocked => _isLockedBacking;
+  double get weight => _weightBacking;
 
-  set _isLocked(bool value) {
-    if (value != _isLocked) {
-      _isLocked = value;
+  set isLocked(bool value) {
+    if (value != isLocked) {
+      _isLockedBacking = value;
       notifyListeners();
     }
   }
 
-  set _weight(double value) {
-    if (!_isLocked && value != _weight) {
-      _weight = value;
+  set weight(double value) {
+    if (!isLocked && value != weight) {
+      _weightBacking = value;
       notifyListeners();
     }
   }
@@ -32,11 +32,11 @@ class RubricGroup extends ChangeNotifier {
     @required double weight,
   }) : _weightBacking = weight;
 
-  void lock() => _isLocked = true;
+  void lock() => isLocked = true;
 
-  void unlock() => _isLocked = false;
+  void unlock() => isLocked = false;
 
-  void increaseWeight(double value) => _weight += value;
+  void increaseWeight(double value) => weight += value;
 
-  void decreaseWeight(double value) => _weight -= value;
+  void decreaseWeight(double value) => weight -= value;
 }
