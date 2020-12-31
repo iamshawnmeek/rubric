@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Colors.transparent,
         ),
+        brightness: Brightness.dark,
         scaffoldBackgroundColor: secondary,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
