@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rubric/body_one.dart';
 import 'package:rubric/body_placeholder.dart';
+import 'package:rubric/body_placeholder_white.dart';
 import 'package:rubric/colors.dart';
 import 'package:rubric/headline_one.dart';
 
@@ -37,6 +38,7 @@ class Onboard extends StatelessWidget {
                     BodyOne('What is your first grading objective?'),
                     SizedBox(height: 36),
                     TextField(
+                      style: BodyPlaceholderWhite.textStyle,
                       decoration: InputDecoration.collapsed(
                         hintText: 'Grammar, usage and mechanics',
                         hintStyle: BodyPlaceholder.textStyle,
