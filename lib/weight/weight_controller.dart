@@ -44,12 +44,13 @@ class WeightController extends DoubleLinkedList<Slider> {
     Node<Slider> pointer = currentRef;
 
     while (pointer != null && nonLockedSlider == null) {
-      final groupIsLocked = getRubricGroup(pointer.content).isLocked;
+      final atEnd = pointer.isBegin || pointer.isEnd;
+      groupIsLocked() => getRubricGroup(pointer.content).isLocked;
 
-      if (groupIsLocked) {
+      if (!atEnd && groupIsLocked()) {
         pointer = getSliderRef(pointer); // check next ref
       } else {
-        nonLockedSlider = pointer.content; // set value to return
+        break; // set value to return
       }
     }
 

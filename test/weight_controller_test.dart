@@ -263,7 +263,72 @@ void main() {
         });
       });
     });
-  });
 
-  group('with locks', () {});
+    group('with locks', () {
+      group('should move next available slider', () {
+        test('unless none are available in direction above', () {
+          final groups = <String>['test1', 'test2', 'test3', 'test4', 'test5'];
+          final controller = WeightController.fromGroupNames(groups);
+          final initialWeight = 100 / groups.length;
+          final adjustedIndex = 0;
+          final positions = getPositions(
+            initialWeight: initialWeight,
+            length: groups.length - 1,
+          );
+          final adjustedPosition = positions.removeAt(adjustedIndex) - 15;
+          positions.insert(adjustedIndex, adjustedPosition);
+
+          testMoveSlider(
+            controller: controller,
+            groups: groups,
+            positions: positions,
+            getSlider: () => controller.first.content,
+            lockRegions: () {
+              final firstRegion = controller.first.content.previous;
+
+              firstRegion.lock();
+            },
+            makeAssertions: (adjustedSlider) {
+              final group1 = adjustedSlider.previous;
+              final group2 = adjustedSlider.next;
+
+              expect(group1.weight, initialWeight);
+              expect(group2.weight, initialWeight);
+            },
+          );
+        });
+
+        test('unless none are available in direction below', () {
+          final groups = <String>['test1', 'test2', 'test3', 'test4', 'test5'];
+          final controller = WeightController.fromGroupNames(groups);
+          final initialWeight = 100 / groups.length;
+          final positions = getPositions(
+            initialWeight: initialWeight,
+            length: groups.length - 1,
+          );
+          final adjustedPosition = positions.removeLast() - 15;
+          positions.add(adjustedPosition);
+
+          testMoveSlider(
+            controller: controller,
+            groups: groups,
+            positions: positions,
+            getSlider: () => controller.last.content,
+            lockRegions: () {
+              final lastRegion = controller.last.content.next;
+
+              lastRegion.lock();
+            },
+            makeAssertions: (adjustedSlider) {
+              final group1 = adjustedSlider.previous;
+              final group2 = adjustedSlider.next;
+
+              expect(group1.weight, initialWeight);
+              expect(group2.weight, initialWeight);
+            },
+          );
+        });
+      });
+    });
+  });
 }
