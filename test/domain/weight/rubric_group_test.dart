@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:rubric/weight/rubric_group.dart';
+import 'package:rubric/domain/weight/rubric_group.dart';
 
 void main() {
   const initialWeight = 50.0;

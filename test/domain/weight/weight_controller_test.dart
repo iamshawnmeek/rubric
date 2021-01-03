@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:double_linked_list/double_linked_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:rubric/weight/rubric_group.dart';
-import 'package:rubric/weight/slider.dart';
-import 'package:rubric/weight/weight_controller.dart';
+import 'package:rubric/domain/weight/rubric_group.dart';
+import 'package:rubric/domain/weight/slider.dart';
+import 'package:rubric/domain/weight/weight_controller.dart';
 
 void main() {
   group('initialization', () {

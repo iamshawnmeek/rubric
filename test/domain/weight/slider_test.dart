@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:rubric/weight/rubric_group.dart';
-import 'package:rubric/weight/slider.dart';
+import 'package:rubric/domain/weight/rubric_group.dart';
+import 'package:rubric/domain/weight/slider.dart';
 
 void main() {
   group('#handleAdjustment', () {

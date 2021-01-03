@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:double_linked_list/double_linked_list.dart';
 
-import 'package:rubric/weight/rubric_group.dart';
-import 'package:rubric/weight/slider.dart';
+import 'package:rubric/domain/weight/rubric_group.dart';
+import 'package:rubric/domain/weight/slider.dart';
 
 class WeightController extends DoubleLinkedList<Slider> {
   WeightController.fromIterable(Iterable<Slider> contents)
