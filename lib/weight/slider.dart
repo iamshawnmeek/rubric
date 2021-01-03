@@ -4,65 +4,104 @@ import 'package:rubric/weight/rubric_group.dart';
 enum Direction { up, down, undetermined }
 
 class Slider {
-  final RubricGroup previous;
-  final RubricGroup next;
-  double _currentLocation;
-  double _previousLocation;
-  Direction _direction = Direction.undetermined;
+  final RubricGroup regionBefore;
+  final RubricGroup regionAfter;
+  ScrollPosition _current;
+  ScrollPosition _previous;
 
   Slider({
-    @required this.previous,
-    @required this.next,
-    @required double initialLocation,
-  }) : _currentLocation = initialLocation;
+    @required this.regionBefore,
+    @required this.regionAfter,
+    @required ScrollPosition initial,
+  }) : _current = initial;
 
-  void handleAdjustment(double location) {
-    _setLocation(location);
-    _setDirection();
-    _setGroupValues();
+  ScrollDelta getScrollDelta(ScrollPosition scrollPosition) =>
+      ScrollDelta.fromPositions(previous: _current, next: scrollPosition);
+
+  void handleAdjustment(ScrollDelta scrollDelta) {
+    _setScrollPosition(scrollDelta);
+    _setGroupValues(scrollDelta);
   }
 
-  /// Cache the current location as the previous location and update the current
-  /// location to match what's passed in
-  void _setLocation(double location) {
-    if (_previousLocation != _currentLocation) {
-      _previousLocation = _currentLocation;
-      _currentLocation = location;
-    }
-  }
+  /// Cache the current location as the previous location and adjust the current
+  /// location with the new offset
+  void _setScrollPosition(ScrollDelta delta) {
+    final scrollPosition = delta.direction == Direction.up
+        ? _current.value - delta.value
+        : _current.value + delta.value;
 
-  /// Use the previous and current location to determine the direction the
-  /// slider is moving
-  void _setDirection() {
-    final isMovingUp = _previousLocation > _currentLocation;
-    final isMovingDown = _previousLocation < _currentLocation;
-
-    if (isMovingUp) {
-      _direction = Direction.up;
-    } else if (isMovingDown) {
-      _direction = Direction.down;
-    } else {
-      _direction = Direction.undetermined;
+    if (_previous != _current) {
+      _previous = _current;
+      _current = ScrollPosition(scrollPosition);
     }
   }
 
   /// Adjust the previous and next group values based on the location offset
-  void _setGroupValues() {
-    final adjustment = _getOffset();
-
-    switch (_direction) {
+  void _setGroupValues(ScrollDelta delta) {
+    switch (delta.direction) {
       case Direction.up:
-        previous.decreaseWeight(adjustment);
-        next.increaseWeight(adjustment);
+        regionBefore.decreaseWeight(delta.value);
+        regionAfter.increaseWeight(delta.value);
         break;
       case Direction.down:
-        previous.increaseWeight(adjustment);
-        next.decreaseWeight(adjustment);
+        regionBefore.increaseWeight(delta.value);
+        regionAfter.decreaseWeight(delta.value);
         break;
       case Direction.undetermined:
         break;
     }
   }
+}
 
-  double _getOffset() => (_previousLocation - _currentLocation).abs();
+class ScrollPosition {
+  final double value;
+  const ScrollPosition(this.value);
+
+  operator <(ScrollPosition sp) => value < sp.value;
+  operator >(ScrollPosition sp) => value > sp.value;
+  operator -(ScrollPosition sp) {
+    final delta = value - sp.value;
+
+    return ScrollDelta(
+      direction: delta.toDirection(),
+      value: delta.abs(),
+    );
+  }
+
+  operator *(ScrollPosition sp) => value * sp.value;
+}
+
+class ScrollDelta {
+  final Direction direction;
+  final double value;
+
+  const ScrollDelta({
+    @required this.direction,
+    @required this.value,
+  });
+
+  static ScrollDelta fromPositions({
+    @required ScrollPosition previous,
+    @required ScrollPosition next,
+  }) {
+    final delta = previous.value - next.value;
+
+    final direction = delta.toDirection();
+
+    return ScrollDelta(direction: direction, value: delta.abs());
+  }
+
+  operator <(ScrollDelta sd) => value < sd.value;
+  operator >(ScrollDelta sd) => value > sd.value;
+  operator -(ScrollDelta sd) => value - sd.value;
+  operator *(ScrollDelta sd) => value * sd.value;
+}
+
+extension DirectionExtension on double {
+  Direction toDirection() {
+    Direction getDirection() => isNegative ? Direction.down : Direction.up;
+    final isUndetermined = isNaN || this == 0.0;
+
+    return isUndetermined ? Direction.undetermined : getDirection();
+  }
 }

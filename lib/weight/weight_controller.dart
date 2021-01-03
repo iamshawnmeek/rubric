@@ -7,63 +7,64 @@ class WeightController extends DoubleLinkedList<Slider> {
   WeightController.fromIterable(Iterable<Slider> contents)
       : super.fromIterable(contents);
 
-  void moveSlider({
-    @required Slider slider,
-    @required Map<Slider, double> sliderPositions,
-  }) {
-    final currentRef = _getRef(slider);
+  /// Traverse to the node from the beginning until reaching the supplied index
+  operator [](int i) {
+    Node<Slider> node = begin;
 
-    final previousSlider = _getPreviousNonLockedSlider(
-      currentRef: currentRef,
+    for (int x = 0; x <= i; x++) {
+      node = node.next;
+    }
+
+    return node;
+  }
+
+  void moveSlider({
+    @required Node<Slider> sliderRef,
+    @required ScrollPosition scrollPosition,
+  }) {
+    final previousSlider = _getNonLockedSlider(
+      currentRef: sliderRef,
       getSliderRef: (ref) => ref.previous,
-      getRubricGroup: (slider) => slider.previous,
+      getRegion: (slider) => slider.regionBefore,
     );
 
-    final nextSlider = _getPreviousNonLockedSlider(
-      currentRef: currentRef,
+    final nextSlider = _getNonLockedSlider(
+      currentRef: sliderRef,
       getSliderRef: (ref) => ref.next,
-      getRubricGroup: (slider) => slider.next,
+      getRegion: (slider) => slider.regionAfter,
     );
 
     final canMove = previousSlider != null && nextSlider != null;
     if (canMove) {
-      final previousPosition = sliderPositions[previousSlider];
-      final nextPosition = sliderPositions[nextSlider];
+      final delta = sliderRef.content.getScrollDelta(scrollPosition);
 
-      previousSlider.handleAdjustment(previousPosition);
-      nextSlider.handleAdjustment(nextPosition);
-    }
-  }
-
-  Slider _getPreviousNonLockedSlider({
-    @required Node<Slider> currentRef,
-    @required Node<Slider> getSliderRef(Node<Slider> ref),
-    @required RubricGroup getRubricGroup(Slider slider),
-  }) {
-    Slider nonLockedSlider;
-    Node<Slider> pointer = currentRef;
-
-    while (pointer != null && nonLockedSlider == null) {
-      final atEnd = pointer.isBegin || pointer.isEnd;
-      groupIsLocked() => getRubricGroup(pointer.content).isLocked;
-
-      if (!atEnd && groupIsLocked()) {
-        pointer = getSliderRef(pointer); // check next ref
+      if (previousSlider != nextSlider) {
+        previousSlider.handleAdjustment(delta);
+        nextSlider.handleAdjustment(delta);
       } else {
-        break; // set value to return
+        previousSlider.handleAdjustment(delta);
       }
     }
-
-    return nonLockedSlider;
   }
 
-  Node<Slider> _getRef(Slider slider) {
-    return firstWhere(
-      (storedSlider) => storedSlider.hashCode == slider.hashCode,
-    );
+  Slider _getNonLockedSlider({
+    @required Node<Slider> currentRef,
+    @required Node<Slider> getSliderRef(Node<Slider> ref),
+    @required RubricGroup getRegion(Slider slider),
+  }) {
+    Node<Slider> pointer = currentRef;
+
+    bool atEnd() => pointer.isBegin || pointer.isEnd;
+    bool groupIsLocked() => getRegion(pointer.content).isLocked;
+
+    while (!atEnd() && groupIsLocked()) {
+      pointer = getSliderRef(pointer);
+    }
+
+    return atEnd() ? null : pointer.content;
   }
 
-  static WeightController fromGroupNames(List<String> groupNames) {
+  static WeightController fromNames(List<String> groupNames) {
     const maxValue = 100;
     final initialWeight = maxValue / groupNames.length;
     final rubricGroups = groupNames
@@ -94,9 +95,9 @@ class WeightController extends DoubleLinkedList<Slider> {
 
       if (previous != null) {
         final slider = Slider(
-          next: current,
-          previous: previous,
-          initialLocation: groupWeight * sliderIndex,
+          regionAfter: current,
+          regionBefore: previous,
+          initial: ScrollPosition(groupWeight * sliderIndex),
         );
 
         sliders.add(slider);
