@@ -29,6 +29,7 @@ void main() {
       expect(region.isLocked, isTrue);
     });
   });
+
   group('weight setter should only update when', () {
     test('the new value is different', () {
       int updateCount = 0;
@@ -81,6 +82,7 @@ void main() {
       expect(region.weight, isZero);
     });
   });
+
   group('#increaseWeight', () {
     test('should increase the weight by the value passed in', () {
       expect(region.weight, initialWeight);
@@ -91,6 +93,7 @@ void main() {
       expect(region.weight, initialWeight + testValue);
     });
   });
+
   group('#decreaseWeight', () {
     test('should decrease the weight by the value passed in', () {
       expect(region.weight, initialWeight);
