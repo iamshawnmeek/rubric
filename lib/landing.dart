@@ -16,6 +16,7 @@ class Landing extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
+            isScrollControlled: true,
             context: context,
             builder: (context) => Onboard(),
           );

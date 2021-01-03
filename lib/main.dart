@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+        brightness: Brightness.dark,
         scaffoldBackgroundColor: secondary,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
