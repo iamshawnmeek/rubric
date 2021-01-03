@@ -95,7 +95,7 @@ void main() {
       expect(region.weight, initialWeight);
       const testValue = 10.0;
 
-      region.increaseWeight(testValue);
+      region.decreaseWeight(testValue);
 
       expect(region.weight, initialWeight - testValue);
     });
