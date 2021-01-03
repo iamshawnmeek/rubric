@@ -1,6 +1,8 @@
-import 'package:double_linked_list/double_linked_list.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:double_linked_list/double_linked_list.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:rubric/weight/rubric_group.dart';
 import 'package:rubric/weight/slider.dart';
 import 'package:rubric/weight/weight_controller.dart';

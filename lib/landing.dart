@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:rubric/colors.dart';
 import 'package:rubric/onboard.dart';
 import 'package:rubric/rubric_logo.dart';

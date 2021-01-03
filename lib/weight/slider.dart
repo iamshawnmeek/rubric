@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:rubric/weight/rubric_group.dart';
 
 enum Direction { up, down, undetermined }

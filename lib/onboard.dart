@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:rubric/body_one.dart';
 import 'package:rubric/body_placeholder.dart';
 import 'package:rubric/body_placeholder_white.dart';
