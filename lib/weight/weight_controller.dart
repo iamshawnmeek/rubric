@@ -18,6 +18,16 @@ class WeightController extends DoubleLinkedList<Slider> {
     return node;
   }
 
+  List<RubricGroup> getRegions() => toList()
+      .expand(
+        (e) => [
+          e.regionBefore,
+          e.regionAfter,
+        ],
+      )
+      .toSet() // Remove duplicates
+      .toList();
+
   void moveSlider({
     @required Node<Slider> sliderRef,
     @required ScrollPosition scrollPosition,

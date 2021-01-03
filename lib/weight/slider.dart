@@ -9,6 +9,9 @@ class Slider {
   ScrollPosition _current;
   ScrollPosition _previous;
 
+  /// The current scroll position
+  double get scrollPosition => _current.value;
+
   Slider({
     @required this.regionBefore,
     @required this.regionAfter,
@@ -26,13 +29,16 @@ class Slider {
   /// Cache the current location as the previous location and adjust the current
   /// location with the new offset
   void _setScrollPosition(ScrollDelta delta) {
-    final scrollPosition = delta.direction == Direction.up
+    final isInvalidPosition = delta.value > _current.value;
+    if (isInvalidPosition) return;
+
+    final nextPosition = delta.direction == Direction.up
         ? _current.value - delta.value
         : _current.value + delta.value;
 
     if (_previous != _current) {
       _previous = _current;
-      _current = ScrollPosition(scrollPosition);
+      _current = ScrollPosition(nextPosition);
     }
   }
 
@@ -40,12 +46,16 @@ class Slider {
   void _setGroupValues(ScrollDelta delta) {
     switch (delta.direction) {
       case Direction.up:
-        regionBefore.decreaseWeight(delta.value);
-        regionAfter.increaseWeight(delta.value);
+        if (delta.value <= regionBefore.weight) {
+          regionBefore.decreaseWeight(delta.value);
+          regionAfter.increaseWeight(delta.value);
+        }
         break;
       case Direction.down:
-        regionBefore.increaseWeight(delta.value);
-        regionAfter.decreaseWeight(delta.value);
+        if (delta.value <= regionAfter.weight) {
+          regionBefore.increaseWeight(delta.value);
+          regionAfter.decreaseWeight(delta.value);
+        }
         break;
       case Direction.undetermined:
         break;
@@ -56,19 +66,6 @@ class Slider {
 class ScrollPosition {
   final double value;
   const ScrollPosition(this.value);
-
-  operator <(ScrollPosition sp) => value < sp.value;
-  operator >(ScrollPosition sp) => value > sp.value;
-  operator -(ScrollPosition sp) {
-    final delta = value - sp.value;
-
-    return ScrollDelta(
-      direction: delta.toDirection(),
-      value: delta.abs(),
-    );
-  }
-
-  operator *(ScrollPosition sp) => value * sp.value;
 }
 
 class ScrollDelta {
@@ -90,11 +87,6 @@ class ScrollDelta {
 
     return ScrollDelta(direction: direction, value: delta.abs());
   }
-
-  operator <(ScrollDelta sd) => value < sd.value;
-  operator >(ScrollDelta sd) => value > sd.value;
-  operator -(ScrollDelta sd) => value - sd.value;
-  operator *(ScrollDelta sd) => value * sd.value;
 }
 
 extension DirectionExtension on double {

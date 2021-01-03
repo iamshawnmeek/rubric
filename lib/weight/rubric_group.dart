@@ -21,7 +21,7 @@ class RubricGroup extends ChangeNotifier {
   }
 
   set weight(double value) {
-    if (!isLocked && value != weight) {
+    if (!isLocked && value >= 0 && value != weight) {
       _weightBacking = value;
       notifyListeners();
     }

@@ -76,6 +76,23 @@ void main() {
     });
   });
 
+  group('#getRegions', () {
+    test('should get unique groups', () {
+      final regionNames = <String>[
+        'region0',
+        'region1',
+        'region2',
+        'region3',
+        'region4'
+      ];
+      final controller = WeightController.fromNames(regionNames);
+
+      final groups = controller.getRegions();
+
+      expect(groups.map((group) => group.title), regionNames);
+    });
+  });
+
   group('#moveSlider', () {
     ScrollPosition getAdjustedPosition({
       @required int sliderCount,
@@ -113,6 +130,40 @@ void main() {
 
       makeAssertions(sliderRef);
     }
+
+    test('unless moving would be negative', () {
+      final regionNames = <String>[
+        'region0',
+        'region1',
+        'region2',
+        'region3',
+        'region4'
+      ];
+      final controller = WeightController.fromNames(regionNames);
+      final initialWeight = 100 / regionNames.length;
+      final sliderIndex = 0;
+      final adjustedPosition = getAdjustedPosition(
+        initialWeight: initialWeight,
+        sliderCount: regionNames.length - 1,
+        sliderIndex: sliderIndex,
+        adjustment: -(initialWeight + .01),
+      );
+
+      testMoveSlider(
+        controller: controller,
+        regionNames: regionNames,
+        scrollPosition: adjustedPosition,
+        getSliderRef: () => controller[sliderIndex],
+        makeAssertions: (adjustedRef) {
+          final adjustedSlider = adjustedRef.content;
+          final region1 = adjustedSlider.regionBefore;
+          final region2 = adjustedSlider.regionAfter;
+
+          expect(region1.weight, initialWeight);
+          expect(region2.weight, initialWeight);
+        },
+      );
+    });
 
     group('with no locks', () {
       group('first slider', () {
