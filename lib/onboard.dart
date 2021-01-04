@@ -34,6 +34,7 @@ class Onboard extends StatelessWidget {
                 ],
               ),
               Positioned(
+                //widget works with Stack
                 right: 0,
                 bottom: 0,
                 child: Transform.translate(
