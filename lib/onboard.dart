@@ -5,23 +5,39 @@ import 'package:rubric/body_placeholder_white.dart';
 import 'package:rubric/colors.dart';
 import 'package:rubric/headline_one.dart';
 
-class Onboard extends StatelessWidget {
+class Onboard extends StatefulWidget {
+  @override
+  _OnboardState createState() => _OnboardState();
+}
+
+class _OnboardState extends State<Onboard> {
+  bool canContinue = false;
+
+  void handleObjectiveChanged(String value) {
+    setState(() => canContinue = value.isNotEmpty);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    const edgeOffset = 40;
+    final fabInactivePosition = -deviceWidth - edgeOffset;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: primaryDark,
-        ),
-        child: Padding(
+      child: ClipRRect(
+        // hide the FAB outside of this
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: primaryDark,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 24).copyWith(
             top: 36,
             bottom: 36 + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Stack(
-            //z access stacking / children
+            overflow: Overflow.visible, // Show FAB outside of this
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,13 +45,15 @@ class Onboard extends StatelessWidget {
                 children: [
                   HeadlineOne('Let’s create your first rubric.'),
                   SizedBox(height: 45),
-                  _FormLayer(),
+                  _FormLayer(onObjectiveChanged: handleObjectiveChanged),
                   SizedBox(height: 26),
                 ],
               ),
-              Positioned(
+              AnimatedPositioned(
                 //widget works with Stack
-                right: 0,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.ease,
+                right: canContinue ? 0 : fabInactivePosition,
                 bottom: 0,
                 child: Transform.translate(
                   offset: Offset(5, 0),
@@ -43,7 +61,9 @@ class Onboard extends StatelessWidget {
                     foregroundColor: primaryDark,
                     backgroundColor: accent,
                     child: Icon(Icons.add),
-                    onPressed: () {},
+                    onPressed: () {
+                      print('clicked');
+                    },
                   ),
                 ),
               ),
@@ -56,7 +76,9 @@ class Onboard extends StatelessWidget {
 }
 
 class _FormLayer extends StatelessWidget {
+  final void Function(String) onObjectiveChanged;
   const _FormLayer({
+    @required this.onObjectiveChanged,
     Key key,
   }) : super(key: key);
 
@@ -74,6 +96,7 @@ class _FormLayer extends StatelessWidget {
           BodyOne('What is your first grading objective?'),
           SizedBox(height: 36),
           TextField(
+            onChanged: onObjectiveChanged,
             style: BodyPlaceholderWhite.textStyle,
             decoration: InputDecoration.collapsed(
               hintText: 'Grammar, usage and mechanics',
