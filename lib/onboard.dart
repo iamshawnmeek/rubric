@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rubric/body_one.dart';
-import 'package:rubric/body_placeholder.dart';
-import 'package:rubric/body_placeholder_white.dart';
-import 'package:rubric/colors.dart';
-import 'package:rubric/headline_one.dart';
+import 'package:rubric/typography/body_one.dart';
+import 'package:rubric/typography/body_placeholder.dart';
+import 'package:rubric/typography/body_placeholder_white.dart';
+import 'package:rubric/components/colors.dart';
+import 'package:rubric/typography/headline_one.dart';
 
 class Onboard extends StatefulWidget {
   @override
