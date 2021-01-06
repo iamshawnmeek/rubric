@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rubric/colors.dart';
+import 'package:rubric/components/colors.dart';
 import 'package:rubric/onboard.dart';
 
 class Landing extends StatelessWidget {
