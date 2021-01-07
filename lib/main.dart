@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/grading_objectives_landing.dart';
-import 'package:rubric/landing.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
