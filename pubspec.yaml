@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
   flutter_svg: ^0.19.1  
   font_awesome_flutter: ^8.11.0
+  flutter_riverpod: ^0.12.1 # State management / Dependency Injection (for testing)
+  flow_builder: ^0.0.1-dev.11 # Navigation
 
 
 

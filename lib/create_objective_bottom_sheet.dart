@@ -5,12 +5,21 @@ import 'package:rubric/typography/body_placeholder_white.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/headline_one.dart';
 
-class Onboard extends StatefulWidget {
+class CreateObjectiveBottomSheet extends StatefulWidget {
+  final VoidCallback onCreatePressed;
+
+  const CreateObjectiveBottomSheet({
+    Key key,
+    @required this.onCreatePressed,
+  }) : super(key: key);
+
   @override
-  _OnboardState createState() => _OnboardState();
+  _CreateObjectiveBottomSheetState createState() =>
+      _CreateObjectiveBottomSheetState();
 }
 
-class _OnboardState extends State<Onboard> {
+class _CreateObjectiveBottomSheetState
+    extends State<CreateObjectiveBottomSheet> {
   bool canContinue = false;
 
   void handleObjectiveChanged(String value) {
@@ -62,7 +71,11 @@ class _OnboardState extends State<Onboard> {
                     backgroundColor: accent,
                     child: Icon(Icons.add),
                     onPressed: () {
-                      print('clicked');
+                      // Store the users objective
+                      // TODO 'store the users objective';
+
+                      // Navigate to the grading objectives page
+                      widget.onCreatePressed();
                     },
                   ),
                 ),
