@@ -4,8 +4,13 @@ import 'package:rubric/typography/card_hint.dart';
 import 'package:rubric/typography/card_title.dart';
 
 class RubricCard extends StatelessWidget {
+  final String cardHintText;
+  final String cardTitleText;
+
   const RubricCard({
     Key key,
+    @required this.cardHintText,
+    @required this.cardTitleText,
   }) : super(key: key);
 
   @override
@@ -14,9 +19,9 @@ class RubricCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          CardHint('Objective 1'),
+          CardHint(cardHintText),
           SizedBox(height: 7),
-          CardTitle('Code Requirements')
+          CardTitle(cardTitleText)
         ],
       ),
       padding: const EdgeInsets.symmetric(
