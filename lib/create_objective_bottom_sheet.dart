@@ -72,7 +72,6 @@ class _CreateObjectiveBottomSheetState
                     child: Icon(Icons.add),
                     onPressed: () {
                       // Store the users objective
-                      // TODO 'store the users objective';
 
                       // Navigate to the grading objectives page
                       widget.onCreatePressed();
