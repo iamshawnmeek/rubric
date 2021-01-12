@@ -8,5 +8,7 @@ final rubricProviderRef =
 class RubricState extends StateNotifier<Rubric> {
   RubricState() : super(Rubric(objectives: []));
 
-//TODO: Add method to update objectives: 1.11.21
+  void addObjective(Objective objective) {
+    state.objectives.add(objective);
+  }
 }

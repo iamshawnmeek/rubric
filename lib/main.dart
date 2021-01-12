@@ -32,8 +32,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    controller = FlowController<OnboardingFlow>(
-        OnboardingFlow.gradingObjectives); //landing
+    controller =
+        FlowController<OnboardingFlow>(OnboardingFlow.landing); //landing
   }
 
   @override

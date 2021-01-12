@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rubric/domain/rubric.dart';
+import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/body_placeholder_white.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/headline_one.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateObjectiveBottomSheet extends StatefulWidget {
   final VoidCallback onCreatePressed;
@@ -21,9 +24,13 @@ class CreateObjectiveBottomSheet extends StatefulWidget {
 class _CreateObjectiveBottomSheetState
     extends State<CreateObjectiveBottomSheet> {
   bool canContinue = false;
+  String objectiveTitle = '';
 
   void handleObjectiveChanged(String value) {
-    setState(() => canContinue = value.isNotEmpty);
+    setState(() {
+      canContinue = value.isNotEmpty;
+      objectiveTitle = value;
+    });
   }
 
   @override
@@ -72,7 +79,8 @@ class _CreateObjectiveBottomSheetState
                     child: Icon(Icons.add),
                     onPressed: () {
                       // Store the users objective
-
+                      final rubric = context.read(rubricProviderRef);
+                      rubric.addObjective(Objective(title: objectiveTitle));
                       // Navigate to the grading objectives page
                       widget.onCreatePressed();
                     },

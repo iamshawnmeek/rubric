@@ -6,6 +6,7 @@ import 'package:rubric/components/rubric_card.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rubric/iterable_extensions.dart';
 
 class GradingObjectivesLanding extends ConsumerWidget {
   @override
@@ -24,8 +25,14 @@ class GradingObjectivesLanding extends ConsumerWidget {
               SizedBox(height: 60),
               HeadlineOne('Grading Objectives'),
               SizedBox(height: 46),
-              //TODO: map over rubric objectives to create cards
-              RubricCard(),
+              ...rubric.objectives
+                  .map(
+                    (objective) => RubricCard(
+                      cardHintText: 'Objective 1',
+                      cardTitleText: objective.title,
+                    ),
+                  )
+                  .joinWith(SizedBox(height: 16)),
               SizedBox(height: 16),
               CreateCard(),
             ],
