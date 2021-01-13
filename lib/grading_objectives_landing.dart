@@ -1,3 +1,4 @@
+import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rubric/components/colors.dart';
@@ -34,7 +35,7 @@ class GradingObjectivesLanding extends ConsumerWidget {
                   )
                   .joinWith(SizedBox(height: 16)),
               SizedBox(height: 16),
-              CreateCard(),
+              CreateCard(flowController: FlowController()),
             ],
           ),
         ),
