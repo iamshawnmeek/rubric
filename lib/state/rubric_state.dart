@@ -9,6 +9,6 @@ class RubricState extends StateNotifier<Rubric> {
   RubricState() : super(Rubric(objectives: []));
 
   void addObjective(Objective objective) {
-    state.objectives.add(objective);
+    state = state.copyWith(objectives: [...state.objectives, objective]);
   }
 }

@@ -62,8 +62,7 @@ class _MyAppState extends State<MyApp> {
             if (bodyContent == OnboardingFlow.landing)
               FadeInPage(child: Landing(flowController: controller)),
             if (bodyContent == OnboardingFlow.gradingObjectives)
-              FadeInPage(
-                  child: GradingObjectivesLanding(flowController: controller)),
+              FadeInPage(child: GradingObjectivesLanding()),
           ];
         },
       ), //Landing

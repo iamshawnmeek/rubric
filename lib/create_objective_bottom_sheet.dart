@@ -9,11 +9,15 @@ import 'package:rubric/typography/headline_one.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateObjectiveBottomSheet extends StatefulWidget {
+  final String title;
+  final String subtitle;
   final VoidCallback onCreatePressed;
 
   const CreateObjectiveBottomSheet({
-    Key key,
+    @required this.title,
     @required this.onCreatePressed,
+    this.subtitle,
+    Key key,
   }) : super(key: key);
 
   @override
@@ -59,9 +63,12 @@ class _CreateObjectiveBottomSheetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  HeadlineOne('Let’s create your first rubric.'),
+                  HeadlineOne(widget.title),
                   SizedBox(height: 45),
-                  _FormLayer(onObjectiveChanged: handleObjectiveChanged),
+                  _FormLayer(
+                    onObjectiveChanged: handleObjectiveChanged,
+                    subtitle: widget.subtitle,
+                  ),
                   SizedBox(height: 26),
                 ],
               ),
@@ -96,9 +103,12 @@ class _CreateObjectiveBottomSheetState
 }
 
 class _FormLayer extends StatelessWidget {
+  final String subtitle;
   final void Function(String) onObjectiveChanged;
+
   const _FormLayer({
     @required this.onObjectiveChanged,
+    this.subtitle,
     Key key,
   }) : super(key: key);
 
@@ -113,15 +123,17 @@ class _FormLayer extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          BodyOne('What is your first grading objective?'),
-          SizedBox(height: 36),
+          if (subtitle != null) ...[
+            BodyOne(subtitle),
+            SizedBox(height: 36),
+          ],
           TextField(
             onChanged: onObjectiveChanged,
             style: BodyPlaceholderWhite.textStyle,
             decoration: InputDecoration.collapsed(
-              hintText: 'Grammar, usage and mechanics',
+              hintText: 'example: Grammar, usage and mechanics',
               hintStyle: BodyPlaceholder.textStyle,
-            ),
+            ).copyWith(hintMaxLines: 3),
             keyboardAppearance: Brightness.dark, //iOS only
           ),
         ],
