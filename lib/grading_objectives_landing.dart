@@ -7,6 +7,7 @@ import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/iterable_extensions.dart';
+import 'package:rubric/list_extensions.dart';
 
 class GradingObjectivesLanding extends ConsumerWidget {
   @override
@@ -27,9 +28,9 @@ class GradingObjectivesLanding extends ConsumerWidget {
                 HeadlineOne('Grading Objectives'),
                 SizedBox(height: 46),
                 ...rubric.objectives
-                    .map(
-                      (objective) => RubricCard(
-                        cardHintText: 'Objective 1',
+                    .mapWithIndex(
+                      (i, objective) => RubricCard(
+                        cardHintText: 'Objective ${i + 1}',
                         cardTitleText: objective.title,
                       ),
                     )
