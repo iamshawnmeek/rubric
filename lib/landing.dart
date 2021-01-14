@@ -25,6 +25,8 @@ class Landing extends StatelessWidget {
             isScrollControlled: true,
             context: context,
             builder: (context) => CreateObjectiveBottomSheet(
+              title: 'Let’s create your first rubric.',
+              subtitle: 'What is your first grading objective?',
               onCreatePressed: () => flowController
                   .update((_) => OnboardingFlow.gradingObjectives),
             ),
