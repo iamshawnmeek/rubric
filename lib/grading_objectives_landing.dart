@@ -10,6 +10,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/iterable_extensions.dart';
 
 class GradingObjectivesLanding extends ConsumerWidget {
+  final FlowController flowController;
+
+  const GradingObjectivesLanding({@required this.flowController});
+
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final rubric = watch(rubricProviderRef.state);
@@ -35,7 +39,7 @@ class GradingObjectivesLanding extends ConsumerWidget {
                   )
                   .joinWith(SizedBox(height: 16)),
               SizedBox(height: 16),
-              CreateCard(flowController: FlowController()),
+              CreateCard(flowController: flowController),
             ],
           ),
         ),

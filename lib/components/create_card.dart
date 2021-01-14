@@ -15,8 +15,8 @@ class CreateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: .5,
-      child: Container(
-        onPressed: () {
+      child: GestureDetector(
+        onTap: () {
           showModalBottomSheet(
             isScrollControlled: true,
             context: context,
@@ -26,17 +26,19 @@ class CreateCard extends StatelessWidget {
             ),
           );
         },
-        height: 92,
-        child: Center(
-          child: FaIcon(FontAwesomeIcons.plus),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 18,
-        ),
-        decoration: BoxDecoration(
-          color: primaryCard,
-          borderRadius: BorderRadius.circular(10),
+        child: Container(
+          height: 92,
+          child: Center(
+            child: FaIcon(FontAwesomeIcons.plus),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 18,
+          ),
+          decoration: BoxDecoration(
+            color: primaryCard,
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       ),
     );
