@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/card_next.dart';
 
-class NextBtn extends StatelessWidget {
-  const NextBtn({
-    Key key,
-    @required this.width,
-  }) : super(key: key);
-
-  final double width;
-
+class NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * .175),
+      padding: EdgeInsets.symmetric(horizontal: width * .25),
       child: Container(
         height: 75,
         child: Center(
