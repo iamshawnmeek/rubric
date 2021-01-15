@@ -24,10 +24,7 @@ class Landing extends StatelessWidget {
           showModalBottomSheet(
             isScrollControlled: true,
             context: context,
-            builder: (context) => CreateObjectiveBottomSheet(
-              onCreatePressed: () => flowController
-                  .update((_) => OnboardingFlow.gradingObjectives),
-            ),
+            builder: (context) => CreateObjectiveBottomSheet(),
           );
         },
       ),
