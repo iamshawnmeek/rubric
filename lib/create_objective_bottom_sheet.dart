@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rubric/domain/rubric.dart';
+import 'package:rubric/enums.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/body_placeholder.dart';
@@ -9,17 +10,6 @@ import 'package:rubric/typography/headline_one.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateObjectiveBottomSheet extends StatefulWidget {
-  final String title;
-  final String subtitle;
-  final VoidCallback onCreatePressed;
-
-  const CreateObjectiveBottomSheet({
-    @required this.title,
-    @required this.onCreatePressed,
-    this.subtitle,
-    Key key,
-  }) : super(key: key);
-
   @override
   _CreateObjectiveBottomSheetState createState() =>
       _CreateObjectiveBottomSheetState();
@@ -63,11 +53,11 @@ class _CreateObjectiveBottomSheetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  HeadlineOne(widget.title),
+                  HeadlineOne('Let’s create your first rubric.'),
                   SizedBox(height: 45),
                   _FormLayer(
                     onObjectiveChanged: handleObjectiveChanged,
-                    subtitle: widget.subtitle,
+                    subtitle: 'What is your first grading objective?',
                   ),
                   SizedBox(height: 26),
                 ],
@@ -89,7 +79,8 @@ class _CreateObjectiveBottomSheetState
                       final rubric = context.read(rubricProviderRef);
                       rubric.addObjective(Objective(title: objectiveTitle));
                       // Navigate to the grading objectives page
-                      widget.onCreatePressed();
+                      flowController
+                          .update((_) => OnboardingFlow.gradingObjectives);
                     },
                   ),
                 ),
@@ -128,6 +119,7 @@ class _FormLayer extends StatelessWidget {
             SizedBox(height: 36),
           ],
           TextField(
+            maxLines: 2,
             onChanged: onObjectiveChanged,
             style: BodyPlaceholderWhite.textStyle,
             decoration: InputDecoration.collapsed(

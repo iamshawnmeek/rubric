@@ -15,7 +15,6 @@ class GradingObjectivesLanding extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final rubric = watch(rubricProviderRef.state);
-    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -41,20 +40,15 @@ class GradingObjectivesLanding extends ConsumerWidget {
                       .joinWith(SizedBox(height: 16)),
                   SizedBox(height: 16),
                   CreateCard(),
-                  SizedBox(height: 16),
-                  // Align(
-                  //   alignment: Alignment.bottomCenter, //??
-                  Positioned(
-                    bottom: 0,
-                    child: NextBtn(width: width),
-                  ),
-                  // ),
+                  SizedBox(height: 90),
                 ],
               ),
             ),
           ),
         ),
       ),
+      floatingActionButton: NextButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
