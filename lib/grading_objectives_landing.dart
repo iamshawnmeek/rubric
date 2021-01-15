@@ -42,10 +42,13 @@ class GradingObjectivesLanding extends ConsumerWidget {
                   SizedBox(height: 16),
                   CreateCard(),
                   SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.bottomCenter, //??
+                  // Align(
+                  //   alignment: Alignment.bottomCenter, //??
+                  Positioned(
+                    bottom: 0,
                     child: NextBtn(width: width),
                   ),
+                  // ),
                 ],
               ),
             ),
