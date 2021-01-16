@@ -10,11 +10,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateObjectiveAddBottomSheet extends StatefulWidget {
   @override
-  _CreateObjectiveBottomSheetState createState() =>
-      _CreateObjectiveBottomSheetState();
+  _CreateObjectiveAddBottomSheetState createState() =>
+      _CreateObjectiveAddBottomSheetState();
 }
 
-class _CreateObjectiveBottomSheetState
+class _CreateObjectiveAddBottomSheetState
     extends State<CreateObjectiveAddBottomSheet> {
   bool canContinue = false;
   String objectiveTitle = '';
