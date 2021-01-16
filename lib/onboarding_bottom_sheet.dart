@@ -1,3 +1,4 @@
+import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/enums.dart';
@@ -9,14 +10,17 @@ import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateObjectiveBottomSheet extends StatefulWidget {
+class OnboardingBottomSheet extends StatefulWidget {
+  final FlowController flowController;
+
+  OnboardingBottomSheet({Key key, @required this.flowController})
+      : super(key: key);
+
   @override
-  _CreateObjectiveBottomSheetState createState() =>
-      _CreateObjectiveBottomSheetState();
+  _OnboardingBottomSheetState createState() => _OnboardingBottomSheetState();
 }
 
-class _CreateObjectiveBottomSheetState
-    extends State<CreateObjectiveBottomSheet> {
+class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
   bool canContinue = false;
   String objectiveTitle = '';
 
@@ -79,7 +83,7 @@ class _CreateObjectiveBottomSheetState
                       final rubric = context.read(rubricProviderRef);
                       rubric.addObjective(Objective(title: objectiveTitle));
                       // Navigate to the grading objectives page
-                      flowController
+                      widget.flowController
                           .update((_) => OnboardingFlow.gradingObjectives);
                     },
                   ),
