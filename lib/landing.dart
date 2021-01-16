@@ -2,13 +2,13 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rubric/components/colors.dart';
-import 'package:rubric/create_objective_bottom_sheet.dart';
+import 'package:rubric/onboarding_bottom_sheet.dart';
 // import 'package:rubric/enums.dart';
 
 class Landing extends StatelessWidget {
   final FlowController flowController;
 
-  const Landing({Key key, @required this.flowController}) : super(key: key);
+  Landing({Key key, @required this.flowController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,9 @@ class Landing extends StatelessWidget {
           showModalBottomSheet(
             isScrollControlled: true,
             context: context,
-            builder: (context) => CreateObjectiveBottomSheet(),
+            builder: (context) => OnboardingBottomSheet(
+              flowController: flowController,
+            ),
           );
         },
       ),
