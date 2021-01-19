@@ -2,7 +2,7 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/all.dart';
-// import 'package:rubric/assign_groups_landing.dart';
+import 'package:rubric/assign_groups_landing.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/enums.dart';
 import 'package:rubric/fade_in_page.dart';
@@ -28,18 +28,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FlowController controller;
+  FlowController flowController;
 
   @override
   void initState() {
     super.initState();
-    controller =
-        FlowController<OnboardingFlow>(OnboardingFlow.landing); //landing
+    flowController = FlowController<OnboardingFlow>(
+      OnboardingFlow.landing,
+    );
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    flowController.dispose();
     super.dispose();
   }
 
@@ -57,15 +58,17 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: FlowBuilder<OnboardingFlow>(
-        controller: controller,
+        controller: flowController,
         onGeneratePages: (bodyContent, pages) {
           return [
             if (bodyContent == OnboardingFlow.landing)
-              FadeInPage(child: Landing(flowController: controller)),
-            if (bodyContent ==
-                OnboardingFlow.gradingObjectives) //gradingObjectives
+              FadeInPage(child: Landing(flowController: flowController)),
+            if (bodyContent == OnboardingFlow.gradingObjectives)
               FadeInPage(
-                  child: GradingObjectivesLanding()), //GradingObjectivesLanding
+                child: GradingObjectivesLanding(flowController: flowController),
+              ),
+            if (bodyContent == OnboardingFlow.assignGroups)
+              FadeInPage(child: AssignGroupsLanding()),
           ];
         },
       ),
