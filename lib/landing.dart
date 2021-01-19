@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/onboarding_bottom_sheet.dart';
-// import 'package:rubric/enums.dart';
 
 class Landing extends StatelessWidget {
   final FlowController flowController;

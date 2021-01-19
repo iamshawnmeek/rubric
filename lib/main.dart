@@ -2,6 +2,7 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/all.dart';
+// import 'package:rubric/assign_groups_landing.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/enums.dart';
 import 'package:rubric/fade_in_page.dart';
@@ -61,11 +62,13 @@ class _MyAppState extends State<MyApp> {
           return [
             if (bodyContent == OnboardingFlow.landing)
               FadeInPage(child: Landing(flowController: controller)),
-            if (bodyContent == OnboardingFlow.gradingObjectives)
-              FadeInPage(child: GradingObjectivesLanding()),
+            if (bodyContent ==
+                OnboardingFlow.gradingObjectives) //gradingObjectives
+              FadeInPage(
+                  child: GradingObjectivesLanding()), //GradingObjectivesLanding
           ];
         },
-      ), //Landing
+      ),
     );
   }
 }
