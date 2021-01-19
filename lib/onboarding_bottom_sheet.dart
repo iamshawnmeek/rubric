@@ -83,8 +83,9 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
                       final rubric = context.read(rubricProviderRef);
                       rubric.addObjective(Objective(title: objectiveTitle));
                       // Navigate to the grading objectives page
-                      widget.flowController
-                          .update((_) => OnboardingFlow.gradingObjectives);
+                      widget.flowController.update(
+                        (_) => OnboardingFlow.gradingObjectives,
+                      );
                     },
                   ),
                 ),
