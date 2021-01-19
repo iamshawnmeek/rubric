@@ -27,7 +27,7 @@ class GradingObjectivesLanding extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 36),
-                  smallLogo(),
+                  SmallLogo(),
                   SizedBox(height: 60),
                   HeadlineOne('Grading Objectives'),
                   SizedBox(height: 46),
