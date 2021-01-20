@@ -20,6 +20,7 @@ class GradingObjectivesLanding extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final rubric = watch(rubricProviderRef.state);
+    final shouldShowNextButton = rubric.objectives.length >= 2;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -43,11 +44,12 @@ class GradingObjectivesLanding extends ConsumerWidget {
           ),
         ),
       ),
-      floatingActionButton: NextButton(
-        onTap: () {
-          flowController.update((_) => OnboardingFlow.assignGroups);
-        },
-      ),
+      // Ternary Operator: basically an if/else statement
+      floatingActionButton: shouldShowNextButton
+          ? NextButton(onTap: () {
+              flowController.update((_) => OnboardingFlow.assignGroups);
+            })
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
