@@ -54,8 +54,11 @@ class AssignGroupsLanding extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 18.0, horizontal: 22),
-                    child: FaIcon(FontAwesomeIcons.chevronLeft),
-                  ), //how to fade this back in color with hex value #B693DD?
+                    child: FaIcon(
+                      FontAwesomeIcons.chevronLeft,
+                      color: primaryLightest,
+                    ),
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: primaryDark,
