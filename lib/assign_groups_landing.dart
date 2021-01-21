@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/components/rubric_card.dart';
+import 'package:rubric/domain/rubric.dart';
+import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'components/small_logo.dart';
-// import 'package:dotted_line/dotted_line.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:rubric/iterable_extensions.dart';
+import 'package:rubric/list_extensions.dart';
 
-class AssignGroupsLanding extends StatelessWidget {
+class AssignGroupsLanding extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final rubric = watch(rubricProviderRef.state);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -45,18 +52,27 @@ class AssignGroupsLanding extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: FractionallySizedBox(
-                //fractions out the container
-                heightFactor:
-                    .45, //changed from .50 to help add some white space
+                heightFactor: .45,
                 child: Container(
-                  width:
-                      400, //how to make width 100% or stretch edges w/o numerical value?
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 18.0, horizontal: 22),
-                    child: FaIcon(
-                      FontAwesomeIcons.chevronLeft,
-                      color: primaryLightest,
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 52,
+                          width: 44,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: FaIcon(
+                              FontAwesomeIcons.chevronLeft,
+                              color: primaryLightest,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                        ..._buildObjectives(rubric),
+                      ],
                     ),
                   ),
                   decoration: BoxDecoration(
@@ -70,5 +86,16 @@ class AssignGroupsLanding extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Widget> _buildObjectives(Rubric rubric) {
+    return rubric.objectives
+        .mapWithIndex(
+          (i, objective) => RubricCard(
+            cardHintText: 'Objective ${i + 1}',
+            cardTitleText: objective.title,
+          ),
+        )
+        .joinWith(SizedBox(height: 16));
   }
 }
