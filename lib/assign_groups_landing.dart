@@ -5,6 +5,7 @@ import 'package:rubric/components/colors.dart';
 import 'package:rubric/components/rubric_card.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/state/rubric_state.dart';
+import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'components/small_logo.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -34,13 +35,20 @@ class AssignGroupsLanding extends ConsumerWidget {
                     DottedBorder(
                       borderType: BorderType.RRect,
                       dashPattern: [4, 4, 4, 4],
-                      color: lightgray,
+                      color: lightGray,
                       radius: Radius.circular(12),
                       child: Container(
-                          height: 185, // should this be fractional height?
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          )),
+                        height: 85,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: BodyPlaceholder(
+                            'Drag objective here',
+                            color: lightGray,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
