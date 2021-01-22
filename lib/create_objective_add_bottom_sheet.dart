@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:rubric/components/colors.dart';
+import 'package:rubric/components/rubric_text_field.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_one.dart';
-import 'package:rubric/typography/body_placeholder.dart';
-import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/headline_one.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateObjectiveAddBottomSheet extends StatefulWidget {
   @override
@@ -114,15 +115,10 @@ class _FormLayer extends StatelessWidget {
             BodyOne(subtitle),
             SizedBox(height: 36),
           ],
-          TextField(
-            maxLines: 6,
+          RubricTextField(
             onChanged: onObjectiveChanged,
-            style: BodyPlaceholder.textStyle.copyWith(color: Colors.white),
-            decoration: InputDecoration.collapsed(
-              hintText: 'example: Grammar, usage and mechanics',
-              hintStyle: BodyPlaceholder.textStyle,
-            ).copyWith(hintMaxLines: 3),
-            keyboardAppearance: Brightness.dark, //iOS only
+            hintText: 'example: Grammar, usage and mechanics',
+            maxLines: 6,
           ),
         ],
       ),
