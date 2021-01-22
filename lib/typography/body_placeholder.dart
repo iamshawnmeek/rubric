@@ -8,12 +8,19 @@ class BodyPlaceholder extends StatelessWidget {
     fontSize: 24,
     height: 1.2,
   );
-  final String data;
 
-  const BodyPlaceholder(this.data);
+  final String data;
+  final Color color;
+
+  const BodyPlaceholder(this.data, {this.color});
 
   @override
   Widget build(BuildContext context) {
-    return Text(data, style: textStyle);
+    return Text(
+      data,
+      style: textStyle.copyWith(
+        color: color ?? textStyle.color,
+      ),
+    );
   }
 }

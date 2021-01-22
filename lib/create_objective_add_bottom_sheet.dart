@@ -3,7 +3,6 @@ import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/body_placeholder.dart';
-import 'package:rubric/typography/body_placeholder_white.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -118,7 +117,7 @@ class _FormLayer extends StatelessWidget {
           TextField(
             maxLines: 6,
             onChanged: onObjectiveChanged,
-            style: BodyPlaceholderWhite.textStyle,
+            style: BodyPlaceholder.textStyle.copyWith(color: Colors.white),
             decoration: InputDecoration.collapsed(
               hintText: 'example: Grammar, usage and mechanics',
               hintStyle: BodyPlaceholder.textStyle,
