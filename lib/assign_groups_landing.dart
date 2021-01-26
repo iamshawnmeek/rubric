@@ -15,18 +15,19 @@ import 'package:rubric/list_extensions.dart';
 
 class AssignGroupsLanding extends ConsumerWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final rubric = watch(rubricProviderRef.state);
+  Widget build(BuildContext contextInstance, ScopedReader watch) {
+    final rubricInstance = watch(rubricProviderRef.state);
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(contextInstance).unfocus(),
       child: Scaffold(
         body: Stack(
           children: [
             SingleChildScrollView(
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24), //adjust this globally to 24
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -57,7 +58,7 @@ class AssignGroupsLanding extends ConsumerWidget {
                   heightFactor: .45,
                   child: Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(24),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -73,7 +74,8 @@ class AssignGroupsLanding extends ConsumerWidget {
                             ),
                           ),
                           SizedBox(height: 24),
-                          ..._buildObjectives(rubric),
+                          ..._buildObjectives(
+                              rubric: rubricInstance, context: contextInstance),
                         ],
                       ),
                     ),
@@ -112,12 +114,27 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
-  List<Widget> _buildObjectives(Rubric rubric) {
+  List<Widget> _buildObjectives({Rubric rubric, BuildContext context}) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+
     return rubric.objectives
         .mapWithIndex(
-          (i, objective) => RubricCard(
-            cardHintText: 'Objective ${i + 1}',
-            cardTitleText: objective.title,
+          (i, objective) => Draggable(
+            data: 'Objective ${i + 1}',
+            feedback: Container(
+              width: deviceWidth,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: RubricCard(
+                  cardHintText: 'Objective ${i + 1}',
+                  cardTitleText: objective.title,
+                ),
+              ),
+            ),
+            child: RubricCard(
+              cardHintText: 'Objective ${i + 1}',
+              cardTitleText: objective.title,
+            ),
           ),
         )
         .joinWith(SizedBox(height: 16));
