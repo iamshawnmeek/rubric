@@ -93,7 +93,7 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
-  DottedBorder _firstDragTarget() {
+  Widget rubricDrag(BuildContext context, List<dynamic> l1, List<dynamic> l2) {
     return DottedBorder(
       borderType: BorderType.RRect,
       dashPattern: [4, 4, 4, 4],
@@ -114,13 +114,21 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
+  Widget _firstDragTarget() {
+    return DragTarget<int>(
+      builder: rubricDrag,
+      onAccept: (value) => print('It has been accepted!!'),
+      onWillAccept: (value) => true,
+    );
+  }
+
   List<Widget> _buildObjectives({Rubric rubric, BuildContext context}) {
     final deviceWidth = MediaQuery.of(context).size.width;
 
     return rubric.objectives
         .mapWithIndex(
           (i, objective) => Draggable(
-            data: 'Objective ${i + 1}',
+            data: i,
             feedback: Container(
               width: deviceWidth,
               child: Padding(
