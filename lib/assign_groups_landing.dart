@@ -125,9 +125,12 @@ class AssignGroupsLanding extends ConsumerWidget {
               width: deviceWidth,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: RubricCard(
-                  cardHintText: 'Objective ${i + 1}',
-                  cardTitleText: objective.title,
+                child: Material(
+                  color: Colors.transparent,
+                  child: RubricCard(
+                    cardHintText: 'Objective ${i + 1}',
+                    cardTitleText: objective.title,
+                  ),
                 ),
               ),
             ),
