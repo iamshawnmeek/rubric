@@ -134,6 +134,13 @@ class AssignGroupsLanding extends ConsumerWidget {
                 ),
               ),
             ),
+            childWhenDragging: Opacity(
+              opacity: .4,
+              child: RubricCard(
+                cardHintText: 'Objective ${i + 1}',
+                cardTitleText: objective.title,
+              ),
+            ),
             child: RubricCard(
               cardHintText: 'Objective ${i + 1}',
               cardTitleText: objective.title,
