@@ -158,3 +158,13 @@ class AssignGroupsLanding extends ConsumerWidget {
         .joinWith(SizedBox(height: 16));
   }
 }
+
+//ToDo:
+// - Research: Can Draggable widget accept a specified drag target / lock?
+
+// - Create a copy of the current RubricObjectives list as our BottomSheet list.
+// - After drag / drop: remove the Dropped element from BottomSheet list.
+// - Add element to new list
+// - Create the title for said group
+// - Create the 'New Group' drag target
+// - Update the text for current drag target (Add to ___blank_____)
