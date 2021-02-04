@@ -2,14 +2,23 @@ import 'package:flutter/foundation.dart';
 
 class Rubric {
   final List<Objective> objectives;
+  final List<RubricGroup> groups;
 
-  const Rubric({@required this.objectives});
+  const Rubric({@required this.objectives, @required this.groups});
 
-  Rubric copyWith({List<Objective> objectives}) {
+  Rubric copyWith({List<Objective> objectives, List<RubricGroup> groups}) {
     return Rubric(
       objectives: objectives ?? this.objectives,
+      groups: groups ?? this.groups,
     );
   }
+}
+
+class RubricGroup {
+  final String title;
+  final List<Objective> objectives;
+
+  RubricGroup({@required this.title, @required this.objectives});
 }
 
 class Objective {
