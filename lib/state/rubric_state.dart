@@ -6,7 +6,7 @@ final rubricProviderRef =
 
 //mechanism to update the Rubric class with the new objective
 class RubricState extends StateNotifier<Rubric> {
-  RubricState() : super(Rubric(objectives: []));
+  RubricState() : super(Rubric(objectives: [], groups: []));
 
   void addObjective(Objective objective) {
     state = state.copyWith(objectives: [...state.objectives, objective]);
