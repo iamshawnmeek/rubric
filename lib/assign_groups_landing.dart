@@ -134,37 +134,37 @@ class AssignGroupsLanding extends ConsumerWidget {
   List<Widget> _buildObjectives({Rubric rubric, BuildContext context}) {
     final deviceWidth = MediaQuery.of(context).size.width;
 
-    return rubric.objectives
-        .mapWithIndex(
-          (i, objective) => Draggable(
-            data: i,
-            feedback: Container(
-              width: deviceWidth,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Material(
-                  color: Colors.transparent,
-                  child: RubricCard(
-                    cardHintText: 'Objective ${i + 1}',
-                    cardTitleText: objective.title,
-                  ),
+    return rubric.objectives.mapWithIndex(
+      (i, objective) {
+        return Draggable(
+          data: i,
+          feedback: Container(
+            width: deviceWidth,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Material(
+                color: Colors.transparent,
+                child: RubricCard(
+                  cardHintText: 'Objective ${i + 1}',
+                  cardTitleText: objective.title,
                 ),
               ),
             ),
-            childWhenDragging: Opacity(
-              opacity: .4,
-              child: RubricCard(
-                cardHintText: 'Objective ${i + 1}',
-                cardTitleText: objective.title,
-              ),
-            ),
+          ),
+          childWhenDragging: Opacity(
+            opacity: .4,
             child: RubricCard(
               cardHintText: 'Objective ${i + 1}',
               cardTitleText: objective.title,
             ),
           ),
-        )
-        .joinWith(SizedBox(height: 16));
+          child: RubricCard(
+            cardHintText: 'Objective ${i + 1}',
+            cardTitleText: objective.title,
+          ),
+        );
+      },
+    ).joinWith(SizedBox(height: 16));
   }
 }
 
