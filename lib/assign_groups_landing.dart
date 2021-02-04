@@ -5,6 +5,7 @@ import 'package:rubric/components/colors.dart';
 import 'package:rubric/components/rubric_card.dart';
 import 'package:rubric/components/rubric_text_field.dart';
 import 'package:rubric/domain/rubric.dart';
+import 'package:rubric/enums.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
@@ -12,11 +13,13 @@ import 'components/small_logo.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:rubric/iterable_extensions.dart';
 import 'package:rubric/list_extensions.dart';
+import 'package:flow_builder/flow_builder.dart';
 
 class AssignGroupsLanding extends ConsumerWidget {
   @override
   Widget build(BuildContext contextInstance, ScopedReader watch) {
     final rubricInstance = watch(rubricProviderRef.state);
+    final flowController = contextInstance.flow<OnboardingFlow>();
 
     return GestureDetector(
       onTap: () => FocusScope.of(contextInstance).unfocus(),
@@ -56,32 +59,40 @@ class AssignGroupsLanding extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: FractionallySizedBox(
                   heightFactor: .45,
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            height: 52,
-                            width: 44,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: FaIcon(
-                                FontAwesomeIcons.chevronLeft,
-                                color: primaryLightest,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(
+                              height: 52,
+                              width: 44,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: GestureDetector(
+                                  onTap: () => flowController.update(
+                                    (_) => OnboardingFlow.gradingObjectives,
+                                  ),
+                                  child: FaIcon(
+                                    FontAwesomeIcons.chevronLeft,
+                                    color: primaryLightest,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 24),
-                          ..._buildObjectives(
-                              rubric: rubricInstance, context: contextInstance),
-                        ],
+                            SizedBox(height: 24),
+                            ..._buildObjectives(
+                                rubric: rubricInstance,
+                                context: contextInstance),
+                          ],
+                        ),
                       ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: primaryDark,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: primaryDark,
+                      ),
                     ),
                   ),
                 ),
@@ -93,30 +104,28 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
-  Widget rubricDrag(BuildContext context, List<dynamic> l1, List<dynamic> l2) {
-    return DottedBorder(
-      borderType: BorderType.RRect,
-      dashPattern: [4, 4, 4, 4],
-      color: lightGray,
-      radius: Radius.circular(12),
-      child: Container(
-        height: 85,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: BodyPlaceholder(
-            'Drag objective here',
-            color: lightGray,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _firstDragTarget() {
     return DragTarget<int>(
-      builder: rubricDrag,
+      builder: (BuildContext context, List<dynamic> l1, List<dynamic> l2) {
+        return DottedBorder(
+          borderType: BorderType.RRect,
+          dashPattern: [4, 4, 4, 4],
+          color: lightGray,
+          radius: Radius.circular(12),
+          child: Container(
+            height: 85,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: BodyPlaceholder(
+                'Drag objective here',
+                color: lightGray,
+              ),
+            ),
+          ),
+        );
+      },
       onAccept: (value) => print('It has been accepted!!'),
       onWillAccept: (value) => true,
     );
@@ -160,8 +169,6 @@ class AssignGroupsLanding extends ConsumerWidget {
 }
 
 //ToDo:
-// - Research: Can Draggable widget accept a specified drag target / lock?
-
 // - Create a copy of the current RubricObjectives list as our BottomSheet list.
 // - After drag / drop: remove the Dropped element from BottomSheet list.
 // - Add element to new list
