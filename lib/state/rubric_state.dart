@@ -11,4 +11,8 @@ class RubricState extends StateNotifier<Rubric> {
   void addObjective(Objective objective) {
     state = state.copyWith(objectives: [...state.objectives, objective]);
   }
+
+  void addGroup(RubricGroup group) {
+    state = state.copyWith(groups: [...state.groups, group]);
+  }
 }
