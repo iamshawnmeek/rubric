@@ -19,6 +19,13 @@ class RubricGroup {
   final List<Objective> objectives;
 
   RubricGroup({@required this.title, @required this.objectives});
+
+  RubricGroup copyWith({String title, List<Objective> objectives}) {
+    return RubricGroup(
+      title: title ?? this.title,
+      objectives: objectives ?? this.objectives,
+    );
+  }
 }
 
 class Objective {
