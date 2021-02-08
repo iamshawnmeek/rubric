@@ -43,7 +43,8 @@ class AssignGroupsLanding extends ConsumerWidget {
                         buildGroupTarget(
                             rubric: rubricInstance, context: context),
                       SizedBox(height: 24),
-                      if (rubricInstance.groups.isEmpty) _firstDragTarget(),
+                      if (rubricInstance.groups.isEmpty)
+                        _firstDragTarget(context),
                     ],
                   ),
                 ),
@@ -111,8 +112,8 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
-  Widget _firstDragTarget() {
-    return DragTarget<int>(
+  Widget _firstDragTarget(BuildContext context) {
+    return DragTarget<Objective>(
       builder: (BuildContext context, List<dynamic> l1, List<dynamic> l2) {
         return DottedBorder(
           borderType: BorderType.RRect,
@@ -133,8 +134,14 @@ class AssignGroupsLanding extends ConsumerWidget {
           ),
         );
       },
-      onAccept: (value) => print('It has been accepted!!'),
-      onWillAccept: (value) => true,
+      onAccept: (value) {
+        final objectives = [value]; //end 2.8.21
+        final group = RubricGroup(title: 'Group 1', objectives: objectives);
+        context.read(rubricProviderRef).addGroup(group);
+      },
+      onWillAccept: (value) {
+        return true;
+      },
     );
   }
 
@@ -144,7 +151,7 @@ class AssignGroupsLanding extends ConsumerWidget {
     return rubric.objectives.mapWithIndex(
       (i, objective) {
         return Draggable(
-          data: i,
+          data: objective,
           feedback: Container(
             width: deviceWidth,
             child: Padding(
