@@ -17,12 +17,12 @@ import 'package:flow_builder/flow_builder.dart';
 
 class AssignGroupsLanding extends ConsumerWidget {
   @override
-  Widget build(BuildContext contextInstance, ScopedReader watch) {
+  Widget build(BuildContext context, ScopedReader watch) {
     final rubricInstance = watch(rubricProviderRef.state);
-    final flowController = contextInstance.flow<OnboardingFlow>();
+    final flowController = context.flow<OnboardingFlow>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(contextInstance).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         body: Stack(
           children: [
@@ -39,15 +39,11 @@ class AssignGroupsLanding extends ConsumerWidget {
                       SizedBox(height: 60),
                       HeadlineOne('Assign Groups'),
                       SizedBox(height: 46),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RubricTextField(
-                              onChanged: (_) {}, hintText: 'Group 1'),
-                          SizedBox(height: 24),
-                          _firstDragTarget(),
-                        ],
-                      ),
+                      if (rubricInstance.groups.isNotEmpty)
+                        buildGroupTarget(
+                            rubric: rubricInstance, context: context),
+                      SizedBox(height: 24),
+                      if (rubricInstance.groups.isEmpty) _firstDragTarget(),
                     ],
                   ),
                 ),
@@ -84,8 +80,7 @@ class AssignGroupsLanding extends ConsumerWidget {
                             ),
                             SizedBox(height: 24),
                             ..._buildObjectives(
-                                rubric: rubricInstance,
-                                context: contextInstance),
+                                rubric: rubricInstance, context: context),
                           ],
                         ),
                       ),
@@ -101,6 +96,18 @@ class AssignGroupsLanding extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildGroupTarget(
+      {@required Rubric rubric, @required BuildContext context}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RubricTextField(onChanged: (_) {}, hintText: 'Group 1'),
+        SizedBox(height: 24),
+        ..._buildGroups(rubric: rubric, context: context),
+      ],
     );
   }
 
@@ -161,6 +168,42 @@ class AssignGroupsLanding extends ConsumerWidget {
           child: RubricCard(
             cardHintText: 'Objective ${i + 1}',
             cardTitleText: objective.title,
+          ),
+        );
+      },
+    ).joinWith(SizedBox(height: 16));
+  }
+
+  List<Widget> _buildGroups({Rubric rubric, BuildContext context}) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+
+    return rubric.groups.mapWithIndex(
+      (i, group) {
+        return Draggable(
+          data: i,
+          feedback: Container(
+            width: deviceWidth,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Material(
+                color: Colors.transparent,
+                child: RubricCard(
+                  cardHintText: 'Objective ${i + 1}',
+                  cardTitleText: group.title,
+                ),
+              ),
+            ),
+          ),
+          childWhenDragging: Opacity(
+            opacity: .4,
+            child: RubricCard(
+              cardHintText: 'Objective ${i + 1}',
+              cardTitleText: group.title,
+            ),
+          ),
+          child: RubricCard(
+            cardHintText: 'Objective ${i + 1}',
+            cardTitleText: group.title,
           ),
         );
       },
