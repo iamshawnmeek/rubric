@@ -30,7 +30,8 @@ class AssignGroupsLanding extends ConsumerWidget {
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 24), //adjust this globally to 24
+                    horizontal: 24,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -40,11 +41,21 @@ class AssignGroupsLanding extends ConsumerWidget {
                       HeadlineOne('Assign Groups'),
                       SizedBox(height: 46),
                       if (rubricInstance.groups.isNotEmpty)
-                        buildGroupTarget(
-                            rubric: rubricInstance, context: context),
+                        buildGroups(
+                          rubric: rubricInstance,
+                          context: context,
+                        ),
                       SizedBox(height: 24),
-                      if (rubricInstance.groups.isEmpty)
-                        _firstDragTarget(context),
+                      _buildDragTarget(
+                        context: context,
+                        text: rubricInstance.groups.isEmpty
+                            ? 'Drag objective here'
+                            : 'Add New Group',
+                      ),
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.height * .45) +
+                            MediaQuery.of(context).padding.bottom,
+                      )
                     ],
                   ),
                 ),
@@ -54,43 +65,10 @@ class AssignGroupsLanding extends ConsumerWidget {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: FractionallySizedBox(
-                  heightFactor: .45,
-                  child: SingleChildScrollView(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(
-                              height: 52,
-                              width: 44,
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: GestureDetector(
-                                  onTap: () => flowController.update(
-                                    (_) => OnboardingFlow.gradingObjectives,
-                                  ),
-                                  child: FaIcon(
-                                    FontAwesomeIcons.chevronLeft,
-                                    color: primaryLightest,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 24),
-                            ..._buildObjectives(
-                                rubric: rubricInstance, context: context),
-                          ],
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: primaryDark,
-                      ),
-                    ),
-                  ),
+                child: _buildBottomSheet(
+                  flowController: flowController,
+                  rubric: rubricInstance,
+                  context: context,
                 ),
               ),
             ),
@@ -100,19 +78,150 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
-  Widget buildGroupTarget(
-      {@required Rubric rubric, @required BuildContext context}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RubricTextField(onChanged: (_) {}, hintText: 'Group 1'),
-        SizedBox(height: 24),
-        ..._buildGroups(rubric: rubric, context: context),
-      ],
+  Widget _buildBottomSheet({
+    @required FlowController<OnboardingFlow> flowController,
+    @required Rubric rubric,
+    @required BuildContext context,
+  }) {
+    final bottomSheetObjectives = _buildBottomSheetObjectives(rubric);
+
+    return bottomSheetObjectives.isEmpty
+        ? SizedBox()
+        : Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * .45,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: primaryDark,
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildBackChevron(flowController),
+                    SizedBox(height: 24),
+                    ..._buildRubricObjectives(
+                      rubricObjectives: rubric.objectives,
+                      bottomSheetObjectives: bottomSheetObjectives,
+                      context: context,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+  }
+
+  List<Objective> _buildBottomSheetObjectives(Rubric rubric) {
+    final objectivesInGroups = rubric.groups
+        .map((group) => group.objectives)
+        .expand((e) => e)
+        .toList();
+
+    final remainingBottomSheetObjectives =
+        List<Objective>.from(rubric.objectives)
+          ..removeWhere(
+            (objective) => objectivesInGroups.contains(objective),
+          );
+
+    return remainingBottomSheetObjectives ?? [];
+  }
+
+  Widget _buildBackChevron(FlowController<OnboardingFlow> flowController) {
+    return SizedBox(
+      height: 52,
+      width: 44,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: GestureDetector(
+          onTap: () => flowController.update(
+            (_) => OnboardingFlow.gradingObjectives,
+          ),
+          child: FaIcon(
+            FontAwesomeIcons.chevronLeft,
+            color: primaryLightest,
+          ),
+        ),
+      ),
     );
   }
 
-  Widget _firstDragTarget(BuildContext context) {
+  Widget buildGroups({
+    @required Rubric rubric,
+    @required BuildContext context,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: rubric.groups.mapWithIndex(
+        (i, group) {
+          return Column(
+            children: [
+              RubricTextField(onChanged: (_) {}, hintText: group.title),
+              SizedBox(height: 24),
+              ..._buildGroupObjectives(
+                rubricObjectives: rubric.objectives,
+                group: group,
+                context: context,
+              ),
+              SizedBox(height: 16),
+              _buildDragTarget(
+                context: context,
+                text: 'Add to ${group.title}',
+                existingGroup: group,
+              )
+            ],
+          );
+        },
+      ).joinWith(SizedBox(height: 32)),
+    );
+  }
+
+  List<Widget> _buildGroupObjectives({
+    @required List<Objective> rubricObjectives,
+    @required RubricGroup group,
+    @required BuildContext context,
+  }) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+
+    return group.objectives.map(
+      (objective) {
+        final rubricObjectiveLocation = rubricObjectives.indexOf(objective) + 1;
+
+        final rubricCard = RubricCard(
+          cardHintText: 'Objective $rubricObjectiveLocation',
+          cardTitleText: objective.title,
+        );
+
+        return Draggable(
+          data: objective,
+          feedback: Container(
+            width: deviceWidth,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Material(
+                color: Colors.transparent,
+                child: rubricCard,
+              ),
+            ),
+          ),
+          childWhenDragging: Opacity(opacity: .4, child: rubricCard),
+          child: rubricCard,
+        );
+      },
+    ).joinWith(SizedBox(height: 16));
+  }
+
+  Widget _buildDragTarget({
+    @required BuildContext context,
+    @required String text,
+    RubricGroup existingGroup,
+  }) {
+    final rubricGroupLength =
+        context.read(rubricProviderRef.state).groups.length;
+
     return DragTarget<Objective>(
       builder: (BuildContext context, List<dynamic> l1, List<dynamic> l2) {
         return DottedBorder(
@@ -122,34 +231,68 @@ class AssignGroupsLanding extends ConsumerWidget {
           radius: Radius.circular(12),
           child: Container(
             height: 85,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: BodyPlaceholder(
-                'Drag objective here',
-                color: lightGray,
-              ),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: Center(child: BodyPlaceholder(text, color: lightGray)),
           ),
         );
       },
-      onAccept: (value) {
-        final objectives = [value]; //end 2.8.21
-        final group = RubricGroup(title: 'Group 1', objectives: objectives);
-        context.read(rubricProviderRef).addGroup(group);
-      },
+      onAccept: existingGroup == null
+          ? _newGroupCallback(
+              context: context,
+              nextGroupNumber: rubricGroupLength + 1,
+            )
+          : _existingGroupCallback(
+              context: context,
+              existingGroup: existingGroup,
+            ),
       onWillAccept: (value) {
         return true;
       },
     );
   }
 
-  List<Widget> _buildObjectives({Rubric rubric, BuildContext context}) {
+  void Function(Objective) _newGroupCallback({
+    @required BuildContext context,
+    @required int nextGroupNumber,
+  }) {
+    return (value) {
+      final objectives = [value]; //end 2.8.21
+      final group =
+          RubricGroup(title: 'Group $nextGroupNumber', objectives: objectives);
+      context.read(rubricProviderRef).addGroup(group);
+    };
+  }
+
+  void Function(Objective) _existingGroupCallback({
+    @required BuildContext context,
+    @required RubricGroup existingGroup,
+  }) {
+    return (value) {
+      final objectives = [...existingGroup.objectives, value];
+      final group = existingGroup.copyWith(objectives: objectives);
+
+      context.read(rubricProviderRef).replaceGroup(
+            groupToReplace: existingGroup,
+            replacementGroup: group,
+          );
+    };
+  }
+
+  List<Widget> _buildRubricObjectives({
+    @required List<Objective> rubricObjectives,
+    @required List<Objective> bottomSheetObjectives,
+    @required BuildContext context,
+  }) {
     final deviceWidth = MediaQuery.of(context).size.width;
 
-    return rubric.objectives.mapWithIndex(
+    return bottomSheetObjectives.mapWithIndex(
       (i, objective) {
+        final rubricObjectiveLocation = rubricObjectives.indexOf(objective) + 1;
+        final rubricCard = RubricCard(
+          cardHintText: 'Objective $rubricObjectiveLocation',
+          cardTitleText: objective.title,
+        );
+
         return Draggable(
           data: objective,
           feedback: Container(
@@ -158,60 +301,12 @@ class AssignGroupsLanding extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Material(
                 color: Colors.transparent,
-                child: RubricCard(
-                  cardHintText: 'Objective ${i + 1}',
-                  cardTitleText: objective.title,
-                ),
+                child: rubricCard,
               ),
             ),
           ),
-          childWhenDragging: Opacity(
-            opacity: .4,
-            child: RubricCard(
-              cardHintText: 'Objective ${i + 1}',
-              cardTitleText: objective.title,
-            ),
-          ),
-          child: RubricCard(
-            cardHintText: 'Objective ${i + 1}',
-            cardTitleText: objective.title,
-          ),
-        );
-      },
-    ).joinWith(SizedBox(height: 16));
-  }
-
-  List<Widget> _buildGroups({Rubric rubric, BuildContext context}) {
-    final deviceWidth = MediaQuery.of(context).size.width;
-
-    return rubric.groups.mapWithIndex(
-      (i, group) {
-        return Draggable(
-          data: i,
-          feedback: Container(
-            width: deviceWidth,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Material(
-                color: Colors.transparent,
-                child: RubricCard(
-                  cardHintText: 'Objective ${i + 1}',
-                  cardTitleText: group.title,
-                ),
-              ),
-            ),
-          ),
-          childWhenDragging: Opacity(
-            opacity: .4,
-            child: RubricCard(
-              cardHintText: 'Objective ${i + 1}',
-              cardTitleText: group.title,
-            ),
-          ),
-          child: RubricCard(
-            cardHintText: 'Objective ${i + 1}',
-            cardTitleText: group.title,
-          ),
+          childWhenDragging: Opacity(opacity: .4, child: rubricCard),
+          child: rubricCard,
         );
       },
     ).joinWith(SizedBox(height: 16));

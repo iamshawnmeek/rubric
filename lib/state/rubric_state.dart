@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/domain/rubric.dart';
 
@@ -14,5 +15,17 @@ class RubricState extends StateNotifier<Rubric> {
 
   void addGroup(RubricGroup group) {
     state = state.copyWith(groups: [...state.groups, group]);
+  }
+
+  void replaceGroup({
+    @required RubricGroup groupToReplace,
+    @required RubricGroup replacementGroup,
+  }) {
+    final indexOfGroup = state.groups.indexOf(groupToReplace);
+    final replacementGroups = List<RubricGroup>.from(state.groups)
+      ..removeAt(indexOfGroup)
+      ..insert(indexOfGroup, replacementGroup);
+
+    state = state.copyWith(groups: replacementGroups);
   }
 }
