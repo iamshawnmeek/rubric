@@ -314,9 +314,8 @@ class AssignGroupsLanding extends ConsumerWidget {
 }
 
 //ToDo:
-// - Create a copy of the current RubricObjectives list as our BottomSheet list.
-// - After drag / drop: remove the Dropped element from BottomSheet list.
-// - Add element to new list
-// - Create the title for said group
-// - Create the 'New Group' drag target
-// - Update the text for current drag target (Add to ___blank_____)
+// - Add in the next button if there are no more objectives in bottom container
+// - Sync group title with text field value
+// - Fix bug: why objectives, when dragged, are duplciating (very hard, bring beer)
+// - Look into fixing dead space at bottom
+// - Add a back button? Maybe, test this idea...
