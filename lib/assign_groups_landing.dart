@@ -279,9 +279,9 @@ class AssignGroupsLanding extends ConsumerWidget {
   }
 
   List<Widget> _buildRubricObjectives({
-    List<Objective> rubricObjectives,
-    List<Objective> bottomSheetObjectives,
-    BuildContext context,
+    @required List<Objective> rubricObjectives,
+    @required List<Objective> bottomSheetObjectives,
+    @required BuildContext context,
   }) {
     final deviceWidth = MediaQuery.of(context).size.width;
 
