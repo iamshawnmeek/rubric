@@ -20,6 +20,7 @@ class AssignGroupsLanding extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final rubricInstance = watch(rubricProviderRef.state);
     final flowController = context.flow<OnboardingFlow>();
+    final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -61,17 +62,18 @@ class AssignGroupsLanding extends ConsumerWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: _buildBottomSheet(
-                  flowController: flowController,
-                  rubric: rubricInstance,
-                  context: context,
+            if (!isKeyboardVisible)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _buildBottomSheet(
+                    flowController: flowController,
+                    rubric: rubricInstance,
+                    context: context,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
