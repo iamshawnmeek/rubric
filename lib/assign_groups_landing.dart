@@ -258,10 +258,10 @@ class AssignGroupsLanding extends ConsumerWidget {
     @required int nextGroupNumber,
   }) {
     return (value) {
-      final objectives = [value]; //end 2.8.21
+      final objectives = [value];
       final group =
           RubricGroup(title: 'Group $nextGroupNumber', objectives: objectives);
-      context.read(rubricProviderRef).addGroup(group);
+      context.read(rubricProviderRef).addGroup(group: group, objective: value);
     };
   }
 
@@ -318,6 +318,6 @@ class AssignGroupsLanding extends ConsumerWidget {
 //ToDo:
 // - Add in the next button if there are no more objectives in bottom container
 // - Sync group title with text field value
-// - Fix bug: why objectives, when dragged, are duplciating (very hard, bring beer)
+// - Fix bug: why objectives, when dragged, are duplciating (hard to do)
 // - Look into fixing dead space at bottom
 // - Add a back button? Maybe, test this idea...
