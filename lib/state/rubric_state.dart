@@ -17,25 +17,35 @@ class RubricState extends StateNotifier<Rubric> {
     //find the group that has the duplicate objective
     final foundGroup = state.groups.firstWhere((group) {
       return group.objectives.contains(objective);
+    }, orElse: () {
+      return null;
     });
 
-    //create copy of group with new objective list...SM: 2.16
-    final foundGroupCopy = state.groups.firstWhere((group) {
-      objectives:
-      [
-        ...state.objectives,
-        objective,
-      ];
-    });
+    if (foundGroup != null) {
+      //...remove objective from group that we've identified
+      final removedObjectiveList = List<Objective>.from(foundGroup.objectives)
+        ..remove(objective);
 
-    // WIP Updated: 2.16.21: the types are off: RubricCopy versus Rubric, should be RubricGroup, state.copyWith should change
-    // WIP Updated: 2.16.21: reference lines 44 and 45 when updating this
+      //create copy of group with new objective list...SM: 2.16
+      final foundGroupCopy = foundGroup.copyWith(
+        objectives: removedObjectiveList,
+      );
 
-    //...remove objective from group that we've identified
+      final indexOfGroup = state.groups.indexOf(foundGroup);
 
-    //replace the current group with the new group
-    state = state.copyWith(groups: [...state.groups, group]);
+      final replacementGroups = List<RubricGroup>.from(state.groups)
+        ..removeAt(indexOfGroup)
+        ..insert(indexOfGroup, foundGroupCopy);
+
+      //replace the current group with the new group
+      state = state.copyWith(groups: [...replacementGroups, group]);
+    } else {
+      state = state.copyWith(groups: [...state.groups, group]);
+    }
   }
+
+  //refactor lines 16 - 45
+  //fix duplication of drag objective to new group in replaceGroup function
 
   void replaceGroup({
     @required RubricGroup groupToReplace,
