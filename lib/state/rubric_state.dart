@@ -15,23 +15,23 @@ class RubricState extends StateNotifier<Rubric> {
   }
 
   /// Add a `group` containing zero or more objectives from [Rubric.objectives]
-  void addGroup({
+  void addOrMoveObjectiveToNewGroup({
     @required RubricGroup groupToAdd,
-    Objective objectiveToAdd,
+    @required Objective objective,
   }) {
-    final groupsSansObjective = _removeObjectiveFromGroups(objectiveToAdd);
+    final groupsSansObjective = _removeObjectiveFromGroups(objective);
 
     state = state.copyWith(groups: [...groupsSansObjective, groupToAdd]);
   }
 
   // Replace the `existingGroup` in place with the `raplacementGroup`
-  void replaceGroup({
+  void moveObjectiveFromExistingGroup({
     @required RubricGroup existingGroup,
     @required RubricGroup replacementGroup,
-    Objective objectiveToMoveBetweenGroups,
+    @required Objective objective,
   }) {
     final groupsSansObjective = _removeObjectiveFromGroups(
-      objectiveToMoveBetweenGroups,
+      objective,
     );
     final indexOfGroup = groupsSansObjective.indexOf(existingGroup);
     final replacementGroups = List<RubricGroup>.from(groupsSansObjective)
