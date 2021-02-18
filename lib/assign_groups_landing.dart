@@ -259,9 +259,16 @@ class AssignGroupsLanding extends ConsumerWidget {
   }) {
     return (value) {
       final objectives = [value];
-      final group =
-          RubricGroup(title: 'Group $nextGroupNumber', objectives: objectives);
-      context.read(rubricProviderRef).addGroup(group: group, objective: value);
+      final group = RubricGroup(
+        title: 'Group $nextGroupNumber',
+        objectives: objectives,
+      );
+      final state = context.read(rubricProviderRef);
+
+      state.addGroup(
+        groupToAdd: group,
+        objectiveToAdd: value,
+      );
     };
   }
 
@@ -272,11 +279,13 @@ class AssignGroupsLanding extends ConsumerWidget {
     return (value) {
       final objectives = [...existingGroup.objectives, value];
       final group = existingGroup.copyWith(objectives: objectives);
+      final state = context.read(rubricProviderRef);
 
-      context.read(rubricProviderRef).replaceGroup(
-            groupToReplace: existingGroup,
-            replacementGroup: group,
-          );
+      state.replaceGroup(
+        existingGroup: existingGroup,
+        replacementGroup: group,
+        objectiveToMoveBetweenGroups: value,
+      );
     };
   }
 
