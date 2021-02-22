@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/components/next_button.dart';
 import 'package:rubric/components/rubric_card.dart';
 import 'package:rubric/components/rubric_text_field.dart';
 import 'package:rubric/domain/rubric.dart';
@@ -16,11 +17,14 @@ import 'package:rubric/list_extensions.dart';
 import 'package:flow_builder/flow_builder.dart';
 
 class AssignGroupsLanding extends ConsumerWidget {
+  get shouldShowNextButton => null;
+
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final rubricInstance = watch(rubricProviderRef.state);
     final flowController = context.flow<OnboardingFlow>();
     final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+    // final shouldShowNextButton = rubric.group.length >= 2; //trying to figure this out
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -76,6 +80,14 @@ class AssignGroupsLanding extends ConsumerWidget {
               ),
           ],
         ),
+        // Ternary Operator: basically an if/else statement
+        floatingActionButton: NextButton(onTap: () {
+          flowController.update((_) => OnboardingFlow
+              .assignWeights); //assigned to route to assignWeights
+        }),
+
+        // WIP: Only want to show NextButton once all objectives are dragged
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
@@ -327,6 +339,5 @@ class AssignGroupsLanding extends ConsumerWidget {
 //ToDo:
 // - Add in the next button if there are no more objectives in bottom container
 // - Sync group title with text field value
-// - Fix bug: why objectives, when dragged, are duplciating (hard to do)
 // - Look into fixing dead space at bottom
 // - Add a back button? Maybe, test this idea...
