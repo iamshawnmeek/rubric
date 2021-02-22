@@ -94,7 +94,7 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
-  //2.22: Remove empty groups when all objectives are dragged, look in rubric_state
+  //2.22.21: Remove empty groups when all objectives are dragged, look in rubric_state
 
   Widget _buildBottomSheet({
     @required FlowController<OnboardingFlow> flowController,
