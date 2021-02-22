@@ -7,7 +7,8 @@ import 'package:rubric/enums.dart';
 class AssignWeights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FlowController<OnboardingFlow> flowController;
+    final flowController = context.flow<OnboardingFlow>();
+
     return GestureDetector(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -31,7 +32,7 @@ class AssignWeights extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: GestureDetector(
           onTap: () => flowController.update(
-            (_) => OnboardingFlow.assignGroups, //WIP: How to go back?
+            (_) => OnboardingFlow.assignGroups,
           ),
           child: FaIcon(
             FontAwesomeIcons.chevronLeft,
