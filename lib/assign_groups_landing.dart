@@ -17,14 +17,12 @@ import 'package:rubric/list_extensions.dart';
 import 'package:flow_builder/flow_builder.dart';
 
 class AssignGroupsLanding extends ConsumerWidget {
-  get shouldShowNextButton => null;
-
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final rubricInstance = watch(rubricProviderRef.state);
     final flowController = context.flow<OnboardingFlow>();
     final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
-    // final shouldShowNextButton = rubric.group.length >= 2; //trying to figure this out
+    final bottomSheetObjectives = _buildBottomSheetObjectives(rubricInstance);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -75,18 +73,21 @@ class AssignGroupsLanding extends ConsumerWidget {
                     flowController: flowController,
                     rubric: rubricInstance,
                     context: context,
+                    bottomSheetObjectives: bottomSheetObjectives,
                   ),
                 ),
               ),
           ],
         ),
         // Ternary Operator: basically an if/else statement
-        floatingActionButton: NextButton(onTap: () {
-          flowController.update((_) => OnboardingFlow
-              .assignWeights); //assigned to route to assignWeights
-        }),
-
         // WIP: Only want to show NextButton once all objectives are dragged
+        floatingActionButton: bottomSheetObjectives.isEmpty
+            ? NextButton(onTap: () {
+                flowController.update((_) => OnboardingFlow
+                    .assignWeights); //assigned to route to assignWeights
+              })
+            : SizedBox(),
+
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
@@ -96,9 +97,8 @@ class AssignGroupsLanding extends ConsumerWidget {
     @required FlowController<OnboardingFlow> flowController,
     @required Rubric rubric,
     @required BuildContext context,
+    @required List<Objective> bottomSheetObjectives,
   }) {
-    final bottomSheetObjectives = _buildBottomSheetObjectives(rubric);
-
     return bottomSheetObjectives.isEmpty
         ? SizedBox()
         : Container(
