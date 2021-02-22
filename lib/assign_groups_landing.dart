@@ -56,8 +56,10 @@ class AssignGroupsLanding extends ConsumerWidget {
                             : 'Add New Group',
                       ),
                       SizedBox(
-                        height: (MediaQuery.of(context).size.height * .45) +
-                            MediaQuery.of(context).padding.bottom,
+                        height: bottomSheetObjectives.isEmpty
+                            ? 110
+                            : (MediaQuery.of(context).size.height * .45) +
+                                MediaQuery.of(context).padding.bottom,
                       )
                     ],
                   ),
@@ -80,7 +82,6 @@ class AssignGroupsLanding extends ConsumerWidget {
           ],
         ),
         // Ternary Operator: basically an if/else statement
-        // WIP: Only want to show NextButton once all objectives are dragged
         floatingActionButton: bottomSheetObjectives.isEmpty
             ? NextButton(onTap: () {
                 flowController.update((_) => OnboardingFlow
@@ -92,6 +93,8 @@ class AssignGroupsLanding extends ConsumerWidget {
       ),
     );
   }
+
+  //2.22: Remove empty groups when all objectives are dragged, look in rubric_state
 
   Widget _buildBottomSheet({
     @required FlowController<OnboardingFlow> flowController,
