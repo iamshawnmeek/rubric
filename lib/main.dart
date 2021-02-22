@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/all.dart';
 import 'package:rubric/assign_groups_landing.dart';
+import 'package:rubric/assign_weights.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/enums.dart';
 import 'package:rubric/fade_in_page.dart';
@@ -69,6 +70,8 @@ class _MyAppState extends State<MyApp> {
               ),
             if (bodyContent == OnboardingFlow.assignGroups)
               FadeInPage(child: AssignGroupsLanding()),
+            if (bodyContent == OnboardingFlow.assignWeights)
+              FadeInPage(child: AssignWeights()),
           ];
         },
       ),
