@@ -1,1 +1,1 @@
-enum OnboardingFlow { landing, gradingObjectives, assignGroups }
+enum OnboardingFlow { landing, gradingObjectives, assignGroups, assignWeights }
