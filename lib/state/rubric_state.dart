@@ -24,7 +24,7 @@ class RubricState extends StateNotifier<Rubric> {
     state = state.copyWith(groups: [...groupsSansObjective, groupToAdd]);
   }
 
-  // Replace the `existingGroup` in place with the `raplacementGroup`
+  // Replace the `existingGroup` in place with the `replacementGroup`
   void moveObjectiveFromExistingGroup({
     @required RubricGroup existingGroup,
     @required RubricGroup replacementGroup,
