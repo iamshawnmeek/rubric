@@ -84,8 +84,7 @@ class AssignGroupsLanding extends ConsumerWidget {
         // Ternary Operator: basically an if/else statement
         floatingActionButton: bottomSheetObjectives.isEmpty
             ? NextButton(onTap: () {
-                flowController.update((_) => OnboardingFlow
-                    .assignWeights); //assigned to route to assignWeights
+                flowController.update((_) => OnboardingFlow.assignWeights);
               })
             : SizedBox(),
 
@@ -340,7 +339,4 @@ class AssignGroupsLanding extends ConsumerWidget {
 }
 
 //ToDo:
-// - Add in the next button if there are no more objectives in bottom container
 // - Sync group title with text field value
-// - Look into fixing dead space at bottom
-// - Add a back button? Maybe, test this idea...
