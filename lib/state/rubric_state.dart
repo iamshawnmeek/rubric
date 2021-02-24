@@ -37,8 +37,13 @@ class RubricState extends StateNotifier<Rubric> {
     final replacementGroups = List<RubricGroup>.from(groupsSansObjective)
       ..removeAt(indexOfGroup)
       ..insert(indexOfGroup, replacementGroup);
+    final replacementGroupsSansEmpty = _removeEmptyGroups(replacementGroups);
 
-    state = state.copyWith(groups: replacementGroups);
+    state = state.copyWith(groups: replacementGroupsSansEmpty);
+  }
+
+  List<RubricGroup> _removeEmptyGroups(List<RubricGroup> groups) {
+    return groups.where((group) => group.objectives.isNotEmpty).toList();
   }
 
   List<RubricGroup> _removeObjectiveFromGroups(Objective objective) {
