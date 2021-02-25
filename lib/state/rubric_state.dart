@@ -20,9 +20,11 @@ class RubricState extends StateNotifier<Rubric> {
     @required Objective objective,
   }) {
     final groupsSansObjective = _removeObjectiveFromGroups(objective);
+    final replacementGroups = _removeEmptyGroups(groupsSansObjective); //2.24.21
 
-    state = state.copyWith(groups: [...groupsSansObjective, groupToAdd]);
+    state = state.copyWith(groups: [...replacementGroups, groupToAdd]);
   }
+  // 2.24.21: End: Auto increment group names correctly when dragging objectives to New Group
 
   // Replace the `existingGroup` in place with the `replacementGroup`
   void moveObjectiveFromExistingGroup({
