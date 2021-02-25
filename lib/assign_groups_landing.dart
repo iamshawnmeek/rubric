@@ -93,8 +93,6 @@ class AssignGroupsLanding extends ConsumerWidget {
     );
   }
 
-  //2.22.21: Remove empty groups when all objectives are dragged, look in rubric_state
-
   Widget _buildBottomSheet({
     @required FlowController<OnboardingFlow> flowController,
     @required Rubric rubric,
@@ -340,3 +338,4 @@ class AssignGroupsLanding extends ConsumerWidget {
 
 //ToDo:
 // - Sync group title with text field value
+// - For 2.25: Get actual Group Names to sync up with Draggable Area Group Name
