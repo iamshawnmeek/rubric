@@ -14,6 +14,19 @@ class RubricState extends StateNotifier<Rubric> {
     state = state.copyWith(objectives: [...state.objectives, objective]);
   }
 
+  void updateTitleForGroup({
+    @required RubricGroup existingGroup,
+    @required String title,
+  }) {
+    final replacementGroup = existingGroup.copyWith(title: title);
+    final indexOfGroup = state.groups.indexOf(existingGroup);
+    final replacementGroups = List<RubricGroup>.from(state.groups)
+      ..removeAt(indexOfGroup)
+      ..insert(indexOfGroup, replacementGroup);
+
+    state = state.copyWith(groups: replacementGroups);
+  }
+
   /// Add a `group` containing zero or more objectives from [Rubric.objectives]
   void addOrMoveObjectiveToNewGroup({
     @required RubricGroup groupToAdd,

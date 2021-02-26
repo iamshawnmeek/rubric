@@ -167,13 +167,21 @@ class AssignGroupsLanding extends ConsumerWidget {
     @required Rubric rubric,
     @required BuildContext context,
   }) {
+    final state = context.read(rubricProviderRef);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: rubric.groups.mapWithIndex(
         (i, group) {
           return Column(
             children: [
-              RubricTextField(onChanged: (_) {}, hintText: group.title),
+              RubricTextField(
+                hintText: group.title,
+                onEditingComplete: (value) {
+                  // SHAWN!!
+                  state.updateTitleForGroup(existingGroup: group, title: value);
+                },
+              ),
               SizedBox(height: 24),
               ..._buildGroupObjectives(
                 rubricObjectives: rubric.objectives,
