@@ -345,5 +345,4 @@ class AssignGroupsLanding extends ConsumerWidget {
 }
 
 //ToDo:
-// - Sync group title with text field value
-// - For 2.25: Get actual Group Names to sync up with Draggable Area Group Name
+// -Update the padding on Drag Target title update if user inputs too long of a text entry
