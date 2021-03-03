@@ -253,6 +253,7 @@ class AssignGroupsLanding extends ConsumerWidget {
           radius: Radius.circular(12),
           child: Container(
             height: 85,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: Center(child: BodyPlaceholder(text, color: lightGray)),
           ),

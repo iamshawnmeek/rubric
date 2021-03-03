@@ -18,6 +18,7 @@ class BodyPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       data,
+      overflow: TextOverflow.ellipsis,
       style: textStyle.copyWith(
         color: color ?? textStyle.color,
       ),
