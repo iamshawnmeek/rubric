@@ -1,45 +1,69 @@
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rubric/components/colors.dart';
-import 'package:rubric/enums.dart';
+import 'package:rubric/typography/body_one.dart';
+import 'package:rubric/typography/headline_one.dart';
 
 class AssignWeights extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final flowController = context.flow<OnboardingFlow>();
-
     return GestureDetector(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: SafeArea(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0), //placeholder
-              child: _buildBackChevron(flowController),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 36),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: HeadlineOne('Assign Weights'),
+                ),
+                SizedBox(height: 24),
+                Expanded(
+                  child: LayoutBuilder(
+                    // study layout builder this later
+                    builder: (context, constraints) {
+                      final height =
+                          constraints.maxHeight; //dynamic to user screen height
+
+                      return Container(
+                        child: Column(
+                          children: [
+                            WeightSlider(data: 'Process: 33%'),
+                            WeightSlider(data: 'Realization: 33%'),
+                            WeightSlider(data: 'Experimentation: 33%')
+                          ],
+                        ),
+                        decoration: BoxDecoration(
+                          color: primaryCard,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 24),
+              ],
             ),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildBackChevron(FlowController<OnboardingFlow> flowController) {
-    return SizedBox(
-      height: 52,
-      width: 44,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: GestureDetector(
-          onTap: () => flowController.update(
-            (_) => OnboardingFlow.assignGroups,
-          ),
-          child: FaIcon(
-            FontAwesomeIcons.chevronLeft,
-            color: primaryLightest,
-          ),
-        ),
-      ),
-    );
+class WeightSlider extends StatelessWidget {
+  final String data;
+
+  const WeightSlider({
+    @required
+        this.data, //study: constructor argument, populating value on ln 56
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BodyOne(data, fontSize: 24);
   }
 }
