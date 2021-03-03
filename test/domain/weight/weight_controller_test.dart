@@ -239,7 +239,7 @@ void main() {
       });
 
       group('middle slider', () {
-        test('should reduce region1 and increase region2', () {
+        test('should reduce region2 and increase region3', () {
           final regionNames = <String>[
             'region0',
             'region1',
@@ -274,7 +274,7 @@ void main() {
           );
         });
 
-        test('should increase region1 and reduce region2', () {
+        test('should increase region2 and reduce region3', () {
           final regionNames = <String>[
             'region0',
             'region1',
@@ -311,7 +311,7 @@ void main() {
       });
 
       group('last slider', () {
-        test('should reduce region1 and increase region2', () {
+        test('should reduce region3 and increase region4', () {
           final regionNames = <String>[
             'region0',
             'region1',
@@ -337,16 +337,16 @@ void main() {
             getSliderRef: () => controller[sliderIndex],
             makeAssertions: (adjustedRef) {
               final adjustedSlider = adjustedRef.content;
-              final region1 = adjustedSlider.regionBefore;
-              final region2 = adjustedSlider.regionAfter;
+              final region3 = adjustedSlider.regionBefore;
+              final region4 = adjustedSlider.regionAfter;
 
-              expect(region1.weight, initialWeight - 15);
-              expect(region2.weight, initialWeight + 15);
+              expect(region3.weight, initialWeight - 15);
+              expect(region4.weight, initialWeight + 15);
             },
           );
         });
 
-        test('should increase region1 and reduce region2', () {
+        test('should increase region3 and reduce region4', () {
           final regionNames = <String>[
             'region0',
             'region1',
@@ -372,10 +372,10 @@ void main() {
             getSliderRef: () => controller[sliderIndex],
             makeAssertions: (adjustedRef) {
               final adjustedSlider = adjustedRef.content;
-              final region1 = adjustedSlider.regionBefore;
+              final region4 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
-              expect(region1.weight, initialWeight + 15);
+              expect(region4.weight, initialWeight + 15);
               expect(region2.weight, initialWeight - 15);
             },
           );

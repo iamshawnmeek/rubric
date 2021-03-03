@@ -10,7 +10,7 @@ void main() {
 
       final model = GroupViewModel(controller: controller);
 
-      final result = model.mapController<int>(
+      final result = model.mapController(
         fromSlider: (slider) => slider.hashCode,
         fromGroup: (group) => group.hashCode,
       );
