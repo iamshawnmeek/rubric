@@ -19,16 +19,16 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=2.0.0 < 3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^0.19.1
-  double_linked_list: ^1.0.8
+  double_linked_list: ^1.0.8 # Used for weight calculations on assign_weights
   font_awesome_flutter: ^8.11.0
   flutter_riverpod: ^0.13.0 # State management / Dependency Injection (for testing)
   flow_builder: ^0.0.1-dev.11 # Navigation
-  dotted_line: ^2.0.2
   dotted_border: ^1.0.7
 
 
