@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'colors.dart';
+import 'package:rubric/components/colors.dart';
 
 class RubricLogo extends StatelessWidget {
   const RubricLogo({

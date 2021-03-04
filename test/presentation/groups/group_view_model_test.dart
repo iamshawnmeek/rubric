@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:rubric/domain/weight/weight_controller.dart';
 import 'package:rubric/presentation/groups/group_view_model.dart';
 

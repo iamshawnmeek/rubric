@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:rubric/colors.dart';
-import 'package:rubric/onboard.dart';
+import 'package:flow_builder/flow_builder.dart';
+
+import 'package:rubric/components/colors.dart';
+import 'package:rubric/onboarding_bottom_sheet.dart';
 import 'package:rubric/rubric_logo.dart';
 
 class Landing extends StatelessWidget {
+  final FlowController flowController;
+
+  Landing({Key key, @required this.flowController}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height; //MQ Wow
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -19,7 +25,9 @@ class Landing extends StatelessWidget {
           showModalBottomSheet(
             isScrollControlled: true,
             context: context,
-            builder: (context) => Onboard(),
+            builder: (context) => OnboardingBottomSheet(
+              flowController: flowController,
+            ),
           );
         },
       ),

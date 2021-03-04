@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:rubric/colors.dart';
+import 'package:flow_builder/flow_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:rubric/assign_groups_landing.dart';
+import 'package:rubric/assign_weights.dart';
+import 'package:rubric/components/colors.dart';
+import 'package:rubric/enums.dart';
+import 'package:rubric/fade_in_page.dart';
+import 'package:rubric/grading_objectives_landing.dart';
 import 'package:rubric/landing.dart';
 
 void main() {
@@ -12,10 +20,33 @@ void main() {
       statusBarBrightness: Brightness.dark,
     ),
   );
-  runApp(MyApp());
+  runApp(
+    ProviderScope(child: MyApp()),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  FlowController flowController;
+
+  @override
+  void initState() {
+    super.initState();
+    flowController = FlowController<OnboardingFlow>(
+      OnboardingFlow.assignWeights, //landing
+    );
+  }
+
+  @override
+  void dispose() {
+    flowController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +63,23 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Landing(),
+      home: FlowBuilder<OnboardingFlow>(
+        controller: flowController,
+        onGeneratePages: (bodyContent, pages) {
+          return [
+            if (bodyContent == OnboardingFlow.landing)
+              FadeInPage(child: Landing(flowController: flowController)),
+            if (bodyContent == OnboardingFlow.gradingObjectives)
+              FadeInPage(
+                child: GradingObjectivesLanding(flowController: flowController),
+              ),
+            if (bodyContent == OnboardingFlow.assignGroups)
+              FadeInPage(child: AssignGroupsLanding()),
+            if (bodyContent == OnboardingFlow.assignWeights)
+              FadeInPage(child: AssignWeights()),
+          ];
+        },
+      ),
     );
   }
 }

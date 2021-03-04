@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:rubric/domain/weight/rubric_group.dart';
 import 'package:rubric/domain/weight/slider.dart';
-
 import 'package:rubric/domain/weight/weight_controller.dart';
 
 class GroupViewModel {
