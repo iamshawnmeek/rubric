@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:rubric/domain/weight/rubric_group.dart';
+import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 
 void main() {
@@ -10,11 +10,11 @@ void main() {
 
     setUp(() {
       slider = Slider(
-        regionBefore: RubricGroup(
+        regionBefore: RubricRegion(
           title: 'region1',
           weight: weight,
         ),
-        regionAfter: RubricGroup(
+        regionAfter: RubricRegion(
           title: 'region2',
           weight: weight,
         ),
@@ -48,11 +48,11 @@ void main() {
 
     setUp(() {
       slider = Slider(
-        regionBefore: RubricGroup(
+        regionBefore: RubricRegion(
           title: 'region1',
           weight: weight,
         ),
-        regionAfter: RubricGroup(
+        regionAfter: RubricRegion(
           title: 'region2',
           weight: weight,
         ),

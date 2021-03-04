@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-class RubricGroup extends ChangeNotifier {
-  /// The group name
+class RubricRegion extends ChangeNotifier {
+  /// The region name
   final String title;
 
   /// A private value used to track the locked state
   bool _isLockedBacking = false;
 
-  /// The percentage this group is worth in the overall grade
+  /// The percentage this region is worth in the overall grade
   double _weightBacking = 0.0;
 
   bool get isLocked => _isLockedBacking;
@@ -27,7 +27,7 @@ class RubricGroup extends ChangeNotifier {
     }
   }
 
-  RubricGroup({
+  RubricRegion({
     @required this.title,
     @required double weight,
   }) : _weightBacking = weight;

@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:rubric/domain/weight/rubric_group.dart';
+import 'package:rubric/domain/weight/rubric_region.dart';
 
 enum Direction { up, down, undetermined }
 
 class Slider {
-  final RubricGroup regionBefore;
-  final RubricGroup regionAfter;
+  final RubricRegion regionBefore;
+  final RubricRegion regionAfter;
   ScrollPosition _current;
   ScrollPosition _previous;
 
@@ -43,7 +43,7 @@ class Slider {
     }
   }
 
-  /// Adjust the previous and next group values based on the location offset
+  /// Adjust the previous and next region values based on the location offset
   void _setGroupValues(ScrollDelta delta) {
     switch (delta.direction) {
       case Direction.up:

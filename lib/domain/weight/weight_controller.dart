@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:double_linked_list/double_linked_list.dart';
 
-import 'package:rubric/domain/weight/rubric_group.dart';
+import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 
 class WeightController extends DoubleLinkedList<Slider> {
@@ -20,7 +20,7 @@ class WeightController extends DoubleLinkedList<Slider> {
     return node;
   }
 
-  List<RubricGroup> getRegions() => toList()
+  List<RubricRegion> getRegions() => toList()
       .expand(
         (e) => [
           e.regionBefore,
@@ -62,54 +62,54 @@ class WeightController extends DoubleLinkedList<Slider> {
   Slider _getNonLockedSlider({
     @required Node<Slider> currentRef,
     @required Node<Slider> getSliderRef(Node<Slider> ref),
-    @required RubricGroup getRegion(Slider slider),
+    @required RubricRegion getRegion(Slider slider),
   }) {
     Node<Slider> pointer = currentRef;
 
     bool atEnd() => pointer.isBegin || pointer.isEnd;
-    bool groupIsLocked() => getRegion(pointer.content).isLocked;
+    bool regionIsLocked() => getRegion(pointer.content).isLocked;
 
-    while (!atEnd() && groupIsLocked()) {
+    while (!atEnd() && regionIsLocked()) {
       pointer = getSliderRef(pointer);
     }
 
     return atEnd() ? null : pointer.content;
   }
 
-  static WeightController fromNames(List<String> groupNames) {
+  static WeightController fromNames(List<String> regionNames) {
     const maxValue = 100;
-    final initialWeight = maxValue / groupNames.length;
-    final rubricGroups = groupNames
+    final initialWeight = maxValue / regionNames.length;
+    final rubricGroups = regionNames
         .map(
-          (groupName) => RubricGroup(
-            title: groupName,
+          (regionName) => RubricRegion(
+            title: regionName,
             weight: initialWeight,
           ),
         )
         .toList();
 
     final sliders = _buildSliders(
-      groups: rubricGroups,
-      groupWeight: initialWeight,
+      regions: rubricGroups,
+      regionWeight: initialWeight,
     );
 
     return WeightController.fromIterable(sliders);
   }
 
   static List<Slider> _buildSliders({
-    @required List<RubricGroup> groups,
-    @required double groupWeight,
+    @required List<RubricRegion> regions,
+    @required double regionWeight,
   }) {
     var sliders = <Slider>[];
 
-    groups.fold(null, (previous, current) {
+    regions.fold(null, (previous, current) {
       final sliderIndex = sliders.length + 1;
 
       if (previous != null) {
         final slider = Slider(
           regionAfter: current,
           regionBefore: previous,
-          initial: ScrollPosition(groupWeight * sliderIndex),
+          initial: ScrollPosition(regionWeight * sliderIndex),
         );
 
         sliders.add(slider);
