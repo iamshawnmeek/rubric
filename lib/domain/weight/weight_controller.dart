@@ -37,17 +37,8 @@ class WeightController extends DoubleLinkedList<Slider> {
       regionWeight: initialWeight,
     );
 
-    final controller = WeightController.fromIterable(sliders);
-
-    // TODO: Test the weight controller to verify the node is being set properly
-    controller.forEach((slider) {
-      final node = controller.firstWhere((s) => s == slider);
-      slider = slider.copyWith(node);
-    });
-
-    return controller;
+    return WeightController.fromIterable(sliders);
   }
-
   List<RubricRegion> getRegions() => toList()
       .expand(
         (e) => [
