@@ -13,7 +13,7 @@ void main() {
 
       final result = model.mapController(
         fromSlider: (slider) => slider.hashCode,
-        fromGroup: (region) => region.hashCode,
+        fromRegion: (region) => region.hashCode,
       );
 
       expect(result.length, 7);

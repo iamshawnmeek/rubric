@@ -79,7 +79,7 @@ class WeightController extends DoubleLinkedList<Slider> {
   static WeightController fromNames(List<String> regionNames) {
     const maxValue = 100;
     final initialWeight = maxValue / regionNames.length;
-    final rubricGroups = regionNames
+    final rubricRegions = regionNames
         .map(
           (regionName) => RubricRegion(
             title: regionName,
@@ -89,7 +89,7 @@ class WeightController extends DoubleLinkedList<Slider> {
         .toList();
 
     final sliders = _buildSliders(
-      regions: rubricGroups,
+      regions: rubricRegions,
       regionWeight: initialWeight,
     );
 

@@ -16,7 +16,7 @@ class RegionViewModel {
   /// method of a [StatelessWidget] or [StatefullWidget]
   List<T> mapController<T>({
     @required T fromSlider(Slider slider),
-    @required T fromGroup(RubricRegion slider),
+    @required T fromRegion(RubricRegion slider),
   }) {
     final sliders = controller.toList();
     final regions = controller.getRegions();
@@ -26,12 +26,12 @@ class RegionViewModel {
       final sliderExists = sliders.length >= index + 1;
       if (sliderExists) {
         final slider = sliders[index];
-        final result = [fromGroup(region), fromSlider(slider)];
+        final result = [fromRegion(region), fromSlider(slider)];
         index++;
         return result;
       }
       index++;
-      return [fromGroup(region)];
+      return [fromRegion(region)];
     }).expand((e) => e));
   }
 }
