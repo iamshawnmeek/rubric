@@ -50,6 +50,7 @@ class WeightController extends DoubleLinkedList<Slider> {
       .toList();
 
   void moveSlider({
+    // TODO: Require a slider and get the node from inside of this method
     @required Node<Slider> sliderRef,
     @required ScrollPosition scrollPosition,
   }) {
