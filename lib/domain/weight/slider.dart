@@ -24,7 +24,7 @@ class Slider {
 
   void handleAdjustment(ScrollDelta scrollDelta) {
     _setScrollPosition(scrollDelta);
-    _setGroupValues(scrollDelta);
+    _setRegionValues(scrollDelta);
   }
 
   /// Cache the current location as the previous location and adjust the current
@@ -44,7 +44,7 @@ class Slider {
   }
 
   /// Adjust the previous and next region values based on the location offset
-  void _setGroupValues(ScrollDelta delta) {
+  void _setRegionValues(ScrollDelta delta) {
     switch (delta.direction) {
       case Direction.up:
         if (delta.value <= regionBefore.weight) {
