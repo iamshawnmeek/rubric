@@ -20,6 +20,34 @@ class WeightController extends DoubleLinkedList<Slider> {
     return node;
   }
 
+  factory WeightController.fromNames(List<String> regionNames) {
+    const maxValue = 100;
+    final initialWeight = maxValue / regionNames.length;
+    final rubricRegions = regionNames
+        .map(
+          (regionName) => RubricRegion(
+            title: regionName,
+            weight: initialWeight,
+          ),
+        )
+        .toList();
+
+    final sliders = _buildSliders(
+      regions: rubricRegions,
+      regionWeight: initialWeight,
+    );
+
+    final controller = WeightController.fromIterable(sliders);
+
+    // TODO: Test the weight controller to verify the node is being set properly
+    controller.forEach((slider) {
+      final node = controller.firstWhere((s) => s == slider);
+      slider = slider.copyWith(node);
+    });
+
+    return controller;
+  }
+
   List<RubricRegion> getRegions() => toList()
       .expand(
         (e) => [
@@ -74,26 +102,6 @@ class WeightController extends DoubleLinkedList<Slider> {
     }
 
     return atEnd() ? null : pointer.content;
-  }
-
-  static WeightController fromNames(List<String> regionNames) {
-    const maxValue = 100;
-    final initialWeight = maxValue / regionNames.length;
-    final rubricRegions = regionNames
-        .map(
-          (regionName) => RubricRegion(
-            title: regionName,
-            weight: initialWeight,
-          ),
-        )
-        .toList();
-
-    final sliders = _buildSliders(
-      regions: rubricRegions,
-      regionWeight: initialWeight,
-    );
-
-    return WeightController.fromIterable(sliders);
   }
 
   static List<Slider> _buildSliders({

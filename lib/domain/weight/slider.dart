@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'package:double_linked_list/double_linked_list.dart';
+
 import 'package:rubric/domain/weight/rubric_region.dart';
 
 enum Direction { up, down, undetermined }
@@ -7,6 +9,7 @@ enum Direction { up, down, undetermined }
 class Slider {
   final RubricRegion regionBefore;
   final RubricRegion regionAfter;
+  final Node<Slider> node;
   ScrollPosition _current;
   ScrollPosition _previous;
 
@@ -17,7 +20,17 @@ class Slider {
     @required this.regionBefore,
     @required this.regionAfter,
     @required ScrollPosition initial,
+    this.node,
   }) : _current = initial;
+
+  Slider copyWith(Node<Slider> node) {
+    return Slider(
+      regionBefore: regionBefore,
+      regionAfter: regionAfter,
+      initial: _current,
+      node: node,
+    );
+  }
 
   ScrollDelta getScrollDelta(ScrollPosition scrollPosition) =>
       ScrollDelta.fromPositions(previous: _current, next: scrollPosition);

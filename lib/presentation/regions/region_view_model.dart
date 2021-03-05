@@ -15,8 +15,8 @@ class RegionViewModel {
   /// Normally used to build a list of [Widget]s to be used inside of the [build]
   /// method of a [StatelessWidget] or [StatefullWidget]
   List<T> mapController<T>({
-    @required T fromSlider(Slider slider),
-    @required T fromRegion(RubricRegion slider),
+    @required T Function(Slider slider) sliderBuilder,
+    @required T Function(RubricRegion region) regionBuilder,
   }) {
     final sliders = controller.toList();
     final regions = controller.getRegions();
@@ -26,12 +26,12 @@ class RegionViewModel {
       final sliderExists = sliders.length >= index + 1;
       if (sliderExists) {
         final slider = sliders[index];
-        final result = [fromRegion(region), fromSlider(slider)];
+        final result = [regionBuilder(region), sliderBuilder(slider)];
         index++;
         return result;
       }
       index++;
-      return [fromRegion(region)];
+      return [regionBuilder(region)];
     }).expand((e) => e));
   }
 }

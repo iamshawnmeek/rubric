@@ -12,8 +12,8 @@ void main() {
       final model = RegionViewModel(controller: controller);
 
       final result = model.mapController(
-        fromSlider: (slider) => slider.hashCode,
-        fromRegion: (region) => region.hashCode,
+        sliderBuilder: (slider) => slider.hashCode,
+        regionBuilder: (region) => region.hashCode,
       );
 
       expect(result.length, 7);
