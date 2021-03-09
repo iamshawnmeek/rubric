@@ -10,7 +10,7 @@ class WeightController extends DoubleLinkedList<Slider> {
       : super.fromIterable(contents);
 
   /// Traverse to the node from the beginning until reaching the supplied index
-  operator [](int i) {
+  Node<Slider> operator [](int i) {
     Node<Slider> node = begin;
 
     for (int x = 0; x <= i; x++) {
@@ -50,10 +50,11 @@ class WeightController extends DoubleLinkedList<Slider> {
       .toList();
 
   void moveSlider({
-    // TODO: Require a slider and get the node from inside of this method
-    @required Node<Slider> sliderRef,
+    @required Slider slider,
     @required ScrollPosition scrollPosition,
   }) {
+    final sliderRef = this.firstWhere((e) => e == slider);
+
     final previousSlider = _getNonLockedSlider(
       currentRef: sliderRef,
       getSliderRef: (ref) => ref.previous,

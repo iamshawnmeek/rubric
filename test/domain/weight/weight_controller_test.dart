@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:double_linked_list/double_linked_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:rubric/domain/weight/rubric_region.dart';
@@ -117,20 +116,18 @@ void main() {
       @required WeightController controller,
       @required List<String> regionNames,
       @required ScrollPosition scrollPosition,
-      @required void makeAssertions(Node<Slider> slider),
-      @required Node<Slider> getSliderRef(),
+      @required void makeAssertions(Slider slider),
+      @required Slider slider,
       void lockRegions(Slider slider),
     }) {
-      final sliderRef = getSliderRef();
-
-      lockRegions?.call(sliderRef.content);
+      lockRegions?.call(slider);
 
       controller.moveSlider(
-        sliderRef: sliderRef,
+        slider: slider,
         scrollPosition: scrollPosition,
       );
 
-      makeAssertions(sliderRef);
+      makeAssertions(slider);
     }
 
     test('unless moving would be negative', () {
@@ -155,9 +152,8 @@ void main() {
         controller: controller,
         regionNames: regionNames,
         scrollPosition: adjustedPosition,
-        getSliderRef: () => controller[sliderIndex],
-        makeAssertions: (adjustedRef) {
-          final adjustedSlider = adjustedRef.content;
+        slider: controller[sliderIndex].content,
+        makeAssertions: (adjustedSlider) {
           final region1 = adjustedSlider.regionBefore;
           final region2 = adjustedSlider.regionAfter;
 
@@ -191,9 +187,8 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            slider: controller[sliderIndex].content,
+            makeAssertions: (adjustedSlider) {
               final region1 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
@@ -225,9 +220,8 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            slider: controller[sliderIndex].content,
+            makeAssertions: (adjustedSlider) {
               final region1 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
@@ -262,9 +256,8 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            slider: controller[sliderIndex].content,
+            makeAssertions: (adjustedSlider) {
               final region1 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
@@ -297,9 +290,8 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            slider: controller[sliderIndex].content,
+            makeAssertions: (adjustedSlider) {
               final region1 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
@@ -334,9 +326,8 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            slider: controller[sliderIndex].content,
+            makeAssertions: (adjustedSlider) {
               final region3 = adjustedSlider.regionBefore;
               final region4 = adjustedSlider.regionAfter;
 
@@ -369,9 +360,8 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            slider: controller[sliderIndex].content,
+            makeAssertions: (adjustedSlider) {
               final region4 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
@@ -407,14 +397,13 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller.first,
+            slider: controller.first.content,
             lockRegions: (slider) {
               final firstRegion = slider.regionBefore;
 
               firstRegion.lock();
             },
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            makeAssertions: (adjustedSlider) {
               final region1 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
@@ -447,14 +436,13 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
+            slider: controller[sliderIndex].content,
             lockRegions: (slider) {
               final lastRegion = slider.regionAfter;
 
               lastRegion.lock();
             },
-            makeAssertions: (adjustedRef) {
-              final adjustedSlider = adjustedRef.content;
+            makeAssertions: (adjustedSlider) {
               final region1 = adjustedSlider.regionBefore;
               final region2 = adjustedSlider.regionAfter;
 
@@ -496,22 +484,22 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
+            slider: controller[sliderIndex].content,
             lockRegions: (adjustedSlider) {
               final regionToLock = adjustedSlider.regionBefore;
 
               regionToLock.lock();
             },
-            makeAssertions: (slider2Ref) {
+            makeAssertions: (slider2) {
               // Slider 1
               // regionBefore: region1
               // regionAfter: region2
+              final slider2Ref = controller.firstWhere((e) => e == slider2);
               final slider1 = slider2Ref.previous.content;
               final region1 = slider1.regionBefore;
               // Slider 2
               // regionBefore: region2
               // regionAfter: region3
-              final slider2 = slider2Ref.content;
               final region2 = slider2.regionBefore;
               final region3 = slider2.regionAfter;
 
@@ -562,21 +550,21 @@ void main() {
             controller: controller,
             regionNames: regionNames,
             scrollPosition: adjustedPosition,
-            getSliderRef: () => controller[sliderIndex],
+            slider: controller[sliderIndex].content,
             lockRegions: (adjustedSlider) {
               final regionToLock = adjustedSlider.regionAfter;
 
               regionToLock.lock();
             },
-            makeAssertions: (slider2Ref) {
+            makeAssertions: (slider2) {
               // Slider 2
               // regionBefore: region2
               // regionAfter: region3
-              final slider2 = slider2Ref.content;
               final region2 = slider2.regionBefore;
               // Slider 3
               // regionBefore: region3
               // regionAfter: region4
+              final slider2Ref = controller.firstWhere((e) => e == slider2);
               final slider3 = slider2Ref.next.content;
               final region3 = slider3.regionBefore;
               final region4 = slider3.regionAfter;
