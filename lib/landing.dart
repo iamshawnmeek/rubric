@@ -1,7 +1,9 @@
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:flow_builder/flow_builder.dart';
+
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/components/rubric_logo.dart';
 import 'package:rubric/onboarding_bottom_sheet.dart';
 
 class Landing extends StatelessWidget {
@@ -34,21 +36,11 @@ class Landing extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: height * .3),
-            _logo(),
+            SizedBox(height: height * .3), //MQ Use
+            RubricLogo(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _logo() {
-    return SvgPicture.asset(
-      'assets/images/logo.svg',
-      color: primary,
-      semanticsLabel: 'rubric logo',
-      width: 295,
-      height: 89,
     );
   }
 }

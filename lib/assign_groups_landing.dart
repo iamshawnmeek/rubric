@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/components/next_button.dart';
 import 'package:rubric/components/rubric_card.dart';
 import 'package:rubric/components/rubric_text_field.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/enums.dart';
+import 'package:rubric/iterable_extensions.dart';
+import 'package:rubric/list_extensions.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'components/small_logo.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:rubric/iterable_extensions.dart';
-import 'package:rubric/list_extensions.dart';
-import 'package:flow_builder/flow_builder.dart';
 
 class AssignGroupsLanding extends ConsumerWidget {
   @override

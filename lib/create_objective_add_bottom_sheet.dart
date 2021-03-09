@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:rubric/components/colors.dart';
@@ -46,7 +47,7 @@ class _CreateObjectiveAddBottomSheetState
             bottom: 36 + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Stack(
-            overflow: Overflow.visible, // Show FAB outside of this
+            clipBehavior: Clip.none,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

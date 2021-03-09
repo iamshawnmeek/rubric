@@ -1,16 +1,18 @@
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flow_builder/flow_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:rubric/components/create_card.dart';
 import 'package:rubric/components/next_button.dart';
 import 'package:rubric/components/rubric_card.dart';
 import 'package:rubric/components/small_logo.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/enums.dart';
-import 'package:rubric/state/rubric_state.dart';
-import 'package:rubric/typography/headline_one.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/iterable_extensions.dart';
 import 'package:rubric/list_extensions.dart';
+import 'package:rubric/state/rubric_state.dart';
+import 'package:rubric/typography/headline_one.dart';
 
 class GradingObjectivesLanding extends ConsumerWidget {
   final FlowController flowController;

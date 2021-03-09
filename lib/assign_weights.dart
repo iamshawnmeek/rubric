@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';

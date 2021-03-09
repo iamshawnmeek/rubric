@@ -1,7 +1,9 @@
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/all.dart';
+
+import 'package:flow_builder/flow_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:rubric/assign_groups_landing.dart';
 import 'package:rubric/assign_weights.dart';
 import 'package:rubric/components/colors.dart';
@@ -52,6 +54,9 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         brightness: Brightness.dark,
         scaffoldBackgroundColor: secondary,

@@ -19,15 +19,16 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=2.0.0 < 3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^0.19.1  
+  flutter_svg: ^0.19.1
+  double_linked_list: ^1.0.8 # Used for weight calculations on assign_weights
   font_awesome_flutter: ^8.11.0
-  flutter_riverpod: ^0.12.1 # State management / Dependency Injection (for testing)
+  flutter_riverpod: ^0.13.0 # State management / Dependency Injection (for testing)
   flow_builder: ^0.0.1-dev.11 # Navigation
-  dotted_line: ^2.0.2
   dotted_border: ^1.0.7
 
 
@@ -39,6 +40,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  import_sorter: ^4.2.1
+
+import_sorter:
+  comments: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

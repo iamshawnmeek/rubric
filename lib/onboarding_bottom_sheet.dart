@@ -1,13 +1,15 @@
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flow_builder/flow_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:rubric/components/colors.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/enums.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/body_placeholder.dart';
-import 'package:rubric/components/colors.dart';
 import 'package:rubric/typography/headline_one.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardingBottomSheet extends StatefulWidget {
   final FlowController flowController;
@@ -50,7 +52,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
             bottom: 36 + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Stack(
-            overflow: Overflow.visible, // Show FAB outside of this
+            clipBehavior: Clip.none,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
