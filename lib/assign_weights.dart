@@ -34,13 +34,14 @@ class AssignWeights extends StatelessWidget {
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final height = constraints.maxHeight;
+                      final height = constraints.maxHeight; //here
 
                       return Container(
                         child: Column(
                           children: model.mapController(
                             sliderBuilder: _buildSlider,
-                            regionBuilder: _buildRegion,
+                            regionBuilder:
+                                _buildRegion(height), //want dynamic height for
                           ),
                         ),
                         decoration: BoxDecoration(
@@ -60,14 +61,17 @@ class AssignWeights extends StatelessWidget {
     );
   }
 
-  Widget _buildRegion(RubricRegion region) {
-    // TODO: get the height of the region area and divide by the region weight
-    return WeightSlider(data: region.title, height: region.weight);
+  Widget Function(RubricRegion) _buildRegion(double height) {
+    return (RubricRegion region) {
+      final regionHeight = height * (region.weight / 100);
+
+      return WeightSlider(data: region.title, height: regionHeight - 1);
+    };
   }
 
   Widget _buildSlider(Slider slider) {
     return Container(
-      height: 4,
+      height: 1, //interesting, since this is part of the overall region
       color: Colors.white,
     );
   }
