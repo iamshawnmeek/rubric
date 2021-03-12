@@ -64,8 +64,13 @@ class AssignWeights extends StatelessWidget {
   Widget Function(RubricRegion) _buildRegion(double height) {
     return (RubricRegion region) {
       final regionHeight = height * (region.weight / 100);
+      final percentage = region.weight.roundToDouble();
 
-      return WeightSlider(data: region.title, height: regionHeight - 1);
+      return WeightSlider(
+        data: region.title,
+        height: regionHeight - 1,
+        percentage: percentage,
+      );
     };
   }
 
@@ -80,18 +85,26 @@ class AssignWeights extends StatelessWidget {
 class WeightSlider extends StatelessWidget {
   final String data;
   final double height;
+  final double percentage;
 
   const WeightSlider({
     Key key,
     @required this.data,
     @required this.height,
+    @required this.percentage,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      child: Center(child: BodyOne(data, fontSize: 24)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BodyOne(data, fontSize: 24),
+          BodyOne(': ${percentage.toStringAsFixed(0)}%'),
+        ],
+      ),
     );
   }
 }
