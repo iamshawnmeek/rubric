@@ -39,9 +39,10 @@ class AssignWeights extends StatelessWidget {
                       return Container(
                         child: Column(
                           children: model.mapController(
-                            sliderBuilder: _buildSlider,
-                            regionBuilder:
-                                _buildRegion(height), //want dynamic height for
+                            sliderBuilder: (slider) {
+                              return WeightSlider(slider: slider);
+                            },
+                            regionBuilder: _buildRegion(height),
                           ),
                         ),
                         decoration: BoxDecoration(
@@ -66,28 +67,61 @@ class AssignWeights extends StatelessWidget {
       final regionHeight = height * (region.weight / 100);
       final percentage = region.weight.roundToDouble();
 
-      return WeightSlider(
+      return Region(
         data: region.title,
-        height: regionHeight - 1,
+        height: regionHeight - 10,
         percentage: percentage,
       );
     };
   }
+}
 
-  Widget _buildSlider(Slider slider) {
-    return Container(
-      height: 1, //interesting, since this is part of the overall region
-      color: Colors.white,
+class WeightSlider extends StatelessWidget {
+  const WeightSlider({
+    Key key,
+    @required this.slider,
+  }) : super(key: key);
+
+  final Slider slider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Stack(
+        children: [
+          Align(
+            child: Container(
+              height: 10,
+              width: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 4,
+            left: 0,
+            right: 0,
+            //Positioned widgets only work in a stack
+            child: Container(
+              height: 1, //interesting, since this is part of the overall region
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class WeightSlider extends StatelessWidget {
+class Region extends StatelessWidget {
   final String data;
   final double height;
   final double percentage;
 
-  const WeightSlider({
+  const Region({
     Key key,
     @required this.data,
     @required this.height,
