@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:rubric/assign_groups_landing.dart';
+import 'package:rubric/assign_weights_rev.dart';
 import 'package:rubric/assign_weights.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';
@@ -40,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     flowController = FlowController<OnboardingFlow>(
-      OnboardingFlow.landing, //assignWeights
+      OnboardingFlow.landing, //assignWeights, assignWeightsRev
     );
   }
 
@@ -79,7 +78,9 @@ class _MyAppState extends State<MyApp> {
             if (bodyContent == OnboardingFlow.assignGroups)
               FadeInPage(child: AssignGroupsLanding()),
             if (bodyContent == OnboardingFlow.assignWeights)
-              _buildAssignWeights()
+              _buildAssignWeights(),
+            if (bodyContent == OnboardingFlow.assignWeightsRev)
+              _buildAssignWeightsRev()
           ];
         },
       ),
@@ -100,5 +101,21 @@ class _MyAppState extends State<MyApp> {
     final viewModel = RegionViewModel(controller: controller);
 
     return FadeInPage(child: AssignWeights(model: viewModel));
+  }
+
+  FadeInPage _buildAssignWeightsRev() {
+    // get our state from riverpod
+    final rubric = context.read(rubricProviderRef.state);
+
+    // get all of the titles of the groups
+    final groupNames = rubric.groups.map((group) => group.title).toList();
+
+    // create a weight controller from the group names
+    final controller = WeightController.fromNames(groupNames);
+
+    // create a view model to handle the logic for our AssignWeights class
+    final viewModel = RegionViewModel(controller: controller);
+
+    return FadeInPage(child: AssignWeightsRev(model: viewModel));
   }
 }
