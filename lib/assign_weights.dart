@@ -130,6 +130,7 @@ class Region extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Building out a binary of height: small or large depending on region size needs
     return Container(
       height: height,
       child: Row(
