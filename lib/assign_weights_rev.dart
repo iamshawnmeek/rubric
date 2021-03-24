@@ -88,21 +88,11 @@ class WeightSlider extends StatelessWidget {
           Align(
             child: Container(
               height: 10,
-              width: 40,
+              width: 80,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+                color: primaryLighter,
               ),
-            ),
-          ),
-          Positioned(
-            top: 4,
-            left: 0,
-            right: 0,
-            //Positioned widgets only work in a stack
-            child: Container(
-              height: 1, //interesting, since this is part of the overall region
-              color: Colors.white,
             ),
           ),
         ],
