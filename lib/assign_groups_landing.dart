@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flow_builder/flow_builder.dart';
@@ -58,7 +60,11 @@ class AssignGroupsLanding extends ConsumerWidget {
                       SizedBox(
                         height: bottomSheetObjectives.isEmpty
                             ? 110
-                            : (MediaQuery.of(context).size.height * .45) +
+                            : min(
+                                  bottomSheetObjectives.length *
+                                      175, //numerical
+                                  MediaQuery.of(context).size.height * .45,
+                                ) +
                                 MediaQuery.of(context).padding.bottom,
                       )
                     ],
@@ -179,7 +185,6 @@ class AssignGroupsLanding extends ConsumerWidget {
               RubricTextField(
                 hintText: group.title,
                 onEditingComplete: (value) {
-                  // SHAWN!!
                   state.updateTitleForGroup(existingGroup: group, title: value);
                 },
               ),
