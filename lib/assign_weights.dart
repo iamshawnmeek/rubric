@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart' hide Slider;
-
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/presentation/regions/region_view_model.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
+import 'typography/body_weights.dart';
 
 class AssignWeights extends StatelessWidget {
   final RegionViewModel model;
@@ -45,15 +45,10 @@ class AssignWeights extends StatelessWidget {
                             regionBuilder: _buildRegion(height),
                           ),
                         ),
-                        decoration: BoxDecoration(
-                          color: primaryCard,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
                       );
                     },
                   ),
                 ),
-                SizedBox(height: 24),
               ],
             ),
           ),
@@ -69,7 +64,7 @@ class AssignWeights extends StatelessWidget {
 
       return Region(
         data: region.title,
-        height: regionHeight - 10,
+        height: regionHeight - 20,
         percentage: percentage,
       );
     };
@@ -87,27 +82,17 @@ class WeightSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Stack(
         children: [
           Align(
             child: Container(
               height: 10,
-              width: 40,
+              width: 80,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+                color: primaryLighter,
               ),
-            ),
-          ),
-          Positioned(
-            top: 4,
-            left: 0,
-            right: 0,
-            //Positioned widgets only work in a stack
-            child: Container(
-              height: 1, //interesting, since this is part of the overall region
-              color: Colors.white,
             ),
           ),
         ],
@@ -133,12 +118,19 @@ class Region extends StatelessWidget {
     //TODO: Building out a binary of height: small or large depending on region size needs
     return Container(
       height: height,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BodyOne(data, fontSize: 24),
-          BodyOne(': ${percentage.toStringAsFixed(0)}%'),
-        ],
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: primary,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        child: Stack(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BodyOne(data, fontSize: 21, color: primaryLighter),
+            Center(child: BodyOneWeights('${percentage.toStringAsFixed(0)}%')),
+          ],
+        ),
       ),
     );
   }
