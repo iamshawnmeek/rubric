@@ -3,5 +3,4 @@ enum OnboardingFlow {
   gradingObjectives,
   assignGroups,
   assignWeights,
-  assignWeightsRev,
 }
