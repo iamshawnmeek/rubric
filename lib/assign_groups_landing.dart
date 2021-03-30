@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flow_builder/flow_builder.dart';
@@ -90,8 +89,7 @@ class AssignGroupsLanding extends ConsumerWidget {
         // Ternary Operator: basically an if/else statement
         floatingActionButton: bottomSheetObjectives.isEmpty
             ? NextButton(onTap: () {
-                flowController.update(
-                    (_) => OnboardingFlow.assignWeightsRev); //assignWeights
+                flowController.update((_) => OnboardingFlow.assignWeights);
               })
             : SizedBox(),
 
