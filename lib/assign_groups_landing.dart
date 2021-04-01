@@ -56,16 +56,22 @@ class AssignGroupsLanding extends ConsumerWidget {
                             ? 'Drag objective here'
                             : 'Add New Group',
                       ),
-                      SizedBox(
-                        height: bottomSheetObjectives.isEmpty
-                            ? 110
-                            : min(
-                                  bottomSheetObjectives.length *
-                                      175, //numerical
-                                  MediaQuery.of(context).size.height * .45,
-                                ) +
-                                MediaQuery.of(context).padding.bottom,
-                      )
+                      if (MediaQuery.of(context).viewInsets.bottom == 0)
+                        SizedBox(
+                            height: bottomSheetObjectives.isEmpty
+                                ? 110
+                                : min(
+                                    (bottomSheetObjectives.length *
+                                            106.0) + //objecive height + padding
+                                        80 + //note: chevron total height
+                                        36, //note: bottom padding
+                                    MediaQuery.of(context).size.height * .45,
+                                  )
+
+                            //+MediaQuery.of(context).padding.bottom,
+                            )
+                      else
+                        SizedBox(height: 36),
                     ],
                   ),
                 ),
