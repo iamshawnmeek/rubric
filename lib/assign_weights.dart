@@ -32,36 +32,40 @@ class AssignWeights extends StatelessWidget {
                 ),
                 SizedBox(height: 24),
                 Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      const sliderHeight = 30.0;
-                      final height = constraints.maxHeight; //here
-                      final regionCount = model.controller.getRegions().length;
-                      final sliderCount = regionCount - 1;
-                      final sliderOffsetPerRegion =
-                          sliderCount * sliderHeight / regionCount;
-
-                      return Container(
-                        child: Column(
-                          children: model.mapController(
-                            sliderBuilder: (slider) {
-                              return WeightSlider(slider: slider);
-                            },
-                            regionBuilder: _buildRegion(
-                              height: height,
-                              sliderOffsetPerRegion: sliderOffsetPerRegion,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  child: _bodyContent(),
                 ),
+                SizedBox(height: 12),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _bodyContent() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const sliderHeight = 30.0;
+        final height = constraints.maxHeight; //here
+        final regionCount = model.controller.getRegions().length;
+        final sliderCount = regionCount - 1;
+        final sliderOffsetPerRegion = sliderCount * sliderHeight / regionCount;
+
+        return Container(
+          child: Column(
+            children: model.mapController(
+              sliderBuilder: (slider) {
+                return WeightSlider(slider: slider);
+              },
+              regionBuilder: _buildRegion(
+                height: height,
+                sliderOffsetPerRegion: sliderOffsetPerRegion,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
