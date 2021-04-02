@@ -57,19 +57,9 @@ class AssignGroupsLanding extends ConsumerWidget {
                             : 'Add New Group',
                       ),
                       if (MediaQuery.of(context).viewInsets.bottom == 0)
-                        SizedBox(
-                            height: bottomSheetObjectives.isEmpty
-                                ? 110
-                                : min(
-                                    (bottomSheetObjectives.length *
-                                            106.0) + //objecive height + padding
-                                        80 + //note: chevron total height
-                                        36, //note: bottom padding
-                                    MediaQuery.of(context).size.height * .45,
-                                  )
-
-                            //+MediaQuery.of(context).padding.bottom,
-                            )
+                        BottomSheetBacking(
+                          bottomSheetObjectives: bottomSheetObjectives,
+                        )
                       else
                         SizedBox(height: 36),
                     ],
@@ -352,6 +342,29 @@ class AssignGroupsLanding extends ConsumerWidget {
         );
       },
     ).joinWith(SizedBox(height: 16));
+  }
+}
+
+class BottomSheetBacking extends StatelessWidget {
+  static const double emptyHeight = 110.0;
+  static const double objectiveHeight = 106.0;
+  static const double chevronTotalHeight = 80.0;
+  static const double edgeInset = 36.0;
+
+  final List<Objective> bottomSheetObjectives;
+
+  const BottomSheetBacking({@required this.bottomSheetObjectives});
+
+  @override
+  Widget build(BuildContext context) {
+    final objectives = bottomSheetObjectives;
+    final maxHeight = MediaQuery.of(context).size.height * .45;
+    final objectivesHeight = objectives.length * objectiveHeight;
+    final bottomSheetHeight = objectivesHeight + chevronTotalHeight + edgeInset;
+    final nonEmptyHeight = min(bottomSheetHeight, maxHeight);
+    final height = objectives.isEmpty ? emptyHeight : nonEmptyHeight;
+
+    return SizedBox(height: height);
   }
 }
 
