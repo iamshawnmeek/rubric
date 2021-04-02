@@ -34,7 +34,12 @@ class AssignWeights extends StatelessWidget {
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
+                      const sliderHeight = 30.0;
                       final height = constraints.maxHeight; //here
+                      final regionCount = model.controller.getRegions().length;
+                      final sliderCount = regionCount - 1;
+                      final sliderOffsetPerRegion =
+                          sliderCount * sliderHeight / regionCount;
 
                       return Container(
                         child: Column(
@@ -42,7 +47,10 @@ class AssignWeights extends StatelessWidget {
                             sliderBuilder: (slider) {
                               return WeightSlider(slider: slider);
                             },
-                            regionBuilder: _buildRegion(height),
+                            regionBuilder: _buildRegion(
+                              height: height,
+                              sliderOffsetPerRegion: sliderOffsetPerRegion,
+                            ),
                           ),
                         ),
                       );
@@ -57,14 +65,18 @@ class AssignWeights extends StatelessWidget {
     );
   }
 
-  Widget Function(RubricRegion) _buildRegion(double height) {
+  Widget Function(RubricRegion) _buildRegion({
+    @required double height,
+    @required double sliderOffsetPerRegion,
+  }) {
     return (RubricRegion region) {
       final regionHeight = height * (region.weight / 100);
       final percentage = region.weight.roundToDouble();
+      final heightMinusSliderOffset = regionHeight - sliderOffsetPerRegion;
 
       return Region(
         data: region.title,
-        height: regionHeight - 20,
+        height: heightMinusSliderOffset,
         percentage: percentage,
       );
     };
