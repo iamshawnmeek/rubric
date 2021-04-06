@@ -84,9 +84,11 @@ class AssignGroupsLanding extends ConsumerWidget {
         ),
         // Ternary Operator: basically an if/else statement
         floatingActionButton: bottomSheetObjectives.isEmpty
-            ? NextButton(onTap: () {
-                flowController.update((_) => OnboardingFlow.assignWeights);
-              })
+            ? NextButton(
+                onTap: () {
+                  flowController.update((_) => OnboardingFlow.assignWeights);
+                },
+              )
             : SizedBox(),
 
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

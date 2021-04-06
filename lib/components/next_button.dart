@@ -14,20 +14,24 @@ class NextButton extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * .25),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 75,
-          child: Center(
-            child: CardNext('Next'),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 18,
-          ),
-          decoration: BoxDecoration(
-            color: accent,
-            borderRadius: BorderRadius.circular(10),
+      child: Semantics(
+        button: true,
+        label: 'Next',
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+            height: 75,
+            child: Center(
+              child: CardNext('Next'),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 18,
+            ),
+            decoration: BoxDecoration(
+              color: accent,
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ),
       ),
