@@ -17,19 +17,22 @@ class Landing extends StatelessWidget {
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        foregroundColor: primaryDark,
-        backgroundColor: accent,
-        child: Icon(Icons.add),
-        onPressed: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => OnboardingBottomSheet(
-              flowController: flowController,
-            ),
-          );
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(36),
+        child: FloatingActionButton(
+          foregroundColor: primaryDark,
+          backgroundColor: accent,
+          child: Icon(Icons.add),
+          onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (context) => OnboardingBottomSheet(
+                flowController: flowController,
+              ),
+            );
+          },
+        ),
       ),
       body: SafeArea(
         child: Column(

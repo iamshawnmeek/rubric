@@ -44,7 +44,7 @@ class _CreateObjectiveAddBottomSheetState
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24).copyWith(
             top: 36,
-            bottom: 36 + MediaQuery.of(context).viewInsets.bottom,
+            bottom: 36,
           ),
           child: Stack(
             clipBehavior: Clip.none,
