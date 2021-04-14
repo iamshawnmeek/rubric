@@ -10,6 +10,7 @@ import 'package:rubric/components/rubric_card.dart';
 import 'package:rubric/components/rubric_text_field.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/enums.dart';
+import 'package:rubric/hooks/scroll_hook.dart';
 import 'package:rubric/iterable_extensions.dart';
 import 'package:rubric/list_extensions.dart';
 import 'package:rubric/state/rubric_state.dart';
@@ -17,82 +18,103 @@ import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'components/small_logo.dart';
 
-class AssignGroupsLanding extends ConsumerWidget {
+class AssignGroupsLanding extends StatefulWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final rubricInstance = watch(rubricProviderRef.state);
-    final flowController = context.flow<OnboardingFlow>();
-    final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
-    final bottomSheetObjectives = _buildBottomSheetObjectives(rubricInstance);
+  _AssignGroupsLandingState createState() => _AssignGroupsLandingState();
+}
 
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(height: 36),
-                      SmallLogo(),
-                      SizedBox(height: 60),
-                      HeadlineOne('Assign Groups'),
-                      SizedBox(height: 46),
-                      if (rubricInstance.groups.isNotEmpty)
-                        buildGroups(
-                          rubric: rubricInstance,
-                          context: context,
+class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
+  ScrollHookState scrollHook;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, watch, _) {
+        final rubricInstance = watch(rubricProviderRef.state);
+        final flowController = context.flow<OnboardingFlow>();
+        final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+        final bottomSheetObjectives =
+            _buildBottomSheetObjectives(rubricInstance);
+
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            body: Stack(
+              children: [
+                ScrollHook(
+                  builder: (context, scrollController, scrollHook) {
+                    this.scrollHook = scrollHook;
+
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(height: 36),
+                              SmallLogo(),
+                              SizedBox(height: 60),
+                              HeadlineOne('Assign Groups'),
+                              SizedBox(height: 46),
+                              if (rubricInstance.groups.isNotEmpty)
+                                buildGroups(
+                                  rubric: rubricInstance,
+                                  context: context,
+                                ),
+                              SizedBox(height: 24),
+                              _buildDragTarget(
+                                context: context,
+                                text: rubricInstance.groups.isEmpty
+                                    ? 'Drag objective here'
+                                    : 'Add New Group',
+                              ),
+                              if (MediaQuery.of(context).viewInsets.bottom == 0)
+                                BottomSheetBacking(
+                                  bottomSheetObjectives: bottomSheetObjectives,
+                                )
+                              else
+                                SizedBox(height: 36),
+                            ],
+                          ),
                         ),
-                      SizedBox(height: 24),
-                      _buildDragTarget(
-                        context: context,
-                        text: rubricInstance.groups.isEmpty
-                            ? 'Drag objective here'
-                            : 'Add New Group',
                       ),
-                      if (MediaQuery.of(context).viewInsets.bottom == 0)
-                        BottomSheetBacking(
-                          bottomSheetObjectives: bottomSheetObjectives,
-                        )
-                      else
-                        SizedBox(height: 36),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              ),
+                if (!isKeyboardVisible)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: _buildBottomSheet(
+                        flowController: flowController,
+                        rubric: rubricInstance,
+                        context: context,
+                        bottomSheetObjectives: bottomSheetObjectives,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            if (!isKeyboardVisible)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: _buildBottomSheet(
-                    flowController: flowController,
-                    rubric: rubricInstance,
-                    context: context,
-                    bottomSheetObjectives: bottomSheetObjectives,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        // Ternary Operator: basically an if/else statement
-        floatingActionButton: bottomSheetObjectives.isEmpty
-            ? NextButton(
-                onTap: () {
-                  flowController.update((_) => OnboardingFlow.assignWeights);
-                },
-              )
-            : SizedBox(),
+            // Ternary Operator: basically an if/else statement
+            floatingActionButton: bottomSheetObjectives.isEmpty
+                ? NextButton(
+                    onTap: () {
+                      flowController
+                          .update((_) => OnboardingFlow.assignWeights);
+                    },
+                  )
+                : SizedBox(),
 
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+          ),
+        );
+      },
     );
   }
 
@@ -292,6 +314,8 @@ class AssignGroupsLanding extends ConsumerWidget {
         groupToAdd: group,
         objective: value,
       );
+
+      scrollHook.scrollToBottom();
     };
   }
 
@@ -329,6 +353,12 @@ class AssignGroupsLanding extends ConsumerWidget {
 
         return Draggable(
           data: objective,
+          onDragUpdate: (dragDetails) {
+            // TODO: scroll list when user drags to edge
+            // Get coordinates top of bottom sheet
+            // Get coordinates of top of the assign groups area
+            // if the drag details say it's out of bounds, scroll
+          },
           feedback: Container(
             width: deviceWidth,
             child: Padding(
