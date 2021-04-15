@@ -6,6 +6,13 @@ import 'package:rubric/components/colors.dart';
 import 'package:rubric/create_objective_add_bottom_sheet.dart';
 
 class CreateCard extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const CreateCard({
+    this.onPressed,
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Opacity(
@@ -15,7 +22,9 @@ class CreateCard extends StatelessWidget {
           showModalBottomSheet(
             isScrollControlled: true,
             context: context,
-            builder: (context) => CreateObjectiveAddBottomSheet(),
+            builder: (context) {
+              return CreateObjectiveAddBottomSheet(onPressed: onPressed);
+            },
           );
         },
         child: Container(

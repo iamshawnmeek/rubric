@@ -10,6 +10,13 @@ import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
 
 class CreateObjectiveAddBottomSheet extends StatefulWidget {
+  final VoidCallback onPressed;
+
+  const CreateObjectiveAddBottomSheet({
+    this.onPressed,
+    Key key,
+  }) : super(key: key);
+
   @override
   _CreateObjectiveAddBottomSheetState createState() =>
       _CreateObjectiveAddBottomSheetState();
@@ -77,6 +84,9 @@ class _CreateObjectiveAddBottomSheetState
                       // Store the users objective
                       final rubric = context.read(rubricProviderRef);
                       rubric.addObjective(Objective(title: objectiveTitle));
+
+                      if (widget.onPressed != null) widget.onPressed();
+
                       // Navigate to the grading objectives page
                       Navigator.of(context).pop();
                     },

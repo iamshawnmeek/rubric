@@ -15,19 +15,10 @@ import 'package:rubric/list_extensions.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/headline_one.dart';
 
-class GradingObjectivesLanding extends StatefulWidget {
+class GradingObjectivesLanding extends StatelessWidget {
   final FlowController flowController;
 
   GradingObjectivesLanding({@required this.flowController});
-
-  @override
-  _GradingObjectivesLandingState createState() =>
-      _GradingObjectivesLandingState();
-}
-
-class _GradingObjectivesLandingState extends State<GradingObjectivesLanding> {
-  ScrollHookState scrollHook;
-
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -38,8 +29,6 @@ class _GradingObjectivesLandingState extends State<GradingObjectivesLanding> {
         return Scaffold(
           body: ScrollHook(
             builder: (context, scrollController, scrollHook) {
-              this.scrollHook = scrollHook;
-
               return SingleChildScrollView(
                 controller: scrollController,
                 child: SafeArea(
@@ -55,7 +44,7 @@ class _GradingObjectivesLandingState extends State<GradingObjectivesLanding> {
                         SizedBox(height: 46),
                         ..._buildObjectives(rubric),
                         SizedBox(height: 16),
-                        CreateCard(),
+                        CreateCard(onPressed: scrollHook.scrollToBottom),
                         SizedBox(height: 90),
                       ],
                     ),
@@ -67,7 +56,7 @@ class _GradingObjectivesLandingState extends State<GradingObjectivesLanding> {
           // Ternary Operator: basically an if/else statement
           floatingActionButton: shouldShowNextButton
               ? NextButton(onTap: () {
-                  widget.flowController.update(
+                  flowController.update(
                     (_) => OnboardingFlow.assignGroups,
                   );
                 })
