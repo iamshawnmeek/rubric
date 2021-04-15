@@ -75,6 +75,7 @@ class WeightController extends DoubleLinkedList<Slider> {
       } else {
         previousSlider.handleAdjustment(delta);
       }
+      //TODO: Notify listeners by mixing in a ChangeNotifier to this class
     }
   }
 

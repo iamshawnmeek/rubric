@@ -66,6 +66,7 @@ class Slider {
 
 class ScrollPosition {
   final double value;
+
   const ScrollPosition(this.value);
 }
 

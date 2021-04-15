@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Slider;
+import 'package:flutter/material.dart' hide Slider, ScrollPosition;
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
@@ -47,7 +47,7 @@ class AssignWeights extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         const sliderHeight = 30.0;
-        final height = constraints.maxHeight; //here
+        final height = constraints.maxHeight;
         final regionCount = model.controller.getRegions().length;
         final sliderCount = regionCount - 1;
         final sliderOffsetPerRegion = sliderCount * sliderHeight / regionCount;
@@ -56,7 +56,20 @@ class AssignWeights extends StatelessWidget {
           child: Column(
             children: model.mapController(
               sliderBuilder: (slider) {
-                return WeightSlider(slider: slider);
+                return GestureDetector(
+                  // onVerticalDragStart: (deets) => print('Start'),
+                  // onVerticalDragEnd: (deets) => print('End'),
+                  onVerticalDragUpdate: (deets) {
+                    final yValue = deets.localPosition.dy;
+                    final scrollPosition = ScrollPosition(yValue);
+
+                    model.controller.moveSlider(
+                      slider: slider,
+                      scrollPosition: scrollPosition,
+                    );
+                  },
+                  child: WeightSlider(slider: slider),
+                );
               },
               regionBuilder: _buildRegion(
                 height: height,
