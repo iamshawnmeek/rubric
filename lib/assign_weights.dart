@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart' hide Slider, ScrollPosition;
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
@@ -51,7 +53,7 @@ class _AssignWeightsState extends State<AssignWeights> {
                 ),
                 SizedBox(height: 24),
                 Expanded(
-                  child: _bodyContent(context),
+                  child: _bodyContent(),
                 ),
                 SizedBox(height: 12),
               ],
@@ -62,50 +64,46 @@ class _AssignWeightsState extends State<AssignWeights> {
     );
   }
 
-  Widget _bodyContent(BuildContext context) {
-    final globalHeight = MediaQuery.of(context).size.height;
+  Widget _bodyContent() {
+    return ClipRRect(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const sliderHeight = 30.0;
+          final height = constraints.maxHeight;
+          final regionCount = widget.model.getRegions.length;
+          final sliderCount = regionCount - 1;
+          final sliderOffsetPerRegion =
+              sliderCount * sliderHeight / regionCount;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const sliderHeight = 30.0;
-        final height = constraints.maxHeight;
-        final regionCount = widget.model.getRegions.length;
-        final sliderCount = regionCount - 1;
-        final sliderOffsetPerRegion = sliderCount * sliderHeight / regionCount;
+          return Container(
+            child: Column(
+              children: widget.model.mapController(
+                sliderBuilder: (slider) {
+                  return GestureDetector(
+                    // onVerticalDragStart: (deets) => print('Start'),
+                    // onVerticalDragEnd: (deets) => print('End'),
+                    onVerticalDragUpdate: (deets) {
+                      final yValue = slider.scrollPosition + deets.delta.dy;
+                      final scrollPosition = ScrollPosition(yValue);
 
-        return Container(
-          child: Column(
-            children: widget.model.mapController(
-              sliderBuilder: (slider) {
-                return GestureDetector(
-                  // onVerticalDragStart: (deets) => print('Start'),
-                  // onVerticalDragEnd: (deets) => print('End'),
-                  onVerticalDragUpdate: (deets) {
-                    final updatedY = deets.globalPosition.dy;
-                    final scrollPosition = ScrollPosition.fromGlobal(
-                      updatedY: updatedY,
-                      globalHeight: globalHeight,
-                      currentScrollPosition: slider.scrollPosition,
-                    );
-
-                    print(scrollPosition.value);
-
-                    // widget.model.moveSlider(
-                    //   slider: slider,
-                    //   scrollPosition: scrollPosition,
-                    // );
-                  },
-                  child: WeightSlider(slider: slider),
-                );
-              },
-              regionBuilder: _buildRegion(
-                height: height,
-                sliderOffsetPerRegion: sliderOffsetPerRegion,
+                      print(yValue);
+                      widget.model.moveSlider(
+                        slider: slider,
+                        scrollPosition: scrollPosition,
+                      );
+                    },
+                    child: WeightSlider(slider: slider),
+                  );
+                },
+                regionBuilder: _buildRegion(
+                  height: height,
+                  sliderOffsetPerRegion: sliderOffsetPerRegion,
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -173,7 +171,7 @@ class Region extends StatelessWidget {
   Widget build(BuildContext context) {
     //TODO: Building out a binary of height: small or large depending on region size needs
     return Container(
-      height: height,
+      height: max(height, 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: primary,

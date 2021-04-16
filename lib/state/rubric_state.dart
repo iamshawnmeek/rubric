@@ -9,7 +9,26 @@ final rubricProviderRef =
 
 //mechanism to update the Rubric class with the new objective
 class RubricState extends StateNotifier<Rubric> {
-  RubricState() : super(Rubric(objectives: [], groups: []));
+  RubricState()
+      : super(
+          Rubric(
+            objectives: [],
+            groups: [
+              RubricGroup(title: 'Group 1', objectives: [
+                Objective(title: ''),
+              ]),
+              RubricGroup(title: 'Group 2', objectives: [
+                Objective(title: ''),
+              ]),
+              // RubricGroup(title: 'Group 1', objectives: [
+              //   Objective(title: ''),
+              // ]),
+              // RubricGroup(title: 'Group 2', objectives: [
+              //   Objective(title: ''),
+              // ]),
+            ],
+          ),
+        );
 
   /// Add an objective to master list of objectives
   void addObjective(Objective objective) {
