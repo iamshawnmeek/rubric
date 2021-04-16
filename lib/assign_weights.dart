@@ -7,13 +7,32 @@ import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'typography/body_weights.dart';
 
-class AssignWeights extends StatelessWidget {
+class AssignWeights extends StatefulWidget {
   final RegionViewModel model;
 
   const AssignWeights({
     @required this.model,
     Key key,
   }) : super(key: key);
+
+  @override
+  _AssignWeightsState createState() => _AssignWeightsState();
+}
+
+class _AssignWeightsState extends State<AssignWeights> {
+  @override
+  void initState() {
+    super.initState();
+    widget.model.addListener(updateState);
+  }
+
+  @override
+  void dispose() {
+    widget.model.removeListener(updateState);
+    super.dispose();
+  }
+
+  void updateState() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +51,7 @@ class AssignWeights extends StatelessWidget {
                 ),
                 SizedBox(height: 24),
                 Expanded(
-                  child: _bodyContent(),
+                  child: _bodyContent(context),
                 ),
                 SizedBox(height: 12),
               ],
@@ -43,30 +62,38 @@ class AssignWeights extends StatelessWidget {
     );
   }
 
-  Widget _bodyContent() {
+  Widget _bodyContent(BuildContext context) {
+    final globalHeight = MediaQuery.of(context).size.height;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         const sliderHeight = 30.0;
         final height = constraints.maxHeight;
-        final regionCount = model.controller.getRegions().length;
+        final regionCount = widget.model.getRegions.length;
         final sliderCount = regionCount - 1;
         final sliderOffsetPerRegion = sliderCount * sliderHeight / regionCount;
 
         return Container(
           child: Column(
-            children: model.mapController(
+            children: widget.model.mapController(
               sliderBuilder: (slider) {
                 return GestureDetector(
                   // onVerticalDragStart: (deets) => print('Start'),
                   // onVerticalDragEnd: (deets) => print('End'),
                   onVerticalDragUpdate: (deets) {
-                    final yValue = deets.localPosition.dy;
-                    final scrollPosition = ScrollPosition(yValue);
-
-                    model.controller.moveSlider(
-                      slider: slider,
-                      scrollPosition: scrollPosition,
+                    final updatedY = deets.globalPosition.dy;
+                    final scrollPosition = ScrollPosition.fromGlobal(
+                      updatedY: updatedY,
+                      globalHeight: globalHeight,
+                      currentScrollPosition: slider.scrollPosition,
                     );
+
+                    print(scrollPosition.value);
+
+                    // widget.model.moveSlider(
+                    //   slider: slider,
+                    //   scrollPosition: scrollPosition,
+                    // );
                   },
                   child: WeightSlider(slider: slider),
                 );

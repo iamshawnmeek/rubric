@@ -68,6 +68,17 @@ class ScrollPosition {
   final double value;
 
   const ScrollPosition(this.value);
+
+  static ScrollPosition fromGlobal({
+    @required double updatedY,
+    @required double globalHeight,
+    @required double currentScrollPosition,
+  }) {
+    final currentY = (currentScrollPosition / 100) * globalHeight;
+    final percentChange = (updatedY - currentY).abs();
+
+    return ScrollPosition(percentChange);
+  }
 }
 
 class ScrollDelta {

@@ -4,11 +4,22 @@ import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';
 
-class RegionViewModel {
-  final WeightController controller;
+class RegionViewModel extends ChangeNotifier {
+  final WeightController _controller;
   bool isAllLocked = false;
 
-  RegionViewModel({@required this.controller});
+  RegionViewModel({@required WeightController controller})
+      : _controller = controller;
+
+  List<RubricRegion> get getRegions => _controller.getRegions();
+
+  void moveSlider({
+    @required Slider slider,
+    @required ScrollPosition scrollPosition,
+  }) {
+    _controller.moveSlider(slider: slider, scrollPosition: scrollPosition);
+    notifyListeners();
+  }
 
   /// Build a list of [RubricRegion]s separated by [Slider]s
   ///
@@ -18,8 +29,8 @@ class RegionViewModel {
     @required T Function(Slider slider) sliderBuilder,
     @required T Function(RubricRegion region) regionBuilder,
   }) {
-    final sliders = controller.toList();
-    final regions = controller.getRegions();
+    final sliders = _controller.toList();
+    final regions = _controller.getRegions();
 
     int index = 0;
     return List<T>.from(regions.map((region) {
