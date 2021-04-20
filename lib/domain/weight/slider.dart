@@ -48,17 +48,13 @@ class Slider {
     switch (delta.direction) {
       case Direction.up:
         if (delta.value <= regionBefore.weight) {
-          print('decreasing region before weight by ${delta.value}');
           regionBefore.decreaseWeight(delta.value);
-          print('increasing region after weight by ${delta.value}');
           regionAfter.increaseWeight(delta.value);
         }
         break;
       case Direction.down:
         if (delta.value <= regionAfter.weight) {
-          print('increasing region before weight by ${delta.value}');
           regionBefore.increaseWeight(delta.value);
-          print('decreasing region after weight by ${delta.value}');
           regionAfter.decreaseWeight(delta.value);
         }
         break;
