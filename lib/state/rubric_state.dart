@@ -20,12 +20,12 @@ class RubricState extends StateNotifier<Rubric> {
               RubricGroup(title: 'Group 2', objectives: [
                 Objective(title: ''),
               ]),
-              // RubricGroup(title: 'Group 1', objectives: [
-              //   Objective(title: ''),
-              // ]),
-              // RubricGroup(title: 'Group 2', objectives: [
-              //   Objective(title: ''),
-              // ]),
+              RubricGroup(title: 'Group 1', objectives: [
+                Objective(title: ''),
+              ]),
+              RubricGroup(title: 'Group 2', objectives: [
+                Objective(title: ''),
+              ]),
             ],
           ),
         );
