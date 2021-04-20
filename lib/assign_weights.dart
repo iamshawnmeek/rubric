@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart' hide Slider, ScrollPosition;
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/components/rubric_lock.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/presentation/regions/region_view_model.dart';
@@ -181,7 +182,17 @@ class Region extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BodyOne(data, fontSize: 21, color: primaryLighter),
-            Center(child: BodyOneWeights('${percentage.toStringAsFixed(0)}%')),
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(width: 54),
+                  BodyOneWeights('${percentage.toStringAsFixed(0)}%'),
+                  SizedBox(width: 10),
+                  RubricLock(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
