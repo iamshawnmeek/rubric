@@ -83,10 +83,9 @@ class _AssignWeightsState extends State<AssignWeights> {
                     // onVerticalDragStart: (deets) => print('Start'),
                     // onVerticalDragEnd: (deets) => print('End'),
                     onVerticalDragUpdate: (deets) {
-                      final yValue = slider.scrollPosition + deets.delta.dy;
+                      final yValue = slider.scrollPosition + deets.delta.dy / 8;
                       final scrollPosition = ScrollPosition(yValue);
 
-                      print(yValue);
                       widget.model.moveSlider(
                         slider: slider,
                         scrollPosition: scrollPosition,
