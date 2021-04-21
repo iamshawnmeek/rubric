@@ -74,6 +74,7 @@ flutter:
   assets:
     - assets/images/logo.svg
     - assets/images/icon-lock-default.svg
+    - assets/images/icon-lock-locked.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
