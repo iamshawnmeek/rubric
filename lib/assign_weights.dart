@@ -117,7 +117,7 @@ class _AssignWeightsState extends State<AssignWeights> {
       final heightMinusSliderOffset = regionHeight - sliderOffsetPerRegion;
 
       return Region(
-        data: region.title,
+        title: region.title,
         height: heightMinusSliderOffset,
         percentage: percentage,
       );
@@ -156,45 +156,66 @@ class WeightSlider extends StatelessWidget {
 }
 
 class Region extends StatelessWidget {
-  final String data;
+  final String title;
   final double height;
   final double percentage;
 
   const Region({
     Key key,
-    @required this.data,
+    @required this.title,
     @required this.height,
     @required this.percentage,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Building out a binary of height: small or large depending on region size needs
     return Container(
-      height: max(height, 0),
+      height: max(height, 68),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: primary,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-        child: Stack(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BodyOne(data, fontSize: 21, color: primaryLighter),
-            Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(width: 54),
-                  BodyOneWeights('${percentage.toStringAsFixed(0)}%'),
-                  SizedBox(width: 10),
-                  RubricLock(),
-                ],
-              ),
+      child: percentage <= 15 ? smallViewRegion() : largeViewRegion(),
+    );
+  }
+
+  Widget largeViewRegion() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+      child: Stack(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BodyOne(title, fontSize: 21, color: primaryLighter),
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(width: 54),
+                BodyOneWeights('${percentage.toStringAsFixed(0)}%'),
+                SizedBox(width: 10),
+                RubricLock(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget smallViewRegion() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 22, top: 9, bottom: 9, right: 7),
+      child: Row(
+        children: [
+          Expanded(
+            child: BodyOne(
+              '${percentage.toStringAsFixed(0)}%: $title',
+              fontSize: 21,
+              color: primaryLighter,
+            ),
+          ),
+          RubricLock(),
+        ],
       ),
     );
   }
