@@ -175,7 +175,14 @@ class Region extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: primary,
       ),
-      child: percentage <= 15 ? smallViewRegion() : largeViewRegion(),
+      child: AnimatedCrossFade(
+        crossFadeState: percentage <= 15
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+        duration: const Duration(milliseconds: 300),
+        firstChild: smallViewRegion(),
+        secondChild: largeViewRegion(),
+      ),
     );
   }
 
@@ -203,19 +210,21 @@ class Region extends StatelessWidget {
   }
 
   Widget smallViewRegion() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 22, top: 9, bottom: 9, right: 7),
-      child: Row(
-        children: [
-          Expanded(
-            child: BodyOne(
-              '${percentage.toStringAsFixed(0)}%: $title',
-              fontSize: 21,
-              color: primaryLighter,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 22, top: 9, bottom: 9, right: 7),
+        child: Row(
+          children: [
+            Expanded(
+              child: BodyOne(
+                '${percentage.toStringAsFixed(0)}%: $title',
+                fontSize: 21,
+                color: primaryLighter,
+              ),
             ),
-          ),
-          RubricLock(),
-        ],
+            RubricLock(),
+          ],
+        ),
       ),
     );
   }
