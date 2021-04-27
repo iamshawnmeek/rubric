@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart' hide Slider, ScrollPosition;
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/components/rubric_lock.dart';
@@ -169,8 +168,10 @@ class Region extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rubricLockDefault = RubricLock();
+
     return Container(
-      height: max(height, 68),
+      height: max(height, 68), //max quantity of units, for now
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: primary,
@@ -180,13 +181,14 @@ class Region extends StatelessWidget {
             ? CrossFadeState.showFirst
             : CrossFadeState.showSecond,
         duration: const Duration(milliseconds: 300),
-        firstChild: smallViewRegion(),
-        secondChild: largeViewRegion(),
+        firstChild: smallViewRegion(rubricLockDefault),
+        secondChild: largeViewRegion(rubricLockDefault),
+        //TODO: why is the passing in of rubricLockDefault not working between smallViewRegion and largeViewRegion?
       ),
     );
   }
 
-  Widget largeViewRegion() {
+  Widget largeViewRegion(RubricLock rubricLockDefault) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
       child: Stack(
@@ -200,7 +202,8 @@ class Region extends StatelessWidget {
                 SizedBox(width: 54),
                 BodyOneWeights('${percentage.toStringAsFixed(0)}%'),
                 SizedBox(width: 10),
-                RubricLock(),
+                rubricLockDefault,
+                // RubricLock(),
               ],
             ),
           ),
@@ -209,7 +212,7 @@ class Region extends StatelessWidget {
     );
   }
 
-  Widget smallViewRegion() {
+  Widget smallViewRegion(RubricLock rubricLockDefault) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(left: 22, top: 9, bottom: 9, right: 7),
@@ -222,7 +225,8 @@ class Region extends StatelessWidget {
                 color: primaryLighter,
               ),
             ),
-            RubricLock(),
+            rubricLockDefault,
+            // RubricLock(),
           ],
         ),
       ),
