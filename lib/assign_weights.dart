@@ -116,7 +116,7 @@ class _AssignWeightsState extends State<AssignWeights> {
       final heightMinusSliderOffset = regionHeight - sliderOffsetPerRegion;
 
       return Region(
-        title: region.title,
+        rubricRegion: region,
         height: heightMinusSliderOffset,
         percentage: percentage,
       );
@@ -155,13 +155,13 @@ class WeightSlider extends StatelessWidget {
 }
 
 class Region extends StatefulWidget {
-  final String title;
+  final RubricRegion rubricRegion;
   final double height;
   final double percentage;
 
   const Region({
     Key key,
-    @required this.title,
+    @required this.rubricRegion,
     @required this.height,
     @required this.percentage,
   }) : super(key: key);
@@ -171,9 +171,14 @@ class Region extends StatefulWidget {
 }
 
 class _RegionState extends State<Region> {
-  bool isLockActive = false;
+  bool isLocked = false; // aka. this.isLocked
 
-  void toggleLock() => setState(() => isLockActive = !isLockActive);
+  void toggleLock() {
+    final isLocked = !this.isLocked; // toggle the lock state
+
+    isLocked ? widget.rubricRegion.lock() : widget.rubricRegion.unlock();
+    setState(() => this.isLocked = isLocked);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +189,7 @@ class _RegionState extends State<Region> {
         color: primary,
       ),
       child: AnimatedCrossFade(
-        crossFadeState: widget.percentage <= 15
+        crossFadeState: widget.percentage <= 18
             ? CrossFadeState.showFirst
             : CrossFadeState.showSecond,
         duration: const Duration(milliseconds: 300),
@@ -195,12 +200,13 @@ class _RegionState extends State<Region> {
   }
 
   Widget largeViewRegion() {
+    final title = widget.rubricRegion.title;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
       child: Stack(
-        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          BodyOne(widget.title, fontSize: 21, color: primaryLighter),
+          BodyOne(title, fontSize: 21, color: primaryLighter),
           Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -209,7 +215,7 @@ class _RegionState extends State<Region> {
                 BodyOneWeights('${widget.percentage.toStringAsFixed(0)}%'),
                 SizedBox(width: 10),
                 RubricLock(
-                  isActive: isLockActive,
+                  isActive: isLocked,
                   onTap: toggleLock,
                 ),
               ],
@@ -221,6 +227,8 @@ class _RegionState extends State<Region> {
   }
 
   Widget smallViewRegion() {
+    final title = widget.rubricRegion.title;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(left: 22, top: 9, bottom: 9, right: 7),
@@ -228,13 +236,13 @@ class _RegionState extends State<Region> {
           children: [
             Expanded(
               child: BodyOne(
-                '${widget.percentage.toStringAsFixed(0)}%: ${widget.title}',
+                '${widget.percentage.toStringAsFixed(0)}%: $title',
                 fontSize: 21,
                 color: primaryLighter,
               ),
             ),
             RubricLock(
-              isActive: isLockActive,
+              isActive: isLocked,
               onTap: toggleLock,
             ),
           ],
