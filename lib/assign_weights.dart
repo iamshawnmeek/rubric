@@ -154,7 +154,7 @@ class WeightSlider extends StatelessWidget {
   }
 }
 
-class Region extends StatelessWidget {
+class Region extends StatefulWidget {
   final String title;
   final double height;
   final double percentage;
@@ -167,43 +167,51 @@ class Region extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final rubricLockDefault = RubricLock();
+  _RegionState createState() => _RegionState();
+}
 
+class _RegionState extends State<Region> {
+  bool isLockActive = false;
+
+  void toggleLock() => setState(() => isLockActive = !isLockActive);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      height: max(height, 68), //max quantity of units, for now
+      height: max(widget.height, 68), //max quantity of units, for now
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: primary,
       ),
       child: AnimatedCrossFade(
-        crossFadeState: percentage <= 15
+        crossFadeState: widget.percentage <= 15
             ? CrossFadeState.showFirst
             : CrossFadeState.showSecond,
         duration: const Duration(milliseconds: 300),
-        firstChild: smallViewRegion(rubricLockDefault),
-        secondChild: largeViewRegion(rubricLockDefault),
-        //TODO: why is the passing in of rubricLockDefault not working between smallViewRegion and largeViewRegion?
+        firstChild: smallViewRegion(),
+        secondChild: largeViewRegion(),
       ),
     );
   }
 
-  Widget largeViewRegion(RubricLock rubricLockDefault) {
+  Widget largeViewRegion() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
       child: Stack(
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          BodyOne(title, fontSize: 21, color: primaryLighter),
+          BodyOne(widget.title, fontSize: 21, color: primaryLighter),
           Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(width: 54),
-                BodyOneWeights('${percentage.toStringAsFixed(0)}%'),
+                BodyOneWeights('${widget.percentage.toStringAsFixed(0)}%'),
                 SizedBox(width: 10),
-                rubricLockDefault,
-                // RubricLock(),
+                RubricLock(
+                  isActive: isLockActive,
+                  onTap: toggleLock,
+                ),
               ],
             ),
           ),
@@ -212,7 +220,7 @@ class Region extends StatelessWidget {
     );
   }
 
-  Widget smallViewRegion(RubricLock rubricLockDefault) {
+  Widget smallViewRegion() {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(left: 22, top: 9, bottom: 9, right: 7),
@@ -220,13 +228,15 @@ class Region extends StatelessWidget {
           children: [
             Expanded(
               child: BodyOne(
-                '${percentage.toStringAsFixed(0)}%: $title',
+                '${widget.percentage.toStringAsFixed(0)}%: ${widget.title}',
                 fontSize: 21,
                 color: primaryLighter,
               ),
             ),
-            rubricLockDefault,
-            // RubricLock(),
+            RubricLock(
+              isActive: isLockActive,
+              onTap: toggleLock,
+            ),
           ],
         ),
       ),
