@@ -43,6 +43,7 @@ class _AssignWeightsState extends State<AssignWeights> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Rebuild when locks change, fix the fade in animation of Next Btn globally, explore fade b/g
     final shouldShowNextButton = widget.model.isAllLocked();
 
     return GestureDetector(
