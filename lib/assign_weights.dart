@@ -1,9 +1,12 @@
 import 'dart:math';
+import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart' hide Slider, ScrollPosition;
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/components/next_button.dart';
 import 'package:rubric/components/rubric_lock.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
+import 'package:rubric/enums.dart';
 import 'package:rubric/presentation/regions/region_view_model.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
@@ -11,9 +14,11 @@ import 'typography/body_weights.dart';
 
 class AssignWeights extends StatefulWidget {
   final RegionViewModel model;
+  final FlowController flowController;
 
   const AssignWeights({
     @required this.model,
+    @required this.flowController,
     Key key,
   }) : super(key: key);
 
@@ -38,6 +43,8 @@ class _AssignWeightsState extends State<AssignWeights> {
 
   @override
   Widget build(BuildContext context) {
+    final shouldShowNextButton = widget.model.isAllLocked;
+
     return GestureDetector(
       child: Scaffold(
         body: SafeArea(
@@ -60,6 +67,15 @@ class _AssignWeightsState extends State<AssignWeights> {
             ),
           ),
         ),
+        floatingActionButton: shouldShowNextButton
+            ? NextButton(onTap: () {
+                widget.flowController.update(
+                  (_) =>
+                      OnboardingFlow.assignGroups, //take user to actual rubric
+                );
+              })
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
