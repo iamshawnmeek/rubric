@@ -6,7 +6,7 @@ import 'package:rubric/domain/weight/weight_controller.dart';
 
 class RegionViewModel extends ChangeNotifier {
   final WeightController _controller;
-  bool isAllLocked = false;
+  bool isAllLocked() => getRegions.every((region) => region.isLocked);
 
   RegionViewModel({@required WeightController controller})
       : _controller = controller;

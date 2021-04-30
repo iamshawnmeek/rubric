@@ -43,7 +43,7 @@ class _AssignWeightsState extends State<AssignWeights> {
 
   @override
   Widget build(BuildContext context) {
-    final shouldShowNextButton = widget.model.isAllLocked;
+    final shouldShowNextButton = widget.model.isAllLocked();
 
     return GestureDetector(
       child: Scaffold(

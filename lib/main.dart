@@ -77,14 +77,14 @@ class _MyAppState extends State<MyApp> {
             if (bodyContent == OnboardingFlow.assignGroups)
               FadeInPage(child: AssignGroupsLanding()),
             if (bodyContent == OnboardingFlow.assignWeights)
-              _buildAssignWeights(),
+              _buildAssignWeights(flowController),
           ];
         },
       ),
     );
   }
 
-  FadeInPage _buildAssignWeights() {
+  FadeInPage _buildAssignWeights(FlowController flowController) {
     // get our state from riverpod
     final rubric = context.read(rubricProviderRef.state);
 
@@ -97,6 +97,11 @@ class _MyAppState extends State<MyApp> {
     // create a view model to handle the logic for our AssignWeights class
     final viewModel = RegionViewModel(controller: controller);
 
-    return FadeInPage(child: AssignWeights(model: viewModel));
+    return FadeInPage(
+      child: AssignWeights(
+        model: viewModel,
+        flowController: flowController,
+      ),
+    );
   }
 }
