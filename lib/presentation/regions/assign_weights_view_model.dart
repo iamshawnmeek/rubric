@@ -4,11 +4,11 @@ import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';
 
-class RegionViewModel extends ChangeNotifier {
+class AssignWeightsViewModel extends ChangeNotifier {
   final WeightController _controller;
   bool isAllLocked() => getRegions.every((region) => region.isLocked);
 
-  RegionViewModel({@required WeightController controller})
+  AssignWeightsViewModel({@required WeightController controller})
       : _controller = controller;
 
   List<RubricRegion> get getRegions => _controller.getRegions();

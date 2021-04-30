@@ -7,13 +7,13 @@ import 'package:rubric/components/rubric_lock.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/enums.dart';
-import 'package:rubric/presentation/regions/region_view_model.dart';
+import 'package:rubric/presentation/regions/assign_weights_view_model.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'typography/body_weights.dart';
 
 class AssignWeights extends StatefulWidget {
-  final RegionViewModel model;
+  final AssignWeightsViewModel model;
   final FlowController flowController;
 
   const AssignWeights({

@@ -10,7 +10,7 @@ import 'package:rubric/enums.dart';
 import 'package:rubric/fade_in_page.dart';
 import 'package:rubric/grading_objectives_landing.dart';
 import 'package:rubric/landing.dart';
-import 'package:rubric/presentation/regions/region_view_model.dart';
+import 'package:rubric/presentation/regions/assign_weights_view_model.dart';
 import 'package:rubric/state/rubric_state.dart';
 
 void main() {
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
     final controller = WeightController.fromNames(groupNames);
 
     // create a view model to handle the logic for our AssignWeights class
-    final viewModel = RegionViewModel(controller: controller);
+    final viewModel = AssignWeightsViewModel(controller: controller);
 
     return FadeInPage(
       child: AssignWeights(
