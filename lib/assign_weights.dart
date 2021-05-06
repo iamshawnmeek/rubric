@@ -43,7 +43,6 @@ class _AssignWeightsState extends State<AssignWeights> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: ix the fade in animation of Next Btn globally, explore fade b/g
     final shouldShowNextButton = widget.model.isAllLocked();
 
     return GestureDetector(
@@ -68,14 +67,19 @@ class _AssignWeightsState extends State<AssignWeights> {
             ),
           ),
         ),
-        floatingActionButton: shouldShowNextButton
-            ? NextButton(onTap: () {
-                widget.flowController.update(
-                  (_) =>
-                      OnboardingFlow.assignGroups, //take user to actual rubric
-                );
-              })
-            : null,
+        floatingActionButton: IgnorePointer(
+          ignoring: !shouldShowNextButton,
+          ignoringSemantics: !shouldShowNextButton,
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 200),
+            opacity: shouldShowNextButton ? 1 : 0,
+            child: NextButton(onTap: () {
+              widget.flowController.update(
+                (_) => OnboardingFlow.assignGroups, //take user to actual rubric
+              );
+            }),
+          ),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
