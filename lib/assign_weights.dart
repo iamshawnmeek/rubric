@@ -43,7 +43,7 @@ class _AssignWeightsState extends State<AssignWeights> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Rebuild when locks change, fix the fade in animation of Next Btn globally, explore fade b/g
+    //TODO: ix the fade in animation of Next Btn globally, explore fade b/g
     final shouldShowNextButton = widget.model.isAllLocked();
 
     return GestureDetector(
@@ -136,6 +136,7 @@ class _AssignWeightsState extends State<AssignWeights> {
         rubricRegion: region,
         height: heightMinusSliderOffset,
         percentage: percentage,
+        onLockPressed: () => setState(() {}),
       );
     };
   }
@@ -175,12 +176,14 @@ class Region extends StatefulWidget {
   final RubricRegion rubricRegion;
   final double height;
   final double percentage;
+  final VoidCallback onLockPressed;
 
   const Region({
     Key key,
     @required this.rubricRegion,
     @required this.height,
     @required this.percentage,
+    this.onLockPressed,
   }) : super(key: key);
 
   @override
@@ -195,6 +198,7 @@ class _RegionState extends State<Region> {
 
     isLocked ? widget.rubricRegion.lock() : widget.rubricRegion.unlock();
     setState(() => this.isLocked = isLocked);
+    widget.onLockPressed();
   }
 
   @override
