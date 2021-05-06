@@ -4,3 +4,7 @@ enum OnboardingFlow {
   assignGroups,
   assignWeights,
 }
+
+enum MainFlow {
+  landing,
+}
