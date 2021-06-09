@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/enums.dart';
