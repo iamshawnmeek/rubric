@@ -31,8 +31,9 @@ dependencies:
   flow_builder: ^0.0.1-dev.11 # Navigation
   dotted_border: ^1.0.7
   onboarding:
-    git: git@github.com:SupposedlySam/onboarding.git
-    version: ^2.0.0
+    git:
+      url: git@github.com:SupposedlySam/onboarding.git
+      ref: jonahwalker/add-toggle-skip-functionality
 
 
 
