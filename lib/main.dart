@@ -13,6 +13,9 @@ import 'package:rubric/landing.dart';
 import 'package:rubric/presentation/regions/assign_weights_view_model.dart';
 import 'package:rubric/state/rubric_state.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rubric/l10n/l10n.dart';
+
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -51,6 +54,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         bottomSheetTheme: BottomSheetThemeData(
