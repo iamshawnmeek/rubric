@@ -24,6 +24,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
   flutter_svg: ^0.19.1
   double_linked_list: ^1.0.8 # Used for weight calculations on assign_weights
   font_awesome_flutter: ^8.11.0
@@ -34,8 +37,6 @@ dependencies:
     git:
       url: git@github.com:SupposedlySam/onboarding.git
       ref: jonahwalker/add-toggle-skip-functionality
-
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -54,11 +55,8 @@ import_sorter:
 
 # The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
+  generate: true
 
   fonts:
     - family: Avenir-Black

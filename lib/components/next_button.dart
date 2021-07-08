@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/l10n/l10n.dart';
 import 'package:rubric/typography/card_next.dart';
 
 class NextButton extends StatelessWidget {
@@ -10,19 +11,20 @@ class NextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final width = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width * .25),
       child: Semantics(
         button: true,
-        label: 'Next',
+        label: l.nextTitle,
         child: GestureDetector(
           onTap: onTap,
           child: Container(
             height: 75,
             child: Center(
-              child: CardNext('Next'),
+              child: CardNext(l.nextTitle),
             ),
             padding: const EdgeInsets.symmetric(
               horizontal: 24,

@@ -1,0 +1,7 @@
+{
+    "@@locale": "en",
+    "nextTitle": "Next",
+    "@next": {
+        "description": "Text to show on the next button"
+    }
+}
