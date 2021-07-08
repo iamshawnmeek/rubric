@@ -9,7 +9,7 @@ import 'package:rubric/domain/weight/weight_controller.dart';
 import 'package:rubric/enums.dart';
 import 'package:rubric/fade_in_page.dart';
 import 'package:rubric/grading_objectives_landing.dart';
-import 'package:rubric/landing.dart';
+import 'package:rubric/rubric_onboarding.dart';
 import 'package:rubric/presentation/regions/assign_weights_view_model.dart';
 import 'package:rubric/state/rubric_state.dart';
 
@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     flowController = FlowController<OnboardingFlow>(
-      OnboardingFlow.assignWeights, //assignWeights, assignWeightsRev
+      OnboardingFlow.landing, //assignWeights, assignWeightsRev
     );
   }
 
@@ -77,7 +77,8 @@ class _MyAppState extends State<MyApp> {
         onGeneratePages: (bodyContent, pages) {
           return [
             if (bodyContent == OnboardingFlow.landing)
-              FadeInPage(child: Landing(flowController: flowController)),
+              FadeInPage(
+                  child: RubricOnboarding(flowController: flowController)),
             if (bodyContent == OnboardingFlow.gradingObjectives)
               FadeInPage(
                 child: GradingObjectivesLanding(flowController: flowController),
