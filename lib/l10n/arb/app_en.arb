@@ -1,7 +1,31 @@
 {
     "@@locale": "en",
     "nextTitle": "Next",
-    "@next": {
-        "description": "Text to show on the next button"
+    "@nextTitle": {
+        "description": ""
+    },
+    "onboarding1Title": "Grading made simple.",
+    "@onboarding1Title": {
+        "description": ""
+    },
+    "onboarding2Title": "Rubric your way.",
+    "@onboarding2Title": {
+        "description": ""
+    },
+    "onboarding3Title": "But first…",
+    "@onboarding3Title": {
+        "description": ""
+    },
+    "onboarding1Message": "Rubric is designed to take the burden out of grading the old-fashioned way. Grade faster and accurately with built in tools for all your projects and courses.",
+    "@onboarding1Message": {
+        "description": ""
+    },
+    "onboarding2Message": "Establish grading objectives, assign evaluation groups and create customized weights that fit your specific evaluation credentials for any assignment or project.",
+    "@onboarding2Message": {
+        "description": ""
+    },
+    "onboarding3Message": "Let's determine your specific grading scale preferences: simple or detailed and build your first rubric.",
+    "@onboarding3Message": {
+        "description": ""
     }
 }
