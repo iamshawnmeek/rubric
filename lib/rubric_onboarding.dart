@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:flow_builder/flow_builder.dart';
 import 'package:onboarding/onboarding.dart';
 import 'package:rubric/components/colors.dart';
-
 import 'package:rubric/components/rubric_logo.dart';
 import 'package:rubric/l10n/l10n.dart';
 
@@ -31,23 +29,40 @@ class _BottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    const pageTitleStyle = TextStyle(
+      fontFamily: 'Avenir-Black',
+      fontSize: 36,
+      height: 1.2,
+      color: Colors.white,
+    );
+
+    const pageInfoStyle = TextStyle(
+      fontFamily: 'Avenir-Heavy',
+      fontSize: 24,
+      height: 1.5,
+      color: Color(0xffD2BAED),
+    );
 
     final onboardingPagesList = [
       PageModel(
-        widget: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
+        widget: Container(
+          color: Color(0xff8F53D3),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  width: double.infinity,
+                  child: Text(l.onboarding1Title, style: pageTitleStyle)),
+              SizedBox(height: 42),
+              Container(
                 width: double.infinity,
-                child: Text(l.onboarding1Title, style: pageTitleStyle)),
-            Container(
-              width: double.infinity,
-              child: Text(
-                l.onboarding1Message,
-                style: pageInfoStyle,
+                child: Text(
+                  l.onboarding1Message,
+                  style: pageInfoStyle,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ];
