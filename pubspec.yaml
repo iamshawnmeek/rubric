@@ -35,7 +35,7 @@ dependencies:
   dotted_border: ^1.0.7
   onboarding:
     git:
-      url: git@github.com:SupposedlySam/onboarding.git
+      url: https://github.com/SupposedlySam/onboarding.git
       ref: jonahwalker/add-toggle-skip-functionality
 
   # The following adds the Cupertino Icons font to your application.
