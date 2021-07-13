@@ -46,22 +46,35 @@ class _BottomSheet extends StatelessWidget {
     final onboardingPagesList = [
       PageModel(
         widget: Container(
-          color: Color(0xff8F53D3),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
+          margin: EdgeInsets.only(left: 12, right: 12),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            color: Color(0xff8F53D3),
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min, //vertical
+              crossAxisAlignment: CrossAxisAlignment.stretch, //horizontal
+              children: [
+                Container(
+                    width:
+                        double.infinity, //be as large as possible within parent
+                    child: Text(l.onboarding1Title, style: pageTitleStyle)),
+                SizedBox(height: 42),
+                Container(
                   width: double.infinity,
-                  child: Text(l.onboarding1Title, style: pageTitleStyle)),
-              SizedBox(height: 42),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  l.onboarding1Message,
-                  style: pageInfoStyle,
+                  child: Text(
+                    l.onboarding1Message,
+                    style: pageInfoStyle,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -72,35 +85,43 @@ class _BottomSheet extends StatelessWidget {
         Container(color: Colors.black.withOpacity(0.4)),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Onboarding(
-            isSkippable: false,
-            pages: onboardingPagesList,
-            indicator: Indicator(
-              indicatorDesign: IndicatorDesign.polygon(
-                polygonDesign: PolygonDesign(
-                  polygon: DesignType.polygon_circle,
+          child: Container(
+            color: Color(0xff8F53D3),
+            child: Onboarding(
+              background: Color(0xff1C0139),
+              pagesContentPadding: EdgeInsets.zero,
+              footerPadding: EdgeInsets.only(left: 45, right: 12, bottom: 45),
+              isSkippable: false,
+              pages: onboardingPagesList,
+              indicator: Indicator(
+                activeIndicator:
+                    ActiveIndicator(color: Color(0xffFFAD00)), //wip
+                indicatorDesign: IndicatorDesign.polygon(
+                  polygonDesign: PolygonDesign(
+                    polygon: DesignType.polygon_circle,
+                  ),
                 ),
               ),
-            ),
-            proceedButtonStyle: ProceedButtonStyle(
-              proceedButtonColor: accent,
-              proceedButtonBorderRadius: BorderRadius.circular(10),
-              proceedButtonPadding: const EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: 12,
-              ),
-              proceedpButtonText: Text(
-                l.nextTitle,
-                style: TextStyle(
-                  fontFamily: 'Avenir-Heavy',
-                  fontSize: 18,
-                  height: 1.3,
-                  color: secondary,
+              proceedButtonStyle: ProceedButtonStyle(
+                proceedButtonColor: accent,
+                proceedButtonBorderRadius: BorderRadius.circular(10),
+                proceedButtonPadding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 12,
                 ),
+                proceedpButtonText: Text(
+                  l.nextTitle,
+                  style: TextStyle(
+                    fontFamily: 'Avenir-Heavy',
+                    fontSize: 18,
+                    height: 1.3,
+                    color: secondary,
+                  ),
+                ),
+                proceedButtonRoute: (_) {
+                  print('Success!');
+                },
               ),
-              proceedButtonRoute: (_) {
-                print('Success!');
-              },
             ),
           ),
         ),
