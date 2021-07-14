@@ -181,8 +181,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "jonahwalker/add-toggle-skip-functionality"
-      resolved-ref: ea2157afd83f400c5f277f77e15d306fa5b4339f
+      ref: HEAD
+      resolved-ref: d3043c35bc3a8055a3f9565539315fea6714cd58
       url: "https://github.com/SupposedlySam/onboarding.git"
     source: git
     version: "2.1.0"
