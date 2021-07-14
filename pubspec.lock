@@ -182,7 +182,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: d3043c35bc3a8055a3f9565539315fea6714cd58
+      resolved-ref: "6b89a83ad18aff1accebbfbeb6f8fd9a7b3515ae"
       url: "https://github.com/SupposedlySam/onboarding.git"
     source: git
     version: "2.1.0"

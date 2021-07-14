@@ -87,39 +87,42 @@ class _BottomSheet extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Container(
             color: primary,
-            child: Onboarding(
-              background: Color(0xff1C0139),
-              pagesContentPadding: EdgeInsets.zero,
-              footerPadding: EdgeInsets.only(left: 45, right: 12, bottom: 45),
-              isSkippable: false,
-              pages: onboardingPagesList,
-              indicator: Indicator(
-                activeIndicator: ActiveIndicator(color: accent), //wip
-                indicatorDesign: IndicatorDesign.polygon(
-                  polygonDesign: PolygonDesign(
-                    polygon: DesignType.polygon_circle,
+            child: IntrinsicHeight(
+              child: Onboarding(
+                isStandalone: false,
+                background: Color(0xff1C0139),
+                pagesContentPadding: EdgeInsets.zero,
+                footerPadding: EdgeInsets.only(left: 45, right: 12, bottom: 45),
+                isSkippable: false,
+                pages: onboardingPagesList,
+                indicator: Indicator(
+                  activeIndicator: ActiveIndicator(color: accent), //wip
+                  indicatorDesign: IndicatorDesign.polygon(
+                    polygonDesign: PolygonDesign(
+                      polygon: DesignType.polygon_circle,
+                    ),
                   ),
                 ),
-              ),
-              proceedButtonStyle: ProceedButtonStyle(
-                proceedButtonColor: accent,
-                proceedButtonBorderRadius: BorderRadius.circular(10),
-                proceedButtonPadding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 12,
-                ),
-                proceedpButtonText: Text(
-                  l.nextTitle,
-                  style: TextStyle(
-                    fontFamily: 'Avenir-Heavy',
-                    fontSize: 18,
-                    height: 1.3,
-                    color: secondary,
+                proceedButtonStyle: ProceedButtonStyle(
+                  proceedButtonColor: accent,
+                  proceedButtonBorderRadius: BorderRadius.circular(10),
+                  proceedButtonPadding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 12,
                   ),
+                  proceedpButtonText: Text(
+                    l.nextTitle,
+                    style: TextStyle(
+                      fontFamily: 'Avenir-Heavy',
+                      fontSize: 18,
+                      height: 1.3,
+                      color: secondary,
+                    ),
+                  ),
+                  proceedButtonRoute: (_) {
+                    print('Success!');
+                  },
                 ),
-                proceedButtonRoute: (_) {
-                  print('Success!');
-                },
               ),
             ),
           ),
