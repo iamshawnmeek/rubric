@@ -40,7 +40,7 @@ class _BottomSheet extends StatelessWidget {
       fontFamily: 'Avenir-Heavy',
       fontSize: 24,
       height: 1.5,
-      color: Color(0xffD2BAED),
+      color: primaryLighter,
     );
 
     final onboardingPagesList = [
@@ -53,7 +53,7 @@ class _BottomSheet extends StatelessWidget {
               topLeft: Radius.circular(10),
               topRight: Radius.circular(10),
             ),
-            color: Color(0xff8F53D3),
+            color: primary,
           ),
           child: Align(
             alignment: Alignment.bottomCenter,
@@ -62,8 +62,8 @@ class _BottomSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch, //horizontal
               children: [
                 Container(
-                    width:
-                        double.infinity, //be as large as possible within parent
+                    //be as large as possible within parent
+                    width: double.infinity,
                     child: Text(l.onboarding1Title, style: pageTitleStyle)),
                 SizedBox(height: 42),
                 Container(
@@ -86,7 +86,7 @@ class _BottomSheet extends StatelessWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            color: Color(0xff8F53D3),
+            color: primary,
             child: Onboarding(
               background: Color(0xff1C0139),
               pagesContentPadding: EdgeInsets.zero,
@@ -94,8 +94,7 @@ class _BottomSheet extends StatelessWidget {
               isSkippable: false,
               pages: onboardingPagesList,
               indicator: Indicator(
-                activeIndicator:
-                    ActiveIndicator(color: Color(0xffFFAD00)), //wip
+                activeIndicator: ActiveIndicator(color: accent), //wip
                 indicatorDesign: IndicatorDesign.polygon(
                   polygonDesign: PolygonDesign(
                     polygon: DesignType.polygon_circle,
