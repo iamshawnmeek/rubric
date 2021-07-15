@@ -35,29 +35,29 @@ class _BottomSheet extends StatelessWidget {
     height: 1.3,
     color: secondary,
   );
+  static const pageTitleStyle = TextStyle(
+    fontFamily: 'Avenir-Black',
+    fontSize: 36,
+    height: 1.2,
+    color: Colors.white,
+  );
+
+  static const pageInfoStyle = TextStyle(
+    fontFamily: 'Avenir-Heavy',
+    fontSize: 24,
+    height: 1.5,
+    color: primaryLighter,
+  );
   const _BottomSheet({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    const pageTitleStyle = TextStyle(
-      fontFamily: 'Avenir-Black',
-      fontSize: 36,
-      height: 1.2,
-      color: Colors.white,
-    );
-
-    const pageInfoStyle = TextStyle(
-      fontFamily: 'Avenir-Heavy',
-      fontSize: 24,
-      height: 1.5,
-      color: primaryLighter,
-    );
 
     final onboardingPagesList = [
-      _buildPage(l, pageTitleStyle, pageInfoStyle),
-      _buildPage(l, pageTitleStyle, pageInfoStyle),
-      _buildPage(l, pageTitleStyle, pageInfoStyle),
+      _buildPage(title: l.onboarding1Title, message: l.onboarding1Message),
+      _buildPage(title: l.onboarding2Title, message: l.onboarding2Message),
+      _buildPage(title: l.onboarding3Title, message: l.onboarding3Message),
     ];
 
     return Stack(
@@ -66,34 +66,37 @@ class _BottomSheet extends StatelessWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: IntrinsicHeight(
-            child: Onboarding(
-              isStandalone: false,
-              isSkippable: false,
-              background: Colors.transparent,
-              pagesContentPadding: EdgeInsets.zero,
-              footerPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 45),
-              pages: onboardingPagesList,
-              indicator: Indicator(
-                activeIndicator: ActiveIndicator(color: accent),
-                indicatorDesign: IndicatorDesign.polygon(
-                  polygonDesign: PolygonDesign(
-                    polygon: DesignType.polygon_circle,
+            child: SafeArea(
+              child: Onboarding(
+                isStandalone: false,
+                isSkippable: false,
+                background: Colors.transparent,
+                pagesContentPadding: EdgeInsets.zero,
+                footerPadding: EdgeInsets.all(12).copyWith(left: 45),
+                pages: onboardingPagesList,
+                indicator: Indicator(
+                  activeIndicator: ActiveIndicator(color: accent),
+                  indicatorDesign: IndicatorDesign.polygon(
+                    polygonDesign: PolygonDesign(
+                      polygon: DesignType.polygon_circle,
+                    ),
                   ),
                 ),
-              ),
-              proceedButtonStyle: ProceedButtonStyle(
-                proceedButtonColor: accent,
-                proceedButtonBorderRadius: _borderRadius,
-                proceedButtonPadding: _buttonPadding,
-                proceedpButtonText: Text(l.nextTitle, style: _buttonStyle),
-                proceedButtonRoute: (_) {
-                  print('Success!');
-                },
-              ),
-              skipButtonStyle: SkipButtonStyle(
-                skipButtonBorderRadius: _borderRadius,
-                skipButtonPadding: _buttonPadding,
-                skipButtonText: Text(l.skipTitle, style: _buttonStyle),
+                proceedButtonStyle: ProceedButtonStyle(
+                  proceedButtonColor: accent,
+                  proceedButtonBorderRadius: _borderRadius,
+                  proceedButtonPadding: _buttonPadding,
+                  proceedpButtonText: Text(l.nextTitle, style: _buttonStyle),
+                  proceedButtonRoute: (_) {
+                    // TODO: make next button navigate to the landing page
+                    print('Success!');
+                  },
+                ),
+                skipButtonStyle: SkipButtonStyle(
+                  skipButtonBorderRadius: _borderRadius,
+                  skipButtonPadding: _buttonPadding,
+                  skipButtonText: Text(l.skipTitle, style: _buttonStyle),
+                ),
               ),
             ),
           ),
@@ -102,8 +105,10 @@ class _BottomSheet extends StatelessWidget {
     );
   }
 
-  PageModel _buildPage(
-      AppLocalizations l, TextStyle pageTitleStyle, TextStyle pageInfoStyle) {
+  PageModel _buildPage({
+    @required String title,
+    @required String message,
+  }) {
     return PageModel(
       widget: Container(
         margin: EdgeInsets.only(left: 12, right: 12),
@@ -112,26 +117,13 @@ class _BottomSheet extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10)),
           color: primary,
         ),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Column(
-            mainAxisSize: MainAxisSize.min, //vertical
-            crossAxisAlignment: CrossAxisAlignment.stretch, //horizontal
-            children: [
-              Container(
-                  //be as large as possible within parent
-                  width: double.infinity,
-                  child: Text(l.onboarding1Title, style: pageTitleStyle)),
-              SizedBox(height: 42),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  l.onboarding1Message,
-                  style: pageInfoStyle,
-                ),
-              ),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(child: Text(title, style: pageTitleStyle)),
+            SizedBox(height: 42),
+            Container(child: Text(message, style: pageInfoStyle)),
+          ],
         ),
       ),
     );
