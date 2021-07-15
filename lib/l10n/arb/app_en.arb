@@ -2,7 +2,11 @@
     "@@locale": "en",
     "nextTitle": "Next",
     "@nextTitle": {
-        "description": ""
+        "description": "Used in onboarding to continue to next step"
+    },
+    "skipTitle": "Skip",
+    "@skipTitle": {
+        "description": "Used in onboarding to go to the final page"
     },
     "onboarding1Title": "Grading made simple.",
     "@onboarding1Title": {

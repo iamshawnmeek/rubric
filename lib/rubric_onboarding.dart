@@ -24,6 +24,17 @@ class RubricOnboarding extends StatelessWidget {
 }
 
 class _BottomSheet extends StatelessWidget {
+  static final _borderRadius = BorderRadius.circular(10);
+  static const _buttonPadding = const EdgeInsets.symmetric(
+    horizontal: 30,
+    vertical: 12,
+  );
+  static const _buttonStyle = const TextStyle(
+    fontFamily: 'Avenir-Heavy',
+    fontSize: 18,
+    height: 1.3,
+    color: secondary,
+  );
   const _BottomSheet({Key key}) : super(key: key);
 
   @override
@@ -44,40 +55,9 @@ class _BottomSheet extends StatelessWidget {
     );
 
     final onboardingPagesList = [
-      PageModel(
-        widget: Container(
-          margin: EdgeInsets.only(left: 12, right: 12),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 36),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            color: primary,
-          ),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min, //vertical
-              crossAxisAlignment: CrossAxisAlignment.stretch, //horizontal
-              children: [
-                Container(
-                    //be as large as possible within parent
-                    width: double.infinity,
-                    child: Text(l.onboarding1Title, style: pageTitleStyle)),
-                SizedBox(height: 42),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    l.onboarding1Message,
-                    style: pageInfoStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      _buildPage(l, pageTitleStyle, pageInfoStyle),
+      _buildPage(l, pageTitleStyle, pageInfoStyle),
+      _buildPage(l, pageTitleStyle, pageInfoStyle),
     ];
 
     return Stack(
@@ -85,49 +65,75 @@ class _BottomSheet extends StatelessWidget {
         Container(color: Colors.black.withOpacity(0.4)),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Container(
-            color: primary,
-            child: IntrinsicHeight(
-              child: Onboarding(
-                isStandalone: false,
-                background: Color(0xff1C0139),
-                pagesContentPadding: EdgeInsets.zero,
-                footerPadding: EdgeInsets.only(left: 45, right: 12, bottom: 45),
-                isSkippable: false,
-                pages: onboardingPagesList,
-                indicator: Indicator(
-                  activeIndicator: ActiveIndicator(color: accent), //wip
-                  indicatorDesign: IndicatorDesign.polygon(
-                    polygonDesign: PolygonDesign(
-                      polygon: DesignType.polygon_circle,
-                    ),
+          child: IntrinsicHeight(
+            child: Onboarding(
+              isStandalone: false,
+              isSkippable: false,
+              background: Colors.transparent,
+              pagesContentPadding: EdgeInsets.zero,
+              footerPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 45),
+              pages: onboardingPagesList,
+              indicator: Indicator(
+                activeIndicator: ActiveIndicator(color: accent),
+                indicatorDesign: IndicatorDesign.polygon(
+                  polygonDesign: PolygonDesign(
+                    polygon: DesignType.polygon_circle,
                   ),
                 ),
-                proceedButtonStyle: ProceedButtonStyle(
-                  proceedButtonColor: accent,
-                  proceedButtonBorderRadius: BorderRadius.circular(10),
-                  proceedButtonPadding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 12,
-                  ),
-                  proceedpButtonText: Text(
-                    l.nextTitle,
-                    style: TextStyle(
-                      fontFamily: 'Avenir-Heavy',
-                      fontSize: 18,
-                      height: 1.3,
-                      color: secondary,
-                    ),
-                  ),
-                  proceedButtonRoute: (_) {
-                    print('Success!');
-                  },
-                ),
+              ),
+              proceedButtonStyle: ProceedButtonStyle(
+                proceedButtonColor: accent,
+                proceedButtonBorderRadius: _borderRadius,
+                proceedButtonPadding: _buttonPadding,
+                proceedpButtonText: Text(l.nextTitle, style: _buttonStyle),
+                proceedButtonRoute: (_) {
+                  print('Success!');
+                },
+              ),
+              skipButtonStyle: SkipButtonStyle(
+                skipButtonBorderRadius: _borderRadius,
+                skipButtonPadding: _buttonPadding,
+                skipButtonText: Text(l.skipTitle, style: _buttonStyle),
               ),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  PageModel _buildPage(
+      AppLocalizations l, TextStyle pageTitleStyle, TextStyle pageInfoStyle) {
+    return PageModel(
+      widget: Container(
+        margin: EdgeInsets.only(left: 12, right: 12),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: primary,
+        ),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min, //vertical
+            crossAxisAlignment: CrossAxisAlignment.stretch, //horizontal
+            children: [
+              Container(
+                  //be as large as possible within parent
+                  width: double.infinity,
+                  child: Text(l.onboarding1Title, style: pageTitleStyle)),
+              SizedBox(height: 42),
+              Container(
+                width: double.infinity,
+                child: Text(
+                  l.onboarding1Message,
+                  style: pageInfoStyle,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
