@@ -4,6 +4,7 @@ import 'package:onboarding/onboarding.dart';
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/components/rubric_logo.dart';
 import 'package:rubric/l10n/l10n.dart';
+import 'package:rubric/enums.dart';
 
 class RubricOnboarding extends StatelessWidget {
   final FlowController flowController;
@@ -16,7 +17,11 @@ class RubricOnboarding extends StatelessWidget {
       body: Stack(
         children: [
           _RubricLogo(),
-          _BottomSheet(),
+//TODO: Add a 3 sec fade from logo screen to _BottomSheet reveal / fade up. Backdrop fades in and then _BottomSheet fades in from bottom to top.
+          Container(color: Colors.black.withOpacity(0.4)),
+          _BottomSheet(
+            flowController: flowController,
+          ),
         ],
       ),
     );
@@ -24,6 +29,7 @@ class RubricOnboarding extends StatelessWidget {
 }
 
 class _BottomSheet extends StatelessWidget {
+  final FlowController flowController;
   static final _borderRadius = BorderRadius.circular(10);
   static const _buttonPadding = const EdgeInsets.symmetric(
     horizontal: 30,
@@ -48,7 +54,8 @@ class _BottomSheet extends StatelessWidget {
     height: 1.5,
     color: primaryLighter,
   );
-  const _BottomSheet({Key key}) : super(key: key);
+  const _BottomSheet({Key key, @required this.flowController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,48 +67,44 @@ class _BottomSheet extends StatelessWidget {
       _buildPage(title: l.onboarding3Title, message: l.onboarding3Message),
     ];
 
-    return Stack(
-      children: [
-        Container(color: Colors.black.withOpacity(0.4)),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: IntrinsicHeight(
-            child: SafeArea(
-              child: Onboarding(
-                isStandalone: false,
-                isSkippable: false,
-                background: Colors.transparent,
-                pagesContentPadding: EdgeInsets.zero,
-                footerPadding: EdgeInsets.all(12).copyWith(left: 45),
-                pages: onboardingPagesList,
-                indicator: Indicator(
-                  activeIndicator: ActiveIndicator(color: accent),
-                  indicatorDesign: IndicatorDesign.polygon(
-                    polygonDesign: PolygonDesign(
-                      polygon: DesignType.polygon_circle,
-                    ),
-                  ),
-                ),
-                proceedButtonStyle: ProceedButtonStyle(
-                  proceedButtonColor: accent,
-                  proceedButtonBorderRadius: _borderRadius,
-                  proceedButtonPadding: _buttonPadding,
-                  proceedpButtonText: Text(l.nextTitle, style: _buttonStyle),
-                  proceedButtonRoute: (_) {
-                    // TODO: make next button navigate to the landing page
-                    print('Success!');
-                  },
-                ),
-                skipButtonStyle: SkipButtonStyle(
-                  skipButtonBorderRadius: _borderRadius,
-                  skipButtonPadding: _buttonPadding,
-                  skipButtonText: Text(l.skipTitle, style: _buttonStyle),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: IntrinsicHeight(
+        child: SafeArea(
+          child: Onboarding(
+            isStandalone: false,
+            isSkippable: false,
+            background: Colors.transparent,
+            pagesContentPadding: EdgeInsets.zero,
+            footerPadding: EdgeInsets.all(12).copyWith(left: 45),
+            pages: onboardingPagesList,
+            indicator: Indicator(
+              activeIndicator: ActiveIndicator(color: primaryLight),
+              closedIndicator: ClosedIndicator(color: accent),
+              indicatorDesign: IndicatorDesign.polygon(
+                polygonDesign: PolygonDesign(
+                  polygon: DesignType.polygon_circle,
                 ),
               ),
             ),
+            proceedButtonStyle: ProceedButtonStyle(
+                proceedButtonColor: accent,
+                proceedButtonBorderRadius: _borderRadius,
+                proceedButtonPadding: _buttonPadding,
+                proceedpButtonText: Text(l.nextTitle, style: _buttonStyle),
+                proceedButtonRoute: (_) {
+                  flowController.update(
+                    (_) => OnboardingFlow.assignGroups,
+                  );
+                }),
+            skipButtonStyle: SkipButtonStyle(
+              skipButtonBorderRadius: _borderRadius,
+              skipButtonPadding: _buttonPadding,
+              skipButtonText: Text(l.skipTitle, style: _buttonStyle),
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 
