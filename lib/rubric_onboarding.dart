@@ -30,7 +30,8 @@ class _RubricOnboardingState extends State<RubricOnboarding> {
   @override
   void dispose() {
     _timer.cancel();
-    super.dispose();
+    super
+        .dispose(); //ended on Mon, 7.19.21. What is the beginning state and what is the ending state?
   }
 
   @override
