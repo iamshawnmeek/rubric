@@ -32,6 +32,7 @@ class _RubricOnboardingState extends State<RubricOnboarding> {
     _timer.cancel();
     super
         .dispose(); //ended on Mon, 7.19.21. What is the beginning state and what is the ending state?
+    //Resource link: https://flutter-examples.com/execute-a-function-with-delay-time/
   }
 
   @override
