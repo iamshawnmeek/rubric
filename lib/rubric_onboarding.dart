@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:onboarding/onboarding.dart';
 import 'package:rubric/components/colors.dart';
@@ -6,21 +7,43 @@ import 'package:rubric/components/rubric_logo.dart';
 import 'package:rubric/l10n/l10n.dart';
 import 'package:rubric/enums.dart';
 
-class RubricOnboarding extends StatelessWidget {
+class RubricOnboarding extends StatefulWidget {
   final FlowController flowController;
 
   RubricOnboarding({Key key, @required this.flowController}) : super(key: key);
+
+  @override
+  _RubricOnboardingState createState() => _RubricOnboardingState();
+}
+
+class _RubricOnboardingState extends State<RubricOnboarding> {
+  @override
+  Timer _timer;
+
+  void initState() {
+    super.initState();
+    _timer = Timer(const Duration(seconds: 3), () {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          _RubricLogo(),
-//TODO: Add a 3 sec fade from logo screen to _BottomSheet reveal / fade up. Backdrop fades in and then _BottomSheet fades in from bottom to top.
-          Container(color: Colors.black.withOpacity(0.4)),
+          //TODO: Add a 3 sec fade from logo screen to _BottomSheet reveal / fade up. Backdrop fades in and then _BottomSheet fades in from bottom to top.
+          _RubricLogo(), //1
+          Container(color: Colors.black.withOpacity(0.4)), //2
           _BottomSheet(
-            flowController: flowController,
+            //3
+            flowController: widget.flowController,
           ),
         ],
       ),
