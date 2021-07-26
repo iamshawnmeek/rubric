@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/l10n/l10n.dart';
 import 'package:rubric/typography/card_next.dart';
