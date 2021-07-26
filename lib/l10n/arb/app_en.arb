@@ -31,5 +31,45 @@
     "onboarding3Message": "Let's determine your specific grading scale preferences: simple or detailed and build your first rubric.",
     "@onboarding3Message": {
         "description": ""
+    },
+    "gradingScaleTitle": "Grading Scale",
+    "@gradingScaleTitle": {
+        "description": ""
+    },
+    "gradingScaleToggleSimple": "Simple",
+    "@gradingScaleToggleSimple": {
+        "description": ""
+    },
+    "gradingScaleToggleDetailed": "Detailed",
+    "@gradingScaleToggleDetailed": {
+        "description": ""
+    },
+    "gradingScaleGradeA": "A",
+    "@gradingScaleGradeA": {
+        "description": ""
+    },
+    "gradingScaleGradeB": "B",
+    "@gradingScaleGradeB": {
+        "description": ""
+    },
+    "gradingScaleGradeC": "C",
+    "@gradingScaleGradeC": {
+        "description": ""
+    },
+    "gradingScaleGradeD": "D",
+    "@gradingScaleGradeD": {
+        "description": ""
+    },
+    "gradingScaleGradeF": "F",
+    "@gradingScaleGradeF": {
+        "description": ""
+    },
+    "gradingScaleTo": "to",
+    "@gradingScaleTo": {
+        "description": ""
+    },
+    "setGradingScaleTitle": "Set Grading Scale",
+    "@setGradingScaleTitle": {
+        "description": ""
     }
 }
