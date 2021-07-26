@@ -27,8 +27,4 @@ class RubricGradingScale extends StatelessWidget {
     );
   }
 }
-<<<<<<< HEAD
-
 //TODO: Ended on 7.26: Begin to build out the rows and input fields.
-=======
->>>>>>> 7e5d0e7ff42250311f7966d291fc3f3d85aaf0e2
