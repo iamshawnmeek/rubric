@@ -119,7 +119,7 @@ class _BottomSheet extends StatelessWidget {
                 proceedpButtonText: Text(l.nextTitle, style: _buttonStyle),
                 proceedButtonRoute: (_) {
                   flowController.update(
-                    (_) => OnboardingFlow.assignGroups,
+                    (_) => OnboardingFlow.gradingScale,
                   );
                 }),
             skipButtonStyle: SkipButtonStyle(
