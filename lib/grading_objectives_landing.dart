@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:rubric/components/create_card.dart';
 import 'package:rubric/components/next_button.dart';
 import 'package:rubric/components/rubric_card.dart';
