@@ -3,6 +3,7 @@ enum OnboardingFlow {
   gradingObjectives,
   assignGroups,
   assignWeights,
+  gradingScale,
 }
 
 enum MainFlow {
