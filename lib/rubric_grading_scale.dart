@@ -1,5 +1,6 @@
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:rubric/components/setGradingScale_button.dart';
 import 'package:rubric/l10n/l10n.dart';
 import 'package:rubric/typography/body_headline.dart';
 
@@ -22,8 +23,7 @@ class RubricGradingScale extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: SetGradingScaleButton(),
     );
   }
 }
-
-//float in CTA at bottom
