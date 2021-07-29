@@ -91,7 +91,7 @@ class RubricGradingScale extends StatelessWidget {
         ToggleBtnTitleNull(l.gradingScaleGradeA),
         Container(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
             child: ToggleBtnTitleNull('90'),
           ),
           decoration: BoxDecoration(
@@ -100,7 +100,7 @@ class RubricGradingScale extends StatelessWidget {
         ToggleBtnTitleNull(l.gradingScaleTo),
         Container(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
             child: ToggleBtnTitleNull('100'),
           ),
           decoration: BoxDecoration(
