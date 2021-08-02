@@ -9,3 +9,4 @@ const primaryLighter = Color(0xffD2BAED); // very light purple
 const primaryLightest = Color(0xffB693DD); // very lightest purple
 const accent = Color(0xffFFAD00); // accent orange
 const lightGray = Color(0xff979797); // light gray for border
+const inactive = Color(0xff9071B4); // lighter color for inactive state
