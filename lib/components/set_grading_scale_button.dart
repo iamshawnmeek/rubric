@@ -23,6 +23,7 @@ class SetGradingScaleButton extends StatelessWidget {
           onTap: onTap,
           child: Container(
             height: 75,
+            // constraints: BoxConstraints(minHeight: 75),
             child: Center(
               child: CardNext(l.setGradingScaleTitle),
             ),

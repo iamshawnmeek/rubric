@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rubric/components/colors.dart';
 
-class ToggleBtnTitleNull extends StatelessWidget {
+class BodyGradingScaleInput extends StatelessWidget {
   final String data;
   final double fontSize;
   final Color color;
 
-  const ToggleBtnTitleNull(
+  const BodyGradingScaleInput(
     this.data, {
     this.fontSize = 21,
     this.color = primaryLighter,
