@@ -22,61 +22,58 @@ class RubricGradingScale extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                child: BodyHeadline(l.gradingScaleTitle),
-              ),
-              SizedBox(height: 22),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 60,
-                          vertical: 12,
-                        ), //note for JW: not sure if this horizontal / width is the right way to do this.
-                        child:
-                            ToggleButtonTitleActive(l.gradingScaleToggleSimple),
-                      ),
-                      decoration: BoxDecoration(
-                        color: primaryDark,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+          child: DefaultTabController(
+            length: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: BodyHeadline(l.gradingScaleTitle),
+                ),
+                SizedBox(height: 22),
+                TabBar(
+                  tabs: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                          ToggleButtonTitleActive(l.gradingScaleToggleSimple),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 50,
-                          vertical: 12,
-                        ), //note for JW: not sure if this horizontal / width is the right way to do this.
-                        child: ToggleButtonTitleInactive(
-                            l.gradingScaleToggleDetailed),
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                          ToggleButtonTitleActive(l.gradingScaleToggleDetailed),
                     ),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _spacingBetweenRows(),
+                          _gradingScaleRow(
+                              l: l, low: '90', high: '100', gradeTitle: 'A'),
+                          _spacingBetweenRows(),
+                          _gradingScaleRow(
+                              l: l, low: '80', high: '89.9', gradeTitle: 'B'),
+                          _spacingBetweenRows(),
+                          _gradingScaleRow(
+                              l: l, low: '70', high: '79.9', gradeTitle: 'C'),
+                          _spacingBetweenRows(),
+                          _gradingScaleRow(
+                              l: l, low: '60', high: '69.9', gradeTitle: 'D'),
+                          _spacingBetweenRows(),
+                          _gradingScaleRow(
+                              l: l, low: '50', high: '59.9', gradeTitle: 'F'),
+                        ],
+                      ),
+                      Container(),
+                    ],
                   ),
-                ],
-              ),
-              _spacingBetweenRows(),
-              _gradingScaleRow(l: l, low: '90', high: '100', gradeTitle: 'A'),
-              _spacingBetweenRows(),
-              _gradingScaleRow(l: l, low: '80', high: '89.9', gradeTitle: 'B'),
-              _spacingBetweenRows(),
-              _gradingScaleRow(l: l, low: '70', high: '79.9', gradeTitle: 'C'),
-              _spacingBetweenRows(),
-              _gradingScaleRow(l: l, low: '60', high: '69.9', gradeTitle: 'D'),
-              _spacingBetweenRows(),
-              _gradingScaleRow(l: l, low: '50', high: '59.9', gradeTitle: 'F'),
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -117,13 +114,13 @@ class RubricGradingScale extends StatelessWidget {
       ],
     );
   }
-}
+// TODO: See below
+//X. You didn’t use any widgets that actually “do” anything. Maybe use a TabBarView instead of building out widgets for the buttons? The buttons can work, but you’ll have to make your own animations and such between the simple and detailed views.
+//What to do with this? Thinking through the next steps.
 
-//Also TODO: 
-//6. Fix the warning
+//X. Fix the warning
 
-//7. Fix how rows / text appear on other devices / testing
-
-//4. You didn’t use any widgets that actually “do” anything. Maybe use a TabBarView instead of building out widgets for the buttons? The buttons can work, but you’ll have to make your own animations and such between the simple and detailed views.
+//X. Fix how rows / text appear on other devices / testing
 
 //X. Make small adjustments to inconsistent sizes of containers / padding in inputs.
+}
