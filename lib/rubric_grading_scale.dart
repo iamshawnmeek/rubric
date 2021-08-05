@@ -30,28 +30,24 @@ class RubricGradingScale extends StatelessWidget {
                   child: BodyHeadline(l.gradingScaleTitle),
                 ),
                 SizedBox(height: 22),
-                Container(
-                  // decoration: BoxDecoration(color: primaryDark),
-                  child: TabBar(
-                    // indicatorWeight: 1,
-                    // indicatorColor: Colors.blue[100],
-                    // indicatorColor: Color(0xff6E27BC),
-
-                    //SM Note, 8.5.21: Seems the indicator is contingent on tab changes, to see how to add b/g color to indicator
-                    //Check out: https://medium.com/codechai/flutter-boring-tab-to-cool-tab-bfcb1a93f8d0
-                    tabs: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:
-                            ToggleButtonTitleActive(l.gradingScaleToggleSimple),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ToggleButtonTitleActive(
-                            l.gradingScaleToggleDetailed),
-                      ),
-                    ],
-                  ),
+                TabBar(
+                  unselectedLabelColor: primaryLighter,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: primaryDark),
+                  tabs: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child:
+                          ToggleButtonTitleActive(l.gradingScaleToggleSimple),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child:
+                          ToggleButtonTitleActive(l.gradingScaleToggleDetailed),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: TabBarView(
@@ -125,9 +121,7 @@ class RubricGradingScale extends StatelessWidget {
       ],
     );
   }
-// TODO: See below
-//– WIP: Work with TabViewBar to customize look of default buttons: Simple & Detailed
-
+// TODO:
 //- For Fri (8.6): Build in the inputs for each
 
 //– Work with TabViewBar to show the 'Detailed' view
