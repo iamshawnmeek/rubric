@@ -30,19 +30,28 @@ class RubricGradingScale extends StatelessWidget {
                   child: BodyHeadline(l.gradingScaleTitle),
                 ),
                 SizedBox(height: 22),
-                TabBar(
-                  tabs: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                          ToggleButtonTitleActive(l.gradingScaleToggleSimple),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                          ToggleButtonTitleActive(l.gradingScaleToggleDetailed),
-                    ),
-                  ],
+                Container(
+                  // decoration: BoxDecoration(color: primaryDark),
+                  child: TabBar(
+                    // indicatorWeight: 1,
+                    // indicatorColor: Colors.blue[100],
+                    // indicatorColor: Color(0xff6E27BC),
+
+                    //SM Note, 8.5.21: Seems the indicator is contingent on tab changes, to see how to add b/g color to indicator
+                    //Check out: https://medium.com/codechai/flutter-boring-tab-to-cool-tab-bfcb1a93f8d0
+                    tabs: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                            ToggleButtonTitleActive(l.gradingScaleToggleSimple),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ToggleButtonTitleActive(
+                            l.gradingScaleToggleDetailed),
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: TabBarView(
@@ -117,7 +126,7 @@ class RubricGradingScale extends StatelessWidget {
     );
   }
 // TODO: See below
-//– Work with TabViewBar to customize look of default buttons: Simple & Detailed
+//– WIP: Work with TabViewBar to customize look of default buttons: Simple & Detailed
 
 //- For Fri (8.6): Build in the inputs for each
 
