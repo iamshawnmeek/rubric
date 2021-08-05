@@ -398,7 +398,7 @@ class BottomSheetBacking extends StatelessWidget {
 
     return SizedBox(height: height);
   }
-}
-
-//ToDo:
+//TODO:
 // -Update the padding on Drag Target title update if user inputs too long of a text entry
+
+}
