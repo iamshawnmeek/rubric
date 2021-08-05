@@ -6,7 +6,6 @@ import 'package:rubric/l10n/l10n.dart';
 import 'package:rubric/typography/body_headline.dart';
 import 'package:rubric/typography/body_grading_scale_input.dart';
 import 'package:rubric/typography/toggle_button_title_active.dart';
-import 'package:rubric/typography/toggle_button_title_inactive.dart';
 
 class RubricGradingScale extends StatelessWidget {
   final FlowController flowController;
@@ -77,7 +76,9 @@ class RubricGradingScale extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: SetGradingScaleButton(),
+      floatingActionButton: SetGradingScaleButton(
+        onTap: () {},
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
@@ -91,6 +92,7 @@ class RubricGradingScale extends StatelessWidget {
     @required AppLocalizations l,
   }) {
     return Row(
+      //in future: look into possible fix for consistent input alignment & size
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         BodyGradingScaleInput(gradeTitle),
@@ -115,12 +117,10 @@ class RubricGradingScale extends StatelessWidget {
     );
   }
 // TODO: See below
-//X. You didn’t use any widgets that actually “do” anything. Maybe use a TabBarView instead of building out widgets for the buttons? The buttons can work, but you’ll have to make your own animations and such between the simple and detailed views.
-//What to do with this? Thinking through the next steps.
+//– Work with TabViewBar to customize look of default buttons: Simple & Detailed
 
-//X. Fix the warning
+//- For Fri (8.6): Build in the inputs for each
 
-//X. Fix how rows / text appear on other devices / testing
+//– Work with TabViewBar to show the 'Detailed' view
 
-//X. Make small adjustments to inconsistent sizes of containers / padding in inputs.
 }
