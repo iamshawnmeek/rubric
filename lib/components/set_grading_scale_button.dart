@@ -28,7 +28,6 @@ class SetGradingScaleButton extends StatelessWidget {
               child: CardNext(l.setGradingScaleTitle),
             ),
             padding: const EdgeInsets.symmetric(
-              horizontal: 24,
               vertical: 18,
             ),
             decoration: BoxDecoration(
