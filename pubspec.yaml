@@ -102,6 +102,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-  # TODO: https://dart.dev/null-safety/migration-guide
-  # TODO: https://github.com/VeryGoodOpenSource/very_good_analysis/blob/main/lib/analysis_options.2.3.0.yaml
-  # TODO: Fix technical debt issues: updating all strings to include arb file
+  # TODO: Add https://github.com/VeryGoodOpenSource/very_good_analysis/blob/main/lib/analysis_options.2.3.0.yaml
+  # TODO: https://dart.dev/null-safety/migration-guide: to do w/ JW
+  # TODO: Fix technical debt issues: updating all strings to include arb file throughout app
