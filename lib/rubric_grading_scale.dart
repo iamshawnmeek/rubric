@@ -122,8 +122,11 @@ class RubricGradingScale extends StatelessWidget {
     );
   }
 // TODO:
-//- For Fri (8.6): Build in the inputs for each
 
-//– Work with TabViewBar to show the 'Detailed' view
+//- Add https://github.com/VeryGoodOpenSource/very_good_analysis/blob/main/lib/analysis_options.2.3.0.yaml
+//- https://dart.dev/null-safety/migration-guide: to do w/ JW
+//- Fix technical debt issues: updating all strings to include arb file throughout app
+//- Build in the inputs for each
+//– Build out 'Detailed' view with TabBar
 
 }
