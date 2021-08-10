@@ -354,10 +354,11 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
         return Draggable(
           data: objective,
           onDragUpdate: (dragDetails) {
-            // TODO: scroll list when user drags to edge
-            // Get coordinates top of bottom sheet
-            // Get coordinates of top of the assign groups area
-            // if the drag details say it's out of bounds, scroll
+            // TODO:
+            //- Scroll list when user drags to edge
+            //- Get coordinates top of bottom sheet
+            //- Get coordinates of top of the assign groups area
+            //- If the drag details say it's out of bounds, scroll
           },
           feedback: Container(
             width: deviceWidth,
@@ -399,6 +400,6 @@ class BottomSheetBacking extends StatelessWidget {
     return SizedBox(height: height);
   }
 //TODO:
-// -Update the padding on Drag Target title update if user inputs too long of a text entry
+//- Update the padding on Drag Target title update if user inputs too long of a text entry
 
 }
