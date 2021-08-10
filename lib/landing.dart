@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:flow_builder/flow_builder.dart';
-
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/components/rubric_logo.dart';
 import 'package:rubric/onboarding_bottom_sheet.dart';
