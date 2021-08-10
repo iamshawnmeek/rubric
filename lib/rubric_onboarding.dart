@@ -168,7 +168,7 @@ class _RubricLogo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: height * .3), //MQ Use
+          SizedBox(height: height * .3),
           RubricLogo(),
         ],
       ),
