@@ -18,7 +18,7 @@ import 'package:rubric/l10n/l10n.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
+    const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.dark,
@@ -117,4 +117,12 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+// TODO:
+
+//- Weds – Week: Refactor all files now that VGAnalysis is in...
+
+//- Add Null Safety Migration, with JW: https://dart.dev/null-safety/migration-guide
+//- Fix technical debt: updating all strings to include arb file throughout app
+//- Build in the inputs for each item
+//– Build out 'Detailed' view with TabBar
 }

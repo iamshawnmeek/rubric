@@ -8,10 +8,10 @@ import 'package:rubric/typography/body_grading_scale_input.dart';
 import 'package:rubric/typography/toggle_button_title_active.dart';
 
 class RubricGradingScale extends StatelessWidget {
-  final FlowController flowController;
-
-  const RubricGradingScale({Key key, @required this.flowController})
+  const RubricGradingScale({Key? key, required this.flowController})
       : super(key: key);
+
+  final FlowController flowController;
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +26,8 @@ class RubricGradingScale extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  child: BodyHeadline(l.gradingScaleTitle),
-                ),
-                SizedBox(height: 22),
+                BodyHeadline(l.gradingScaleTitle),
+                const SizedBox(height: 22),
                 TabBar(
                   unselectedLabelColor: primaryLighter,
                   indicatorSize: TabBarIndicatorSize.tab,
@@ -88,13 +86,13 @@ class RubricGradingScale extends StatelessWidget {
     );
   }
 
-  SizedBox _spacingBetweenRows() => SizedBox(height: 32);
+  SizedBox _spacingBetweenRows() => const SizedBox(height: 32);
 
   Widget _gradingScaleRow({
-    @required String gradeTitle,
-    @required String low,
-    @required String high,
-    @required AppLocalizations l,
+    required String gradeTitle,
+    required String low,
+    required String high,
+    required AppLocalizations l,
   }) {
     return Row(
       //in future: look into possible fix for consistent input alignment & size
@@ -121,12 +119,4 @@ class RubricGradingScale extends StatelessWidget {
       ],
     );
   }
-// TODO:
-
-//- Tues / Weds: Refactor all files now that VGAnalysis is in...
-
-//- Add Null Safety Migration, with JW: https://dart.dev/null-safety/migration-guide
-//- Fix technical debt issues: updating all strings to include arb file throughout app
-//- Build in the inputs for each item
-//– Build out 'Detailed' view with TabBar
 }

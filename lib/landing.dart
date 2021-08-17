@@ -20,7 +20,6 @@ class Landing extends StatelessWidget {
         child: FloatingActionButton(
           foregroundColor: primaryDark,
           backgroundColor: accent,
-          child: Icon(Icons.add),
           onPressed: () {
             showModalBottomSheet(
               isScrollControlled: true,
@@ -30,6 +29,7 @@ class Landing extends StatelessWidget {
               ),
             );
           },
+          child: Icon(Icons.add),
         ),
       ),
       body: SafeArea(

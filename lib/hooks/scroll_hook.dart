@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ScrollHook extends StatefulWidget {
+  const ScrollHook({
+    required this.builder,
+    Key? key,
+  }) : super(key: key);
+
   final Widget Function(BuildContext, ScrollController, ScrollHookState)
       builder;
-
-  const ScrollHook({
-    @required this.builder,
-    Key key,
-  }) : super(key: key);
 
   @override
   ScrollHookState createState() => ScrollHookState();
@@ -24,15 +24,15 @@ class ScrollHookState extends State<ScrollHook> {
 
   @override
   void dispose() {
-    scrollController?.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
   void scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn,
       );
     });

@@ -10,10 +10,10 @@ import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
 
 class OnboardingBottomSheet extends StatefulWidget {
-  final FlowController flowController;
-
-  OnboardingBottomSheet({Key key, @required this.flowController})
+  const OnboardingBottomSheet({Key key, required this.flowController})
       : super(key: key);
+
+  final FlowController flowController;
 
   @override
   _OnboardingBottomSheetState createState() => _OnboardingBottomSheetState();
@@ -56,27 +56,26 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  HeadlineOne('Let’s create your first rubric.'),
-                  SizedBox(height: 45),
+                  const HeadlineOne('Let’s create your first rubric.'),
+                  const SizedBox(height: 45),
                   _FormLayer(
                     onObjectiveChanged: handleObjectiveChanged,
                     subtitle: 'What is your first grading objective?',
                   ),
-                  SizedBox(height: 26),
+                  const SizedBox(height: 26),
                 ],
               ),
               AnimatedPositioned(
                 //widget works with Stack
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.ease,
                 right: canContinue ? 0 : fabInactivePosition,
                 bottom: 0,
                 child: Transform.translate(
-                  offset: Offset(5, 0),
+                  offset: const Offset(5, 0),
                   child: FloatingActionButton(
                     foregroundColor: primaryDark,
                     backgroundColor: accent,
-                    child: Icon(Icons.add),
                     onPressed: () {
                       // Store the users objective
                       final rubric = context.read(rubricProviderRef);
@@ -86,6 +85,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
                         (_) => OnboardingFlow.gradingObjectives,
                       );
                     },
+                    child: const Icon(Icons.add),
                   ),
                 ),
               ),
@@ -98,14 +98,14 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
 }
 
 class _FormLayer extends StatelessWidget {
-  final String subtitle;
-  final void Function(String) onObjectiveChanged;
-
   const _FormLayer({
-    @required this.onObjectiveChanged,
+    required this.onObjectiveChanged,
     this.subtitle,
     Key key,
   }) : super(key: key);
+
+  final String subtitle;
+  final void Function(String) onObjectiveChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class _FormLayer extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: primary,
       ),
-      child: Column(
+      const child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (subtitle != null) ...[

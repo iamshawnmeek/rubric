@@ -1,23 +1,21 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:rubric/domain/weight/rubric_region.dart';
 
 enum Direction { up, down, undetermined }
 
 class Slider {
+  Slider({
+    required this.regionBefore,
+    required this.regionAfter,
+    required ScrollPosition initial,
+  }) : _current = initial;
+
+  double get scrollPosition => _current.value;
+  // The current scroll position
+
   final RubricRegion regionBefore;
   final RubricRegion regionAfter;
   ScrollPosition _current;
   ScrollPosition _previous;
-
-  /// The current scroll position
-  double get scrollPosition => _current.value;
-
-  Slider({
-    @required this.regionBefore,
-    @required this.regionAfter,
-    @required ScrollPosition initial,
-  }) : _current = initial;
 
   ScrollDelta getScrollDelta(ScrollPosition scrollPosition) =>
       ScrollDelta.fromPositions(previous: _current, next: scrollPosition);
@@ -65,14 +63,14 @@ class Slider {
 }
 
 class ScrollPosition {
-  final double value;
-
   const ScrollPosition(this.value);
 
+  final double value;
+
   static ScrollPosition fromGlobal({
-    @required double updatedY,
-    @required double globalHeight,
-    @required double currentScrollPosition,
+    required double updatedY,
+    required double globalHeight,
+    required double currentScrollPosition,
   }) {
     final currentY = (currentScrollPosition / 100) * globalHeight;
     final percentChange = (updatedY - currentY).abs();
@@ -82,17 +80,17 @@ class ScrollPosition {
 }
 
 class ScrollDelta {
+  const ScrollDelta({
+    required this.direction,
+    required this.value,
+  });
+
   final Direction direction;
   final double value;
 
-  const ScrollDelta({
-    @required this.direction,
-    @required this.value,
-  });
-
   static ScrollDelta fromPositions({
-    @required ScrollPosition previous,
-    @required ScrollPosition next,
+    required ScrollPosition previous,
+    required ScrollPosition next,
   }) {
     final delta = previous.value - next.value;
 

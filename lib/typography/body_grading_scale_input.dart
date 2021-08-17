@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:rubric/components/colors.dart';
 
 class BodyGradingScaleInput extends StatelessWidget {
-  final String data;
-  final double fontSize;
-  final Color color;
-
   const BodyGradingScaleInput(
     this.data, {
     this.fontSize = 21,
     this.color = primaryLighter,
-  });
+    Key? key,
+  }) : super(key: key);
+
+  final String data;
+  final double fontSize;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

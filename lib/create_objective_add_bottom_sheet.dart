@@ -14,7 +14,7 @@ class CreateObjectiveAddBottomSheet extends StatefulWidget {
 
   const CreateObjectiveAddBottomSheet({
     this.onPressed,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -106,9 +106,9 @@ class _FormLayer extends StatelessWidget {
   final void Function(String) onObjectiveChanged;
 
   const _FormLayer({
-    @required this.onObjectiveChanged,
-    this.subtitle,
-    Key key,
+    required this.onObjectiveChanged,
+    required this.subtitle,
+    Key? key,
   }) : super(key: key);
 
   @override

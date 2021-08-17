@@ -8,14 +8,14 @@ class AssignWeightsViewModel extends ChangeNotifier {
   final WeightController _controller;
   bool isAllLocked() => getRegions.every((region) => region.isLocked);
 
-  AssignWeightsViewModel({@required WeightController controller})
+  AssignWeightsViewModel({required WeightController controller})
       : _controller = controller;
 
   List<RubricRegion> get getRegions => _controller.getRegions();
 
   void moveSlider({
-    @required Slider slider,
-    @required ScrollPosition scrollPosition,
+    required Slider slider,
+    required ScrollPosition scrollPosition,
   }) {
     _controller.moveSlider(slider: slider, scrollPosition: scrollPosition);
     notifyListeners();
@@ -26,8 +26,8 @@ class AssignWeightsViewModel extends ChangeNotifier {
   /// Normally used to build a list of [Widget]s to be used inside of the [build]
   /// method of a [StatelessWidget] or [StatefullWidget]
   List<T> mapController<T>({
-    @required T Function(Slider slider) sliderBuilder,
-    @required T Function(RubricRegion region) regionBuilder,
+    required T Function(Slider slider) sliderBuilder,
+    required T Function(RubricRegion region) regionBuilder,
   }) {
     final sliders = _controller.toList();
     final regions = _controller.getRegions();

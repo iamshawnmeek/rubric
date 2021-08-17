@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';
@@ -96,10 +94,10 @@ void main() {
 
   group('#moveSlider', () {
     ScrollPosition getAdjustedPosition({
-      @required int sliderCount,
-      @required double initialWeight,
-      @required double adjustment,
-      @required int sliderIndex,
+      required int sliderCount,
+      required double initialWeight,
+      required double adjustment,
+      required int sliderIndex,
     }) {
       final positions = List.generate(
         sliderCount,
@@ -113,11 +111,11 @@ void main() {
     }
 
     void testMoveSlider({
-      @required WeightController controller,
-      @required List<String> regionNames,
-      @required ScrollPosition scrollPosition,
-      @required void makeAssertions(Slider slider),
-      @required Slider slider,
+      required WeightController controller,
+      required List<String> regionNames,
+      required ScrollPosition scrollPosition,
+      required void makeAssertions(Slider slider),
+      required Slider slider,
       void lockRegions(Slider slider),
     }) {
       lockRegions?.call(slider);
@@ -140,7 +138,7 @@ void main() {
       ];
       final controller = WeightController.fromNames(regionNames);
       final initialWeight = 100 / regionNames.length;
-      final sliderIndex = 0;
+      const sliderIndex = 0;
       final adjustedPosition = getAdjustedPosition(
         initialWeight: initialWeight,
         sliderCount: regionNames.length - 1,
@@ -175,7 +173,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 0;
+          const sliderIndex = 0;
           final adjustedPosition = getAdjustedPosition(
             initialWeight: initialWeight,
             sliderCount: regionNames.length - 1,
@@ -208,7 +206,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 0;
+          const sliderIndex = 0;
           final adjustedPosition = getAdjustedPosition(
             initialWeight: initialWeight,
             sliderCount: regionNames.length - 1,
@@ -244,7 +242,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: -15,
             sliderIndex: sliderIndex,
@@ -278,7 +276,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: 15,
             sliderIndex: sliderIndex,
@@ -385,7 +383,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 0;
+          const sliderIndex = 0;
           final adjustedPosition = getAdjustedPosition(
             adjustment: -15,
             sliderIndex: sliderIndex,
@@ -472,7 +470,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: -15,
             sliderIndex: sliderIndex,
@@ -538,7 +536,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: 15,
             sliderIndex: sliderIndex,

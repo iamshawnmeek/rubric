@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:rubric/components/colors.dart';
 import 'package:rubric/create_objective_add_bottom_sheet.dart';
 
 class CreateCard extends StatelessWidget {
-  final VoidCallback onPressed;
-
   const CreateCard({
-    this.onPressed,
-    Key key,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
+
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,7 @@ class CreateCard extends StatelessWidget {
         },
         child: Container(
           height: 92,
-          child: Center(
+          child: const Center(
             child: FaIcon(FontAwesomeIcons.plus),
           ),
           padding: const EdgeInsets.symmetric(

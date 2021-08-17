@@ -9,9 +9,9 @@ class RubricTextField extends StatefulWidget {
   final int maxLines;
 
   const RubricTextField({
-    @required this.hintText,
-    this.onEditingComplete,
-    this.onChanged,
+    required this.hintText,
+    required this.onEditingComplete,
+    required this.onChanged,
     this.maxLines = 1,
     Key key,
   }) : super(key: key);

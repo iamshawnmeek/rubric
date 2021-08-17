@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:rubric/domain/weight/rubric_region.dart';
 
 void main() {

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CardTitle extends StatelessWidget {
-  final String data;
-  final double fontSize;
-
   const CardTitle(
     this.data, {
+    Key? key,
     this.fontSize = 24,
-  });
+  }) : super(key: key);
+
+  final String data;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {

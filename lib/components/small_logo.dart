@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:rubric/components/colors.dart';
 
 class SmallLogo extends StatelessWidget {
   const SmallLogo({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

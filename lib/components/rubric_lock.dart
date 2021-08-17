@@ -6,9 +6,9 @@ class RubricLock extends StatelessWidget {
   final bool isActive;
 
   RubricLock({
-    @required this.onTap,
-    @required this.isActive,
-    Key key,
+    required this.onTap,
+    required this.isActive,
+    Key? key,
   }) : super(key: key);
 
   @override

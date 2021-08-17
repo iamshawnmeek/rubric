@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ToggleButtonTitleActive extends StatelessWidget {
-  final String data;
-  final double fontSize;
-
   const ToggleButtonTitleActive(
     this.data, {
     this.fontSize = 21,
-  });
+    Key? key,
+  }) : super(key: key);
+
+  final String data;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {

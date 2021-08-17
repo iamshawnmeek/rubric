@@ -16,15 +16,16 @@ import 'package:rubric/list_extensions.dart';
 import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
-import 'components/small_logo.dart';
+import 'package:rubric/components/small_logo.dart';
 
 class AssignGroupsLanding extends StatefulWidget {
+  const AssignGroupsLanding({Key? key}) : super(key: key);
   @override
   _AssignGroupsLandingState createState() => _AssignGroupsLandingState();
 }
 
 class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
-  ScrollHookState scrollHook;
+  ScrollHookState? scrollHook;
 
   @override
   Widget build(BuildContext context) {
@@ -55,17 +56,17 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              SizedBox(height: 36),
-                              SmallLogo(),
-                              SizedBox(height: 60),
-                              HeadlineOne('Assign Groups'),
-                              SizedBox(height: 46),
+                              const SizedBox(height: 36),
+                              const SmallLogo(),
+                              const SizedBox(height: 60),
+                              const HeadlineOne('Assign Groups'),
+                              const SizedBox(height: 46),
                               if (rubricInstance.groups.isNotEmpty)
                                 buildGroups(
                                   rubric: rubricInstance,
                                   context: context,
                                 ),
-                              SizedBox(height: 24),
+                              const SizedBox(height: 24),
                               _buildDragTarget(
                                 context: context,
                                 text: rubricInstance.groups.isEmpty
@@ -77,7 +78,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                                   bottomSheetObjectives: bottomSheetObjectives,
                                 )
                               else
-                                SizedBox(height: 36),
+                                const SizedBox(height: 36),
                             ],
                           ),
                         ),
@@ -108,7 +109,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                           .update((_) => OnboardingFlow.assignWeights);
                     },
                   )
-                : SizedBox(),
+                : const SizedBox(),
 
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
@@ -119,13 +120,13 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   Widget _buildBottomSheet({
-    @required FlowController<OnboardingFlow> flowController,
-    @required Rubric rubric,
-    @required BuildContext context,
-    @required List<Objective> bottomSheetObjectives,
+    required FlowController<OnboardingFlow> flowController,
+    required Rubric rubric,
+    required BuildContext context,
+    required List<Objective> bottomSheetObjectives,
   }) {
     return bottomSheetObjectives.isEmpty
-        ? SizedBox()
+        ? const SizedBox()
         : Container(
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * .45,
@@ -141,7 +142,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildBackChevron(flowController),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     ..._buildRubricObjectives(
                       rubricObjectives: rubric.objectives,
                       bottomSheetObjectives: bottomSheetObjectives,
@@ -179,7 +180,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
           onTap: () => flowController.update(
             (_) => OnboardingFlow.gradingObjectives,
           ),
-          child: FaIcon(
+          child: const FaIcon(
             FontAwesomeIcons.chevronLeft,
             color: primaryLightest,
           ),
@@ -189,8 +190,8 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   Widget buildGroups({
-    @required Rubric rubric,
-    @required BuildContext context,
+    required Rubric rubric,
+    required BuildContext context,
   }) {
     final state = context.read(rubricProviderRef);
 
@@ -206,13 +207,13 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                   state.updateTitleForGroup(existingGroup: group, title: value);
                 },
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               ..._buildGroupObjectives(
                 rubricObjectives: rubric.objectives,
                 group: group,
                 context: context,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDragTarget(
                 context: context,
                 text: 'Add to ${group.title}',
@@ -221,14 +222,14 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
             ],
           );
         },
-      ).joinWith(SizedBox(height: 32)),
+      ).joinWith(const SizedBox(height: 32)),
     );
   }
 
   List<Widget> _buildGroupObjectives({
-    @required List<Objective> rubricObjectives,
-    @required RubricGroup group,
-    @required BuildContext context,
+    required List<Objective> rubricObjectives,
+    required RubricGroup group,
+    required BuildContext context,
   }) {
     final deviceWidth = MediaQuery.of(context).size.width;
 
@@ -243,7 +244,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
 
         return Draggable(
           data: objective,
-          feedback: Container(
+          feedback: SizedBox(
             width: deviceWidth,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -261,9 +262,9 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   Widget _buildDragTarget({
-    @required BuildContext context,
-    @required String text,
-    RubricGroup existingGroup,
+    required BuildContext context,
+    required String text,
+    required RubricGroup existingGroup,
   }) {
     final rubricGroupLength =
         context.read(rubricProviderRef.state).groups.length;
@@ -299,8 +300,8 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   void Function(Objective) _newGroupCallback({
-    @required BuildContext context,
-    @required int nextGroupNumber,
+    required BuildContext context,
+    required int nextGroupNumber,
   }) {
     return (value) {
       final objectives = [value];
@@ -315,13 +316,13 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
         objective: value,
       );
 
-      scrollHook.scrollToBottom();
+      scrollHook?.scrollToBottom();
     };
   }
 
   void Function(Objective) _existingGroupCallback({
-    @required BuildContext context,
-    @required RubricGroup existingGroup,
+    required BuildContext context,
+    required RubricGroup existingGroup,
   }) {
     return (value) {
       final objectives = [...existingGroup.objectives, value];
@@ -337,9 +338,9 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   List<Widget> _buildRubricObjectives({
-    @required List<Objective> rubricObjectives,
-    @required List<Objective> bottomSheetObjectives,
-    @required BuildContext context,
+    required List<Objective> rubricObjectives,
+    required List<Objective> bottomSheetObjectives,
+    required BuildContext context,
   }) {
     final deviceWidth = MediaQuery.of(context).size.width;
 
@@ -360,7 +361,8 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
             //- Get coordinates of top of the assign groups area
             //- If the drag details say it's out of bounds, scroll
           },
-          feedback: Container(
+          feedback: SizedBox(
+            //Past Container
             width: deviceWidth,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -386,7 +388,7 @@ class BottomSheetBacking extends StatelessWidget {
 
   final List<Objective> bottomSheetObjectives;
 
-  const BottomSheetBacking({@required this.bottomSheetObjectives});
+  const BottomSheetBacking({required this.bottomSheetObjectives});
 
   @override
   Widget build(BuildContext context) {

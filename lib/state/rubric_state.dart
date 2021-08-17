@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:rubric/domain/rubric.dart';
 
 final rubricProviderRef =
@@ -36,8 +33,8 @@ class RubricState extends StateNotifier<Rubric> {
   }
 
   void updateTitleForGroup({
-    @required RubricGroup existingGroup,
-    @required String title,
+    required RubricGroup existingGroup,
+    required String title,
   }) {
     final replacementGroup = existingGroup.copyWith(title: title);
     final indexOfGroup = state.groups.indexOf(existingGroup);
@@ -50,8 +47,8 @@ class RubricState extends StateNotifier<Rubric> {
 
   /// Add a `group` containing zero or more objectives from [Rubric.objectives]
   void addOrMoveObjectiveToNewGroup({
-    @required RubricGroup groupToAdd,
-    @required Objective objective,
+    required RubricGroup groupToAdd,
+    required Objective objective,
   }) {
     final groupsSansObjective = _removeObjectiveFromGroups(objective);
     final replacementGroups = _removeEmptyGroups(groupsSansObjective); //2.24.21
@@ -62,9 +59,9 @@ class RubricState extends StateNotifier<Rubric> {
 
   // Replace the `existingGroup` in place with the `replacementGroup`
   void moveObjectiveFromExistingGroup({
-    @required RubricGroup existingGroup,
-    @required RubricGroup replacementGroup,
-    @required Objective objective,
+    required RubricGroup existingGroup,
+    required RubricGroup replacementGroup,
+    required Objective objective,
   }) {
     final groupsSansObjective = _removeObjectiveFromGroups(
       objective,
@@ -121,8 +118,8 @@ class RubricState extends StateNotifier<Rubric> {
   /// Creates a copy of the [Rubric.groups] and replaces the
   /// [RubricGroup.objectives] of the previous
   List<RubricGroup> _copyGroupsSansObjective({
-    @required RubricGroup groupWithObjective,
-    @required Objective objectiveForRemoval,
+    required RubricGroup groupWithObjective,
+    required Objective objectiveForRemoval,
   }) {
     // create copy of objective list so we don't change the original
     final copyOfDraggedGroupObjectives = List<Objective>.from(

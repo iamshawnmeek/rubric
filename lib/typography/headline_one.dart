@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class HeadlineOne extends StatelessWidget {
-  final String data;
-  final double fontSize;
-
   const HeadlineOne(
     this.data, {
+    Key? key,
     this.fontSize = 36,
-  });
+  }) : super(key: key); 
+
+  final String data;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {

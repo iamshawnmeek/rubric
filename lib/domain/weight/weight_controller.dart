@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:double_linked_list/double_linked_list.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
@@ -48,8 +48,8 @@ class WeightController extends DoubleLinkedList<Slider> {
       .toList();
 
   void moveSlider({
-    @required Slider slider,
-    @required ScrollPosition scrollPosition,
+    required Slider slider,
+    required ScrollPosition scrollPosition,
   }) {
     final sliderRef = this.firstWhere((e) => e == slider);
 
@@ -79,9 +79,9 @@ class WeightController extends DoubleLinkedList<Slider> {
   }
 
   Slider _getNonLockedSlider({
-    @required Node<Slider> currentRef,
-    @required Node<Slider> getSliderRef(Node<Slider> ref),
-    @required RubricRegion getRegion(Slider slider),
+    required Node<Slider> currentRef,
+    required Node<Slider> getSliderRef(Node<Slider> ref),
+    required RubricRegion getRegion(Slider slider),
   }) {
     Node<Slider> pointer = currentRef;
 
@@ -96,10 +96,10 @@ class WeightController extends DoubleLinkedList<Slider> {
   }
 
   static List<Slider> _buildSliders({
-    @required List<RubricRegion> regions,
-    @required double regionWeight,
+    required List<RubricRegion> regions,
+    required double regionWeight,
   }) {
-    var sliders = <Slider>[];
+    final sliders = <Slider>[];
 
     regions.fold(null, (previous, current) {
       final sliderIndex = sliders.length + 1;
