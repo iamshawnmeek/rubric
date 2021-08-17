@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/domain/rubric.dart';
+import 'package:collection/collection.dart';
 
 final rubricProviderRef =
-    StateNotifierProvider<RubricState>((ref) => RubricState());
+    StateNotifierProvider<RubricState, Rubric>((ref) => RubricState());
 
 //mechanism to update the Rubric class with the new objective
 class RubricState extends StateNotifier<Rubric> {
@@ -79,7 +80,7 @@ class RubricState extends StateNotifier<Rubric> {
     return groups.where((group) => group.objectives.isNotEmpty).toList();
   }
 
-  List<RubricGroup> _removeObjectiveFromGroups(Objective objective) {
+  List<RubricGroup> _removeObjectiveFromGroups(Objective? objective) {
     // No need to continue if there is no objective
     if (objective == null) return state.groups;
 
@@ -92,7 +93,7 @@ class RubricState extends StateNotifier<Rubric> {
       // there isn't a duplicate objective once we add the objective to the
       // new group
       return _copyGroupsSansObjective(
-        groupWithObjective: groupWithObjective,
+        groupWithObjective: groupWithObjective!, // null checked on l88
         objectiveForRemoval: objective,
       );
     } else {
@@ -105,11 +106,9 @@ class RubricState extends StateNotifier<Rubric> {
   /// Find the first [RubricGroup] containing the [Objective]
   ///
   /// Returns `null` if no group contains the `objective`
-  RubricGroup _findGroupWithObjective(Objective objective) {
-    return state.groups.firstWhere((group) {
+  RubricGroup? _findGroupWithObjective(Objective objective) {
+    return state.groups.firstWhereOrNull((group) {
       return group.objectives.contains(objective);
-    }, orElse: () {
-      return null;
     });
   }
 

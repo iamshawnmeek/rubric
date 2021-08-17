@@ -35,7 +35,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late FlowController flowController;
+  late FlowController<OnboardingFlow> flowController;
 
   @override
   void initState() {
@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
 
   FadeInPage _buildAssignWeights(FlowController flowController) {
     // get our state from riverpod
-    final rubric = context.read(rubricProviderRef.state);
+    final rubric = context.read(rubricProviderRef);
 
     // get all of the titles of the groups
     final groupNames = rubric.groups.map((group) => group.title).toList();

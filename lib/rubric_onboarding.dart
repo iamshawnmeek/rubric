@@ -17,8 +17,7 @@ class RubricOnboarding extends StatefulWidget {
 }
 
 class _RubricOnboardingState extends State<RubricOnboarding> {
-  @override
-  Timer? _timer;
+  late Timer _timer;
 
   void initState() {
     super.initState();

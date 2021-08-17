@@ -25,24 +25,6 @@ void main() {
       expect(controller.length, sliderCount);
     });
 
-    test('sliders should contain non null regionNames', () {
-      final regionNames = <String>[
-        'region1',
-        'region2',
-        'region3',
-        'region4',
-        'region5'
-      ];
-      final controller = WeightController.fromNames(regionNames);
-
-      final regionsAreNotNull = controller.every(
-        (element) =>
-            element.regionAfter != null && element.regionBefore != null,
-      );
-
-      expect(regionsAreNotNull, isTrue);
-    });
-
     test('sliders should have reference to the same region', () {
       final regionNames = <String>[
         'region1',
@@ -54,7 +36,7 @@ void main() {
       final controller = WeightController.fromNames(regionNames);
 
       List<List<RubricRegion>> regionPair = [];
-      controller.fold<Slider>(
+      controller.fold<Slider?>(
         null,
         (prev, current) {
           if (prev != null) {
@@ -115,9 +97,9 @@ void main() {
       required ScrollPosition scrollPosition,
       required void makeAssertions(Slider slider),
       required Slider slider,
-      void lockRegions(Slider slider),
+      void Function(Slider slider)? lockRegions,
     }) {
-      lockRegions.call(slider);
+      lockRegions?.call(slider);
 
       controller.moveSlider(
         slider: slider,

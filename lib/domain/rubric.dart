@@ -5,12 +5,12 @@ class Rubric {
   const Rubric({required this.objectives, required this.groups});
 
   Rubric copyWith({
-    required List<Objective> objectives,
+    List<Objective>? objectives,
     List<RubricGroup>? groups,
   }) {
     return Rubric(
-      objectives: objectives = this.objectives,
-      groups: groups = this.groups,
+      objectives: objectives ?? this.objectives,
+      groups: groups ?? this.groups,
     );
   }
 }
@@ -21,10 +21,10 @@ class RubricGroup {
 
   RubricGroup({required this.title, required this.objectives});
 
-  RubricGroup copyWith({String? title, required List<Objective> objectives}) {
+  RubricGroup copyWith({String? title, List<Objective>? objectives}) {
     return RubricGroup(
-      title: title = this.title,
-      objectives: objectives = this.objectives,
+      title: title ?? this.title,
+      objectives: objectives ?? this.objectives,
     );
   }
 }

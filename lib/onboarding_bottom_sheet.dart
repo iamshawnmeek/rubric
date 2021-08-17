@@ -78,7 +78,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
                     backgroundColor: accent,
                     onPressed: () {
                       // Store the users objective
-                      final rubric = context.read(rubricProviderRef);
+                      final rubric = context.read(rubricProviderRef.notifier);
                       rubric.addObjective(Objective(title: objectiveTitle));
                       // Navigate to the grading objectives page
                       widget.flowController.update(
@@ -104,7 +104,7 @@ class _FormLayer extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final String subtitle;
+  final String? subtitle;
   final void Function(String) onObjectiveChanged;
 
   @override
@@ -119,7 +119,7 @@ class _FormLayer extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (subtitle != null) ...[
-            BodyOne(subtitle),
+            BodyOne(subtitle!),
             SizedBox(height: 36),
           ],
           TextField(

@@ -82,7 +82,7 @@ class _CreateObjectiveAddBottomSheetState
                     child: Icon(Icons.add),
                     onPressed: () {
                       // Store the users objective
-                      final rubric = context.read(rubricProviderRef);
+                      final rubric = context.read(rubricProviderRef.notifier);
                       rubric.addObjective(Objective(title: objectiveTitle));
 
                       if (widget.onPressed != null) widget.onPressed!();

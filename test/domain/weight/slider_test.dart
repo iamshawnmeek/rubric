@@ -6,7 +6,7 @@ import 'package:rubric/domain/weight/slider.dart';
 void main() {
   group('#handleAdjustment', () {
     const weight = 50.0;
-    Slider slider;
+    late Slider slider;
 
     setUp(() {
       slider = Slider(
@@ -44,7 +44,7 @@ void main() {
 
   group('#getScrollDelta', () {
     const weight = 50.0;
-    Slider slider;
+    late Slider slider;
 
     setUp(() {
       slider = Slider(

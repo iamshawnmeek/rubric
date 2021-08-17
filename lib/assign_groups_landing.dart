@@ -31,7 +31,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, _) {
-        final rubricInstance = watch(rubricProviderRef).state;
+        final rubricInstance = watch(rubricProviderRef);
         final flowController = context.flow<OnboardingFlow>();
         final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
         final bottomSheetObjectives =
@@ -193,7 +193,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
     required Rubric rubric,
     required BuildContext context,
   }) {
-    final state = context.read(rubricProviderRef);
+    final state = context.read(rubricProviderRef.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,8 +266,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
     required String text,
     RubricGroup? existingGroup,
   }) {
-    final rubricGroupLength =
-        context.read(rubricProviderRef).state.groups.length;
+    final rubricGroupLength = context.read(rubricProviderRef).groups.length;
 
     return DragTarget<Objective>(
       builder: (BuildContext context, List<dynamic> l1, List<dynamic> l2) {
@@ -309,7 +308,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
         title: 'Group $nextGroupNumber',
         objectives: objectives,
       );
-      final state = context.read(rubricProviderRef);
+      final state = context.read(rubricProviderRef.notifier);
 
       state.addOrMoveObjectiveToNewGroup(
         groupToAdd: group,
@@ -327,7 +326,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
     return (value) {
       final objectives = [...existingGroup.objectives, value];
       final group = existingGroup.copyWith(objectives: objectives);
-      final state = context.read(rubricProviderRef);
+      final state = context.read(rubricProviderRef.notifier);
 
       state.moveObjectiveFromExistingGroup(
         existingGroup: existingGroup,
