@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
@@ -118,7 +117,7 @@ void main() {
       required Slider slider,
       void lockRegions(Slider slider),
     }) {
-      lockRegions?.call(slider);
+      lockRegions.call(slider);
 
       controller.moveSlider(
         slider: slider,

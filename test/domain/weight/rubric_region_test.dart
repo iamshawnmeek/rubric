@@ -3,7 +3,7 @@ import 'package:rubric/domain/weight/rubric_region.dart';
 
 void main() {
   const initialWeight = 50.0;
-  RubricRegion region;
+  late RubricRegion region;
   setUp(() {
     region = RubricRegion(title: 'region1', weight: initialWeight);
   });

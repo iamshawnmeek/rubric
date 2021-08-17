@@ -7,7 +7,7 @@ import 'package:rubric/onboarding_bottom_sheet.dart';
 class Landing extends StatelessWidget {
   final FlowController flowController;
 
-  Landing({Key key, @required this.flowController}) : super(key: key);
+  Landing({Key? key, required this.flowController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ class Slider {
   final RubricRegion regionBefore;
   final RubricRegion regionAfter;
   ScrollPosition _current;
-  ScrollPosition _previous;
+  ScrollPosition? _previous;
 
   ScrollDelta getScrollDelta(ScrollPosition scrollPosition) =>
       ScrollDelta.fromPositions(previous: _current, next: scrollPosition);

@@ -6,7 +6,7 @@ import 'package:rubric/components/colors.dart';
 
 class RubricLogo extends StatelessWidget {
   const RubricLogo({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

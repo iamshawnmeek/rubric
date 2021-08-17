@@ -14,7 +14,7 @@ class ScrollHook extends StatefulWidget {
 }
 
 class ScrollHookState extends State<ScrollHook> {
-  ScrollController scrollController;
+  late ScrollController scrollController;
 
   @override
   void initState() {

@@ -28,8 +28,8 @@ class RubricRegion extends ChangeNotifier {
   }
 
   RubricRegion({
-    @required this.title,
-    @required double weight,
+    required this.title,
+    required double weight,
   }) : _weightBacking = weight;
 
   void lock() => isLocked = true;

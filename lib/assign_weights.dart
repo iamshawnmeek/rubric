@@ -183,7 +183,7 @@ class Region extends StatefulWidget {
     required this.rubricRegion,
     required this.height,
     required this.percentage,
-    this.onLockPressed,
+    required this.onLockPressed,
   }) : super(key: key);
 
   final RubricRegion rubricRegion;

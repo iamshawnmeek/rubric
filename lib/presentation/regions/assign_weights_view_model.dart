@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';

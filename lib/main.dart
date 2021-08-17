@@ -35,7 +35,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FlowController flowController;
+  late FlowController flowController;
 
   @override
   void initState() {

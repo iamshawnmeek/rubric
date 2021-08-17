@@ -10,7 +10,7 @@ import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
 
 class OnboardingBottomSheet extends StatefulWidget {
-  const OnboardingBottomSheet({Key key, required this.flowController})
+  const OnboardingBottomSheet({Key? key, required this.flowController})
       : super(key: key);
 
   final FlowController flowController;
@@ -100,8 +100,8 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
 class _FormLayer extends StatelessWidget {
   const _FormLayer({
     required this.onObjectiveChanged,
-    this.subtitle,
-    Key key,
+    required this.subtitle,
+    Key? key,
   }) : super(key: key);
 
   final String subtitle;
@@ -115,7 +115,7 @@ class _FormLayer extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: primary,
       ),
-      const child: Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (subtitle != null) ...[

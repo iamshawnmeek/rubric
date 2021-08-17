@@ -31,7 +31,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, _) {
-        final rubricInstance = watch(rubricProviderRef.state);
+        final rubricInstance = watch(rubricProviderRef).state;
         final flowController = context.flow<OnboardingFlow>();
         final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
         final bottomSheetObjectives =
@@ -167,7 +167,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
             (objective) => objectivesInGroups.contains(objective),
           );
 
-    return remainingBottomSheetObjectives ?? [];
+    return remainingBottomSheetObjectives;
   }
 
   Widget _buildBackChevron(FlowController<OnboardingFlow> flowController) {
@@ -264,10 +264,10 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   Widget _buildDragTarget({
     required BuildContext context,
     required String text,
-    required RubricGroup existingGroup,
+    RubricGroup? existingGroup,
   }) {
     final rubricGroupLength =
-        context.read(rubricProviderRef.state).groups.length;
+        context.read(rubricProviderRef).state.groups.length;
 
     return DragTarget<Objective>(
       builder: (BuildContext context, List<dynamic> l1, List<dynamic> l2) {

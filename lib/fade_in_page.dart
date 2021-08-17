@@ -4,7 +4,7 @@ class FadeInPage<T> extends Page<T> {
   final Widget child;
 
   FadeInPage({
-    @required this.child,
+    required this.child,
   }) : super(key: ValueKey(child));
 
   @override
