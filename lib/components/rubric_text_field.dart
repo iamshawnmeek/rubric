@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:rubric/typography/body_placeholder.dart';
 
 class RubricTextField extends StatefulWidget {
-  final void Function(String) onEditingComplete;
-  final void Function(String p1) onChanged;
+  final void Function(String)? onEditingComplete;
+  final void Function(String p1)? onChanged;
   final String hintText;
   final int maxLines;
 
   const RubricTextField({
-    @required this.hintText,
+    required this.hintText,
     this.onEditingComplete,
     this.onChanged,
     this.maxLines = 1,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class RubricTextField extends StatefulWidget {
 }
 
 class _RubricTextFieldState extends State<RubricTextField> {
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _RubricTextFieldState extends State<RubricTextField> {
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -39,7 +39,7 @@ class _RubricTextFieldState extends State<RubricTextField> {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      onEditingComplete: () => widget.onEditingComplete(controller.text),
+      onEditingComplete: () => widget.onEditingComplete?.call(controller.text),
       maxLines: widget.maxLines,
       onChanged: widget.onChanged,
       style: BodyPlaceholder.textStyle.copyWith(color: Colors.white),

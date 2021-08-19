@@ -16,12 +16,12 @@ import 'package:rubric/typography/headline_one.dart';
 class GradingObjectivesLanding extends StatelessWidget {
   final FlowController flowController;
 
-  GradingObjectivesLanding({@required this.flowController});
+  GradingObjectivesLanding({required this.flowController});
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, _) {
-        final rubric = watch(rubricProviderRef.state);
+        final rubric = watch(rubricProviderRef);
         final shouldShowNextButton = rubric.objectives.length >= 2;
 
         return Scaffold(
@@ -35,15 +35,15 @@ class GradingObjectivesLanding extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(height: 36),
-                        SmallLogo(),
-                        SizedBox(height: 60),
-                        HeadlineOne('Grading Objectives'),
-                        SizedBox(height: 46),
+                        const SizedBox(height: 36),
+                        const SmallLogo(),
+                        const SizedBox(height: 60),
+                        const HeadlineOne('Grading Objectives'),
+                        const SizedBox(height: 46),
                         ..._buildObjectives(rubric),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         CreateCard(onPressed: scrollHook.scrollToBottom),
-                        SizedBox(height: 90),
+                        const SizedBox(height: 90),
                       ],
                     ),
                   ),
@@ -74,6 +74,6 @@ class GradingObjectivesLanding extends StatelessWidget {
             cardTitleText: objective.title,
           ),
         )
-        .joinWith(SizedBox(height: 16));
+        .joinWith(const SizedBox(height: 16));
   }
 }

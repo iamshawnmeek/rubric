@@ -30,7 +30,6 @@ extension ListExtensions<T> on List<T> {
   /// });
   ///```
   List<E> mapWithIndex<E>(E Function(int, T) callback) {
-    if (this == null || callback == null) return null;
     if (length <= 0) return [];
 
     return asMap()

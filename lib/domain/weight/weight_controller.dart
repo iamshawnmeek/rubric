@@ -1,5 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:double_linked_list/double_linked_list.dart';
+import 'package:double_linked_list/double_linked_list.dart'; // not a way to fix unless modify package code
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 
@@ -48,8 +47,8 @@ class WeightController extends DoubleLinkedList<Slider> {
       .toList();
 
   void moveSlider({
-    @required Slider slider,
-    @required ScrollPosition scrollPosition,
+    required Slider slider,
+    required ScrollPosition scrollPosition,
   }) {
     final sliderRef = this.firstWhere((e) => e == slider);
 
@@ -70,18 +69,19 @@ class WeightController extends DoubleLinkedList<Slider> {
       final delta = sliderRef.content.getScrollDelta(scrollPosition);
 
       if (previousSlider != nextSlider) {
-        previousSlider.handleAdjustment(delta);
-        nextSlider.handleAdjustment(delta);
+        // we checked for null on line 67 so it's safe to use ! here.
+        previousSlider!.handleAdjustment(delta);
+        nextSlider!.handleAdjustment(delta);
       } else {
-        previousSlider.handleAdjustment(delta);
+        previousSlider!.handleAdjustment(delta);
       }
     }
   }
 
-  Slider _getNonLockedSlider({
-    @required Node<Slider> currentRef,
-    @required Node<Slider> getSliderRef(Node<Slider> ref),
-    @required RubricRegion getRegion(Slider slider),
+  Slider? _getNonLockedSlider({
+    required Node<Slider> currentRef,
+    required Node<Slider> getSliderRef(Node<Slider> ref),
+    required RubricRegion getRegion(Slider slider),
   }) {
     Node<Slider> pointer = currentRef;
 
@@ -96,12 +96,12 @@ class WeightController extends DoubleLinkedList<Slider> {
   }
 
   static List<Slider> _buildSliders({
-    @required List<RubricRegion> regions,
-    @required double regionWeight,
+    required List<RubricRegion> regions,
+    required double regionWeight,
   }) {
-    var sliders = <Slider>[];
+    final sliders = <Slider>[];
 
-    regions.fold(null, (previous, current) {
+    regions.fold<RubricRegion?>(null, (previous, current) {
       final sliderIndex = sliders.length + 1;
 
       if (previous != null) {

@@ -6,7 +6,7 @@ import 'package:rubric/typography/card_next.dart';
 class SetGradingScaleButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  const SetGradingScaleButton({Key key, @required this.onTap})
+  const SetGradingScaleButton({Key? key, required this.onTap})
       : super(key: key);
 
   @override

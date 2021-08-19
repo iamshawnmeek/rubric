@@ -6,7 +6,7 @@ import 'package:rubric/domain/weight/slider.dart';
 void main() {
   group('#handleAdjustment', () {
     const weight = 50.0;
-    Slider slider;
+    late Slider slider;
 
     setUp(() {
       slider = Slider(
@@ -18,14 +18,14 @@ void main() {
           title: 'region2',
           weight: weight,
         ),
-        initial: ScrollPosition(50),
+        initial: const ScrollPosition(50),
       );
     });
     test('should decrease scroll position with upward delta', () {
       expect(slider.scrollPosition, 50);
 
       slider.handleAdjustment(
-        ScrollDelta(direction: Direction.up, value: 50),
+        const ScrollDelta(direction: Direction.up, value: 50),
       );
 
       expect(slider.scrollPosition, 0);
@@ -35,7 +35,7 @@ void main() {
       expect(slider.scrollPosition, 50);
 
       slider.handleAdjustment(
-        ScrollDelta(direction: Direction.down, value: 50),
+        const ScrollDelta(direction: Direction.down, value: 50),
       );
 
       expect(slider.scrollPosition, 100);
@@ -44,7 +44,7 @@ void main() {
 
   group('#getScrollDelta', () {
     const weight = 50.0;
-    Slider slider;
+    late Slider slider;
 
     setUp(() {
       slider = Slider(
@@ -56,21 +56,21 @@ void main() {
           title: 'region2',
           weight: weight,
         ),
-        initial: ScrollPosition(50),
+        initial: const ScrollPosition(50),
       );
     });
 
     test('should return offset with non-negative lower scroll position', () {
-      final scrollValue = 10.0;
-      final delta = slider.getScrollDelta(ScrollPosition(scrollValue));
+      const scrollValue = 10.0;
+      final delta = slider.getScrollDelta(const ScrollPosition(scrollValue));
 
       expect(delta.direction, Direction.up);
       expect(delta.value, 40);
     });
 
     test('should return offset with non-negative higher scroll position', () {
-      final scrollValue = 70.0;
-      final delta = slider.getScrollDelta(ScrollPosition(scrollValue));
+      const scrollValue = 70.0;
+      final delta = slider.getScrollDelta(const ScrollPosition(scrollValue));
 
       expect(delta.direction, Direction.down);
       expect(delta.value, 20);

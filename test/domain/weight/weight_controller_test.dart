@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:rubric/domain/weight/rubric_region.dart';
 import 'package:rubric/domain/weight/slider.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';
@@ -28,24 +25,6 @@ void main() {
       expect(controller.length, sliderCount);
     });
 
-    test('sliders should contain non null regionNames', () {
-      final regionNames = <String>[
-        'region1',
-        'region2',
-        'region3',
-        'region4',
-        'region5'
-      ];
-      final controller = WeightController.fromNames(regionNames);
-
-      final regionsAreNotNull = controller.every(
-        (element) =>
-            element.regionAfter != null && element.regionBefore != null,
-      );
-
-      expect(regionsAreNotNull, isTrue);
-    });
-
     test('sliders should have reference to the same region', () {
       final regionNames = <String>[
         'region1',
@@ -57,7 +36,7 @@ void main() {
       final controller = WeightController.fromNames(regionNames);
 
       List<List<RubricRegion>> regionPair = [];
-      controller.fold<Slider>(
+      controller.fold<Slider?>(
         null,
         (prev, current) {
           if (prev != null) {
@@ -96,10 +75,10 @@ void main() {
 
   group('#moveSlider', () {
     ScrollPosition getAdjustedPosition({
-      @required int sliderCount,
-      @required double initialWeight,
-      @required double adjustment,
-      @required int sliderIndex,
+      required int sliderCount,
+      required double initialWeight,
+      required double adjustment,
+      required int sliderIndex,
     }) {
       final positions = List.generate(
         sliderCount,
@@ -113,12 +92,12 @@ void main() {
     }
 
     void testMoveSlider({
-      @required WeightController controller,
-      @required List<String> regionNames,
-      @required ScrollPosition scrollPosition,
-      @required void makeAssertions(Slider slider),
-      @required Slider slider,
-      void lockRegions(Slider slider),
+      required WeightController controller,
+      required List<String> regionNames,
+      required ScrollPosition scrollPosition,
+      required void makeAssertions(Slider slider),
+      required Slider slider,
+      void Function(Slider slider)? lockRegions,
     }) {
       lockRegions?.call(slider);
 
@@ -140,7 +119,7 @@ void main() {
       ];
       final controller = WeightController.fromNames(regionNames);
       final initialWeight = 100 / regionNames.length;
-      final sliderIndex = 0;
+      const sliderIndex = 0;
       final adjustedPosition = getAdjustedPosition(
         initialWeight: initialWeight,
         sliderCount: regionNames.length - 1,
@@ -175,7 +154,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 0;
+          const sliderIndex = 0;
           final adjustedPosition = getAdjustedPosition(
             initialWeight: initialWeight,
             sliderCount: regionNames.length - 1,
@@ -208,7 +187,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 0;
+          const sliderIndex = 0;
           final adjustedPosition = getAdjustedPosition(
             initialWeight: initialWeight,
             sliderCount: regionNames.length - 1,
@@ -244,7 +223,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: -15,
             sliderIndex: sliderIndex,
@@ -278,7 +257,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: 15,
             sliderIndex: sliderIndex,
@@ -385,7 +364,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 0;
+          const sliderIndex = 0;
           final adjustedPosition = getAdjustedPosition(
             adjustment: -15,
             sliderIndex: sliderIndex,
@@ -472,7 +451,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: -15,
             sliderIndex: sliderIndex,
@@ -538,7 +517,7 @@ void main() {
           ];
           final controller = WeightController.fromNames(regionNames);
           final initialWeight = 100 / regionNames.length;
-          final sliderIndex = 2;
+          const sliderIndex = 2;
           final adjustedPosition = getAdjustedPosition(
             adjustment: 15,
             sliderIndex: sliderIndex,

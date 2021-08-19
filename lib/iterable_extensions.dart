@@ -25,7 +25,6 @@ extension IterableExtensions<T> on Iterable<T> {
   /// ]
   /// ```
   List<T> joinWith<T>(T separator) {
-    if (this == null || separator == null) return null;
     if (length <= 0) return [separator];
     if (length == 1) return List<T>.from(this);
 

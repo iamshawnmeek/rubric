@@ -5,14 +5,14 @@ import 'package:rubric/typography/card_hint.dart';
 import 'package:rubric/typography/card_title.dart';
 
 class RubricCard extends StatelessWidget {
+  const RubricCard({
+    Key? key,
+    required this.cardHintText,
+    required this.cardTitleText,
+  }) : super(key: key);
+
   final String cardHintText;
   final String cardTitleText;
-
-  const RubricCard({
-    Key key,
-    @required this.cardHintText,
-    @required this.cardTitleText,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:rubric/components/colors.dart';
 
 class BodyPlaceholder extends StatelessWidget {
@@ -13,7 +12,7 @@ class BodyPlaceholder extends StatelessWidget {
   final String data;
   final Color color;
 
-  const BodyPlaceholder(this.data, {this.color});
+  const BodyPlaceholder(this.data, {required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class BodyPlaceholder extends StatelessWidget {
       data,
       overflow: TextOverflow.ellipsis,
       style: textStyle.copyWith(
-        color: color ?? textStyle.color,
+        color: textStyle.color,
       ),
     );
   }

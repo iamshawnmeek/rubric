@@ -10,15 +10,14 @@ import 'package:rubric/enums.dart';
 class RubricOnboarding extends StatefulWidget {
   final FlowController flowController;
 
-  RubricOnboarding({Key key, @required this.flowController}) : super(key: key);
+  RubricOnboarding({Key? key, required this.flowController}) : super(key: key);
 
   @override
   _RubricOnboardingState createState() => _RubricOnboardingState();
 }
 
 class _RubricOnboardingState extends State<RubricOnboarding> {
-  @override
-  Timer _timer;
+  late Timer _timer;
 
   void initState() {
     super.initState();
@@ -79,7 +78,7 @@ class _BottomSheet extends StatelessWidget {
     height: 1.5,
     color: primaryLighter,
   );
-  const _BottomSheet({Key key, @required this.flowController})
+  const _BottomSheet({Key? key, required this.flowController})
       : super(key: key);
 
   @override
@@ -134,8 +133,8 @@ class _BottomSheet extends StatelessWidget {
   }
 
   PageModel _buildPage({
-    @required String title,
-    @required String message,
+    required String title,
+    required String message,
   }) {
     return PageModel(
       widget: Container(

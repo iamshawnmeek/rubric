@@ -10,17 +10,17 @@ import 'package:rubric/enums.dart';
 import 'package:rubric/presentation/regions/assign_weights_view_model.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
-import 'typography/body_weights.dart';
+import 'package:rubric/typography/body_weights.dart';
 
 class AssignWeights extends StatefulWidget {
+  const AssignWeights({
+    required this.model,
+    required this.flowController,
+    Key? key,
+  }) : super(key: key);
+
   final AssignWeightsViewModel model;
   final FlowController flowController;
-
-  const AssignWeights({
-    @required this.model,
-    @required this.flowController,
-    Key key,
-  }) : super(key: key);
 
   @override
   _AssignWeightsState createState() => _AssignWeightsState();
@@ -53,16 +53,16 @@ class _AssignWeightsState extends State<AssignWeights> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 36),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                const SizedBox(height: 36),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   child: HeadlineOne('Assign Weights'),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Expanded(
                   child: _bodyContent(),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
               ],
             ),
           ),
@@ -71,7 +71,7 @@ class _AssignWeightsState extends State<AssignWeights> {
           ignoring: !shouldShowNextButton,
           ignoringSemantics: !shouldShowNextButton,
           child: AnimatedOpacity(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             opacity: shouldShowNextButton ? 1 : 0,
             child: NextButton(onTap: () {
               widget.flowController.update(
@@ -96,7 +96,8 @@ class _AssignWeightsState extends State<AssignWeights> {
           final sliderOffsetPerRegion =
               sliderCount * sliderHeight / regionCount;
 
-          return Container(
+          return SizedBox(
+            //Past Container
             child: Column(
               children: widget.model.mapController(
                 sliderBuilder: (slider) {
@@ -128,8 +129,8 @@ class _AssignWeightsState extends State<AssignWeights> {
   }
 
   Widget Function(RubricRegion) _buildRegion({
-    @required double height,
-    @required double sliderOffsetPerRegion,
+    required double height,
+    required double sliderOffsetPerRegion,
   }) {
     return (RubricRegion region) {
       final regionHeight = height * (region.weight / 100);
@@ -148,8 +149,8 @@ class _AssignWeightsState extends State<AssignWeights> {
 
 class WeightSlider extends StatelessWidget {
   const WeightSlider({
-    Key key,
-    @required this.slider,
+    Key? key,
+    required this.slider,
   }) : super(key: key);
 
   final Slider slider;
@@ -177,18 +178,18 @@ class WeightSlider extends StatelessWidget {
 }
 
 class Region extends StatefulWidget {
+  const Region({
+    Key? key,
+    required this.rubricRegion,
+    required this.height,
+    required this.percentage,
+    required this.onLockPressed,
+  }) : super(key: key);
+
   final RubricRegion rubricRegion;
   final double height;
   final double percentage;
   final VoidCallback onLockPressed;
-
-  const Region({
-    Key key,
-    @required this.rubricRegion,
-    @required this.height,
-    @required this.percentage,
-    this.onLockPressed,
-  }) : super(key: key);
 
   @override
   _RegionState createState() => _RegionState();
@@ -236,9 +237,9 @@ class _RegionState extends State<Region> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(width: 54),
+                const SizedBox(width: 54),
                 BodyOneWeights('${widget.percentage.toStringAsFixed(0)}%'),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 RubricLock(
                   isActive: isLocked,
                   onTap: toggleLock,

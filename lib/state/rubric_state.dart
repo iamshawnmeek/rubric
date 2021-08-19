@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:rubric/domain/rubric.dart';
+import 'package:collection/collection.dart';
 
 final rubricProviderRef =
-    StateNotifierProvider<RubricState>((ref) => RubricState());
+    StateNotifierProvider<RubricState, Rubric>((ref) => RubricState());
 
 //mechanism to update the Rubric class with the new objective
 class RubricState extends StateNotifier<Rubric> {
@@ -36,8 +34,8 @@ class RubricState extends StateNotifier<Rubric> {
   }
 
   void updateTitleForGroup({
-    @required RubricGroup existingGroup,
-    @required String title,
+    required RubricGroup existingGroup,
+    required String title,
   }) {
     final replacementGroup = existingGroup.copyWith(title: title);
     final indexOfGroup = state.groups.indexOf(existingGroup);
@@ -50,8 +48,8 @@ class RubricState extends StateNotifier<Rubric> {
 
   /// Add a `group` containing zero or more objectives from [Rubric.objectives]
   void addOrMoveObjectiveToNewGroup({
-    @required RubricGroup groupToAdd,
-    @required Objective objective,
+    required RubricGroup groupToAdd,
+    required Objective objective,
   }) {
     final groupsSansObjective = _removeObjectiveFromGroups(objective);
     final replacementGroups = _removeEmptyGroups(groupsSansObjective); //2.24.21
@@ -62,9 +60,9 @@ class RubricState extends StateNotifier<Rubric> {
 
   // Replace the `existingGroup` in place with the `replacementGroup`
   void moveObjectiveFromExistingGroup({
-    @required RubricGroup existingGroup,
-    @required RubricGroup replacementGroup,
-    @required Objective objective,
+    required RubricGroup existingGroup,
+    required RubricGroup replacementGroup,
+    required Objective objective,
   }) {
     final groupsSansObjective = _removeObjectiveFromGroups(
       objective,
@@ -82,7 +80,7 @@ class RubricState extends StateNotifier<Rubric> {
     return groups.where((group) => group.objectives.isNotEmpty).toList();
   }
 
-  List<RubricGroup> _removeObjectiveFromGroups(Objective objective) {
+  List<RubricGroup> _removeObjectiveFromGroups(Objective? objective) {
     // No need to continue if there is no objective
     if (objective == null) return state.groups;
 
@@ -95,7 +93,7 @@ class RubricState extends StateNotifier<Rubric> {
       // there isn't a duplicate objective once we add the objective to the
       // new group
       return _copyGroupsSansObjective(
-        groupWithObjective: groupWithObjective,
+        groupWithObjective: groupWithObjective!, // null checked on l88
         objectiveForRemoval: objective,
       );
     } else {
@@ -108,11 +106,9 @@ class RubricState extends StateNotifier<Rubric> {
   /// Find the first [RubricGroup] containing the [Objective]
   ///
   /// Returns `null` if no group contains the `objective`
-  RubricGroup _findGroupWithObjective(Objective objective) {
-    return state.groups.firstWhere((group) {
+  RubricGroup? _findGroupWithObjective(Objective objective) {
+    return state.groups.firstWhereOrNull((group) {
       return group.objectives.contains(objective);
-    }, orElse: () {
-      return null;
     });
   }
 
@@ -121,8 +117,8 @@ class RubricState extends StateNotifier<Rubric> {
   /// Creates a copy of the [Rubric.groups] and replaces the
   /// [RubricGroup.objectives] of the previous
   List<RubricGroup> _copyGroupsSansObjective({
-    @required RubricGroup groupWithObjective,
-    @required Objective objectiveForRemoval,
+    required RubricGroup groupWithObjective,
+    required Objective objectiveForRemoval,
   }) {
     // create copy of objective list so we don't change the original
     final copyOfDraggedGroupObjectives = List<Objective>.from(

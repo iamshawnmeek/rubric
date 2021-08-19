@@ -10,11 +10,11 @@ import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
 
 class CreateObjectiveAddBottomSheet extends StatefulWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const CreateObjectiveAddBottomSheet({
     this.onPressed,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -82,10 +82,10 @@ class _CreateObjectiveAddBottomSheetState
                     child: Icon(Icons.add),
                     onPressed: () {
                       // Store the users objective
-                      final rubric = context.read(rubricProviderRef);
+                      final rubric = context.read(rubricProviderRef.notifier);
                       rubric.addObjective(Objective(title: objectiveTitle));
 
-                      if (widget.onPressed != null) widget.onPressed();
+                      if (widget.onPressed != null) widget.onPressed!();
 
                       // Navigate to the grading objectives page
                       Navigator.of(context).pop();
@@ -102,13 +102,13 @@ class _CreateObjectiveAddBottomSheetState
 }
 
 class _FormLayer extends StatelessWidget {
-  final String subtitle;
+  final String? subtitle;
   final void Function(String) onObjectiveChanged;
 
   const _FormLayer({
-    @required this.onObjectiveChanged,
+    required this.onObjectiveChanged,
     this.subtitle,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -123,7 +123,7 @@ class _FormLayer extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (subtitle != null) ...[
-            BodyOne(subtitle),
+            BodyOne(subtitle!),
             SizedBox(height: 36),
           ],
           RubricTextField(
