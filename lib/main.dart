@@ -119,10 +119,10 @@ class _MyAppState extends State<MyApp> {
   }
 // TODO:
 
-//- Weds – Week: Refactor all files now that VGAnalysis is in...
-
-//- Add Null Safety Migration, with JW: https://dart.dev/null-safety/migration-guide
 //- Fix technical debt: updating all strings to include arb file throughout app
+// -- 8.20: Working on files rubric_state.dart and assign_groups_landing.dart.
+// -- set_grading_scale_button.dart and rubric_grading_scale.dart are good examples of l10n usage.
+
 //- Build in the inputs for each item
 //– Build out 'Detailed' view with TabBar
 }
