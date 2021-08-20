@@ -71,5 +71,25 @@
     "setGradingScaleTitle": "Set Grading Scale",
     "@setGradingScaleTitle": {
         "description": ""
+    },
+    "rubricStateTitleOne": "Group 1",
+    "@rubricStateTitleOne": {
+        "description": ""
+    },
+    "rubricStateTitleTwo": "Group 2",
+    "@rubricStateTitleTwo": {
+        "description": ""
+    },
+    "assignGroupsHeadline": "Assign Groups",
+    "@assignGroupsHeadline": {
+        "description": ""
+    },
+    "assignGroupsDragMessage": "Drag objective here",
+    "@assignGroupsDragMessage": {
+        "description": ""
+    },
+    "assignGroupsDragTarget": "Add New Group",
+    "@assignGroupsDragTarget": {
+        "description": ""
     }
 }
