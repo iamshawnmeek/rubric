@@ -17,6 +17,7 @@ import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
 import 'package:rubric/components/small_logo.dart';
+import 'package:rubric/l10n/l10n.dart';
 
 class AssignGroupsLanding extends StatefulWidget {
   const AssignGroupsLanding({Key? key}) : super(key: key);
@@ -36,6 +37,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
         final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
         final bottomSheetObjectives =
             _buildBottomSheetObjectives(rubricInstance);
+        final l = context.l10n;
 
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -59,7 +61,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                               const SizedBox(height: 36),
                               const SmallLogo(),
                               const SizedBox(height: 60),
-                              const HeadlineOne('Assign Groups'),
+                              HeadlineOne(l.assignGroupsHeadline),
                               const SizedBox(height: 46),
                               if (rubricInstance.groups.isNotEmpty)
                                 buildGroups(
@@ -70,8 +72,8 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                               _buildDragTarget(
                                 context: context,
                                 text: rubricInstance.groups.isEmpty
-                                    ? 'Drag objective here'
-                                    : 'Add New Group',
+                                    ? l.assignGroupsDragMessage
+                                    : l.assignGroupsDragTarget,
                               ),
                               if (MediaQuery.of(context).viewInsets.bottom == 0)
                                 BottomSheetBacking(
