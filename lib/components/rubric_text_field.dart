@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:rubric/typography/body_placeholder.dart';
 
 class RubricTextField extends StatefulWidget {

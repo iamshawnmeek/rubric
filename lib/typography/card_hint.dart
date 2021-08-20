@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:rubric/components/colors.dart';
 
 class CardHint extends StatelessWidget {
