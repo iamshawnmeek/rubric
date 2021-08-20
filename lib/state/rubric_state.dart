@@ -1,27 +1,31 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:collection/collection.dart';
+import 'package:rubric/l10n/l10n.dart';
 
 final rubricProviderRef =
     StateNotifierProvider<RubricState, Rubric>((ref) => RubricState());
-
 //mechanism to update the Rubric class with the new objective
+
+final l = context.l10n;
+//unsure where this goes in this context
+
 class RubricState extends StateNotifier<Rubric> {
   RubricState()
       : super(
           Rubric(
             objectives: [],
             groups: [
-              RubricGroup(title: 'Group 1', objectives: [
+              RubricGroup(title: l.rubricStateTitleOne, objectives: [
                 Objective(title: ''),
               ]),
-              RubricGroup(title: 'Group 2', objectives: [
+              RubricGroup(title: l.rubricStateTitleTwo, objectives: [
                 Objective(title: ''),
               ]),
-              RubricGroup(title: 'Group 1', objectives: [
+              RubricGroup(title: l.rubricStateTitleOne, objectives: [
                 Objective(title: ''),
               ]),
-              RubricGroup(title: 'Group 2', objectives: [
+              RubricGroup(title: l.rubricStateTitleTwo, objectives: [
                 Objective(title: ''),
               ]),
             ],
