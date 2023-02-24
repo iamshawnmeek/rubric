@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/assign_groups_landing.dart';
 import 'package:rubric/assign_weights.dart';
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';
 import 'package:rubric/enums.dart';
 import 'package:rubric/fade_in_page.dart';
@@ -40,6 +41,23 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    final rubric = context.read(rubricProviderRef.notifier);
+    final l = context.l10n;
+
+    rubric.addGroups([
+      RubricGroup(title: l.rubricStateTitleOne, objectives: [
+        Objective(title: ''),
+      ]),
+      RubricGroup(title: l.rubricStateTitleTwo, objectives: [
+        Objective(title: ''),
+      ]),
+      RubricGroup(title: l.rubricStateTitleOne, objectives: [
+        Objective(title: ''),
+      ]),
+      RubricGroup(title: l.rubricStateTitleTwo, objectives: [
+        Objective(title: ''),
+      ]),
+    ]);
     flowController = FlowController<OnboardingFlow>(
       OnboardingFlow
           .gradingScale, //assignWeights, assignWeightsRev, gradingScale
