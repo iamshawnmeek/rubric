@@ -69,10 +69,10 @@ class WeightController extends DoubleLinkedList<Slider> {
       final delta = sliderRef.content.getScrollDelta(scrollPosition);
 
       if (previousSlider != nextSlider) {
-        previousSlider!.handleAdjustment(delta);
-        nextSlider!.handleAdjustment(delta);
+        previousSlider.handleAdjustment(delta);
+        nextSlider.handleAdjustment(delta);
       } else {
-        previousSlider!.handleAdjustment(delta);
+        previousSlider.handleAdjustment(delta);
       }
     }
   }

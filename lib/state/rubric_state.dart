@@ -85,7 +85,7 @@ class RubricState extends StateNotifier<Rubric> {
       // there isn't a duplicate objective once we add the objective to the
       // new group
       return _copyGroupsSansObjective(
-        groupWithObjective: groupWithObjective!, // null checked on l88
+        groupWithObjective: groupWithObjective, // null checked on l88
         objectiveForRemoval: objective,
       );
     } else {
