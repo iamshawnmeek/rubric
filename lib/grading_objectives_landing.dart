@@ -20,8 +20,8 @@ class GradingObjectivesLanding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, watch, _) {
-        final rubric = watch(rubricProviderRef);
+      builder: (context, ref, _) {
+        final rubric = ref.watch(rubricProviderRef);
         final shouldShowNextButton = rubric.objectives.length >= 2;
 
         return Scaffold(

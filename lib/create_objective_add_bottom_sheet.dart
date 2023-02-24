@@ -9,7 +9,7 @@ import 'package:rubric/state/rubric_state.dart';
 import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
 
-class CreateObjectiveAddBottomSheet extends StatefulWidget {
+class CreateObjectiveAddBottomSheet extends ConsumerStatefulWidget {
   final VoidCallback? onPressed;
 
   const CreateObjectiveAddBottomSheet({
@@ -23,7 +23,7 @@ class CreateObjectiveAddBottomSheet extends StatefulWidget {
 }
 
 class _CreateObjectiveAddBottomSheetState
-    extends State<CreateObjectiveAddBottomSheet> {
+    extends ConsumerState<CreateObjectiveAddBottomSheet> {
   bool canContinue = false;
   String objectiveTitle = '';
 
@@ -82,7 +82,7 @@ class _CreateObjectiveAddBottomSheetState
                     child: Icon(Icons.add),
                     onPressed: () {
                       // Store the users objective
-                      final rubric = context.read(rubricProviderRef.notifier);
+                      final rubric = ref.read(rubricProviderRef.notifier);
                       rubric.addObjective(Objective(title: objectiveTitle));
 
                       if (widget.onPressed != null) widget.onPressed!();

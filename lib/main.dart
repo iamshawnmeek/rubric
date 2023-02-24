@@ -30,12 +30,12 @@ void main() {
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   late FlowController<OnboardingFlow> flowController;
 
   @override
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
 
   // Adds groups to our Rubric state
   void initializeGroups(AppLocalizations l) {
-    final rubric = context.read(rubricProviderRef.notifier);
+    final rubric = ref.read(rubricProviderRef.notifier);
     rubric.addGroups([
       RubricGroup(title: l.rubricStateTitleOne, objectives: [
         Objective(title: ''),
@@ -134,7 +134,7 @@ class _MyAppState extends State<MyApp> {
 
   FadeInPage _buildAssignWeights(FlowController flowController) {
     // get our state from riverpod
-    final rubric = context.read(rubricProviderRef);
+    final rubric = ref.read(rubricProviderRef);
 
     // get all of the titles of the groups
     final groupNames = rubric.groups.map((group) => group.title).toList();
