@@ -43,9 +43,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
     initializeGroupsWhenReady();
     flowController = FlowController<OnboardingFlow>(
-      OnboardingFlow
-          .gradingScale, //assignWeights, assignWeightsRev, gradingScale
-    );
+        OnboardingFlow.gradingScale // TODO: Change to starting widget flow
+        );
   }
 
   /// Loops until the l10n is available from the [BuildContext]. Afterwards, we
