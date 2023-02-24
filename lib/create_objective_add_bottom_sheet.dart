@@ -6,7 +6,6 @@ import 'package:rubric/components/colors.dart';
 import 'package:rubric/components/rubric_text_field.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/state/rubric_state.dart';
-import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/headline_one.dart';
 
 class CreateObjectiveAddBottomSheet extends ConsumerStatefulWidget {
@@ -102,12 +101,10 @@ class _CreateObjectiveAddBottomSheetState
 }
 
 class _FormLayer extends StatelessWidget {
-  final String? subtitle;
   final void Function(String) onObjectiveChanged;
 
   const _FormLayer({
     required this.onObjectiveChanged,
-    this.subtitle,
     Key? key,
   }) : super(key: key);
 
@@ -122,10 +119,6 @@ class _FormLayer extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (subtitle != null) ...[
-            BodyOne(subtitle!),
-            SizedBox(height: 36),
-          ],
           RubricTextField(
             onChanged: onObjectiveChanged,
             hintText: 'example: Grammar, usage and mechanics',

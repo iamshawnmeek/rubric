@@ -11,7 +11,7 @@ class RubricLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/images/logo.svg',
-      color: primary,
+      colorFilter: ColorFilter.mode(primary, BlendMode.srcIn),
       semanticsLabel: 'rubric logo',
       width: 295,
       height: 89,

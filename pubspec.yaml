@@ -33,13 +33,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_riverpod: ^1.0.3+1 # State management / Dependency Injection (for testing)
-  flutter_svg: ^1.0.3
+  flutter_riverpod: ^2.2.0 # State management / Dependency Injection (for testing)
+  flutter_svg: ^2.0.2
   font_awesome_flutter: ^10.4.0
   intl: ^0.17.0
   onboarding:
     git: https://github.com/SupposedlySam/onboarding.git
-  very_good_analysis: ^2.3.0
+  very_good_analysis: ^4.0.0+1
 
 dev_dependencies:
   flutter_test:
