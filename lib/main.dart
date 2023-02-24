@@ -41,9 +41,30 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    final rubric = context.read(rubricProviderRef.notifier);
-    final l = context.l10n;
+    initializeGroupsWhenReady();
+    flowController = FlowController<OnboardingFlow>(
+      OnboardingFlow
+          .gradingScale, //assignWeights, assignWeightsRev, gradingScale
+    );
+  }
 
+  /// Loops until the l10n is available from the [BuildContext]. Afterwards, we
+  /// initialize our groups with our localized values.
+  void initializeGroupsWhenReady() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final l = context.maybeL10n;
+
+      if (l == null) {
+        initializeGroupsWhenReady();
+      } else {
+        initializeGroups(l);
+      }
+    });
+  }
+
+  // Adds groups to our Rubric state
+  void initializeGroups(AppLocalizations l) {
+    final rubric = context.read(rubricProviderRef.notifier);
     rubric.addGroups([
       RubricGroup(title: l.rubricStateTitleOne, objectives: [
         Objective(title: ''),
@@ -58,10 +79,6 @@ class _MyAppState extends State<MyApp> {
         Objective(title: ''),
       ]),
     ]);
-    flowController = FlowController<OnboardingFlow>(
-      OnboardingFlow
-          .gradingScale, //assignWeights, assignWeightsRev, gradingScale
-    );
   }
 
   @override
