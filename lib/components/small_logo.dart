@@ -13,7 +13,7 @@ class SmallLogo extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: SvgPicture.asset(
         'assets/images/logo.svg',
-        color: primary,
+        colorFilter: ColorFilter.mode(primary, BlendMode.srcIn),
         semanticsLabel: 'rubric logo',
         width: 120,
         height: 36,
