@@ -31,8 +31,8 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, watch, _) {
-        final rubricInstance = watch(rubricProviderRef);
+      builder: (context, ref, _) {
+        final rubricInstance = ref.watch(rubricProviderRef);
         final flowController = context.flow<OnboardingFlow>();
         final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
         final bottomSheetObjectives =
@@ -66,11 +66,11 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
                               if (rubricInstance.groups.isNotEmpty)
                                 buildGroups(
                                   rubric: rubricInstance,
-                                  context: context,
+                                  ref: ref,
                                 ),
                               const SizedBox(height: 24),
                               _buildDragTarget(
-                                context: context,
+                                ref: ref,
                                 text: rubricInstance.groups.isEmpty
                                     ? l.assignGroupsDragMessage
                                     : l.assignGroupsDragTarget,
@@ -193,9 +193,9 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
 
   Widget buildGroups({
     required Rubric rubric,
-    required BuildContext context,
+    required WidgetRef ref,
   }) {
-    final state = context.read(rubricProviderRef.notifier);
+    final state = ref.read(rubricProviderRef.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +217,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
               ),
               const SizedBox(height: 16),
               _buildDragTarget(
-                context: context,
+                ref: ref,
                 text: 'Add to ${group.title}',
                 existingGroup: group,
               )
@@ -264,11 +264,11 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   Widget _buildDragTarget({
-    required BuildContext context,
+    required WidgetRef ref,
     required String text,
     RubricGroup? existingGroup,
   }) {
-    final rubricGroupLength = context.read(rubricProviderRef).groups.length;
+    final rubricGroupLength = ref.read(rubricProviderRef).groups.length;
 
     return DragTarget<Objective>(
       builder: (BuildContext context, List<dynamic> l1, List<dynamic> l2) {
@@ -287,11 +287,11 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
       },
       onAccept: existingGroup == null
           ? _newGroupCallback(
-              context: context,
+              ref: ref,
               nextGroupNumber: rubricGroupLength + 1,
             )
           : _existingGroupCallback(
-              context: context,
+              ref: ref,
               existingGroup: existingGroup,
             ),
       onWillAccept: (value) {
@@ -301,7 +301,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   void Function(Objective) _newGroupCallback({
-    required BuildContext context,
+    required WidgetRef ref,
     required int nextGroupNumber,
   }) {
     return (value) {
@@ -310,7 +310,7 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
         title: 'Group $nextGroupNumber',
         objectives: objectives,
       );
-      final state = context.read(rubricProviderRef.notifier);
+      final state = ref.read(rubricProviderRef.notifier);
 
       state.addOrMoveObjectiveToNewGroup(
         groupToAdd: group,
@@ -322,13 +322,13 @@ class _AssignGroupsLandingState extends State<AssignGroupsLanding> {
   }
 
   void Function(Objective) _existingGroupCallback({
-    required BuildContext context,
+    required WidgetRef ref,
     required RubricGroup existingGroup,
   }) {
     return (value) {
       final objectives = [...existingGroup.objectives, value];
       final group = existingGroup.copyWith(objectives: objectives);
-      final state = context.read(rubricProviderRef.notifier);
+      final state = ref.read(rubricProviderRef.notifier);
 
       state.moveObjectiveFromExistingGroup(
         existingGroup: existingGroup,
@@ -404,5 +404,4 @@ class BottomSheetBacking extends StatelessWidget {
   }
 //TODO:
 //- Update the padding on Drag Target title update if user inputs too long of a text entry
-
 }

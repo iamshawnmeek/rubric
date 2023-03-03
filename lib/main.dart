@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rubric/assign_groups_landing.dart';
 import 'package:rubric/assign_weights.dart';
 import 'package:rubric/components/colors.dart';
+import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/domain/weight/weight_controller.dart';
 import 'package:rubric/enums.dart';
 import 'package:rubric/fade_in_page.dart';
@@ -29,21 +30,54 @@ void main() {
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   late FlowController<OnboardingFlow> flowController;
 
   @override
   void initState() {
     super.initState();
+    initializeGroupsWhenReady();
     flowController = FlowController<OnboardingFlow>(
-      OnboardingFlow
-          .gradingScale, //assignWeights, assignWeightsRev, gradingScale
-    );
+        OnboardingFlow.gradingScale // TODO: Change to starting widget flow
+        );
+  }
+
+  /// Loops until the l10n is available from the [BuildContext]. Afterwards, we
+  /// initialize our groups with our localized values.
+  void initializeGroupsWhenReady() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final l = context.maybeL10n;
+
+      if (l == null) {
+        initializeGroupsWhenReady();
+      } else {
+        initializeGroups(l);
+      }
+    });
+  }
+
+  // Adds groups to our Rubric state
+  void initializeGroups(AppLocalizations l) {
+    final rubric = ref.read(rubricProviderRef.notifier);
+    rubric.addGroups([
+      RubricGroup(title: l.rubricStateTitleOne, objectives: [
+        Objective(title: ''),
+      ]),
+      RubricGroup(title: l.rubricStateTitleTwo, objectives: [
+        Objective(title: ''),
+      ]),
+      RubricGroup(title: l.rubricStateTitleOne, objectives: [
+        Objective(title: ''),
+      ]),
+      RubricGroup(title: l.rubricStateTitleTwo, objectives: [
+        Objective(title: ''),
+      ]),
+    ]);
   }
 
   @override
@@ -99,7 +133,7 @@ class _MyAppState extends State<MyApp> {
 
   FadeInPage _buildAssignWeights(FlowController flowController) {
     // get our state from riverpod
-    final rubric = context.read(rubricProviderRef);
+    final rubric = ref.read(rubricProviderRef);
 
     // get all of the titles of the groups
     final groupNames = rubric.groups.map((group) => group.title).toList();

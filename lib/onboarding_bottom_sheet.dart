@@ -9,7 +9,7 @@ import 'package:rubric/typography/body_one.dart';
 import 'package:rubric/typography/body_placeholder.dart';
 import 'package:rubric/typography/headline_one.dart';
 
-class OnboardingBottomSheet extends StatefulWidget {
+class OnboardingBottomSheet extends ConsumerStatefulWidget {
   const OnboardingBottomSheet({Key? key, required this.flowController})
       : super(key: key);
 
@@ -19,7 +19,7 @@ class OnboardingBottomSheet extends StatefulWidget {
   _OnboardingBottomSheetState createState() => _OnboardingBottomSheetState();
 }
 
-class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
+class _OnboardingBottomSheetState extends ConsumerState<OnboardingBottomSheet> {
   bool canContinue = false;
   String objectiveTitle = '';
 
@@ -78,7 +78,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
                     backgroundColor: accent,
                     onPressed: () {
                       // Store the users objective
-                      final rubric = context.read(rubricProviderRef.notifier);
+                      final rubric = ref.read(rubricProviderRef.notifier);
                       rubric.addObjective(Objective(title: objectiveTitle));
                       // Navigate to the grading objectives page
                       widget.flowController.update(

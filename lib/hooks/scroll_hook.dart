@@ -29,7 +29,7 @@ class ScrollHookState extends State<ScrollHook> {
   }
 
   void scrollToBottom() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 500),
