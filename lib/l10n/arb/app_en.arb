@@ -33,5 +33,321 @@
   "rubricStateTitleTwo": "Group 2",
   "assignGroupsHeadline": "Assign Groups",
   "assignGroupsDragMessage": "Drag objective here",
-  "assignGroupsDragTarget": "Add New Group"
+  "assignGroupsDragTarget": "Add New Group",
+  "exportSheetTitle": "Export",
+  "exportSheetPrint": "Print",
+  "exportSheetPrintHint": "Paper copy",
+  "exportSheetShare": "Share PDF",
+  "exportSheetShareHint": "Mail, Files, Drive…",
+  "exportFailed": "Export failed. Please try again.",
+  "exportUntitledRubric": "Untitled rubric",
+  "exportReportsName": "{assignment} - reports",
+  "@exportReportsName": {
+    "placeholders": {
+      "assignment": {
+        "type": "String"
+      }
+    }
+  },
+  "exportScoresFileSuffix": "scores",
+  "@exportScoresFileSuffix": {
+    "description": "Part of an exported CSV filename, e.g. essay-scores-2026-09-29.csv"
+  },
+  "exportGradebookFileSuffix": "gradebook",
+  "@exportGradebookFileSuffix": {
+    "description": "Part of an exported CSV filename"
+  },
+  "exportStatusNotStarted": "Not started",
+  "exportStatusInProgress": "In progress",
+  "exportStatusComplete": "Complete",
+  "exportStatusExcused": "Excused",
+  "exportStatusMissing": "Missing",
+  "exportModeSimple": "Simple rubric",
+  "exportModeDetailed": "Detailed rubric",
+  "exportCsvLastName": "Last name",
+  "exportCsvFirstName": "First name",
+  "exportCsvStudentNumber": "Student #",
+  "exportCsvStatus": "Status",
+  "exportCsvGroupPercent": "{group} %",
+  "@exportCsvGroupPercent": {
+    "description": "CSV column header for a rubric group percentage",
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "exportCsvFinalPercent": "Final %",
+  "exportCsvLetter": "Letter",
+  "exportCsvPoints": "Points (of {possible})",
+  "@exportCsvPoints": {
+    "placeholders": {
+      "possible": {
+        "type": "String"
+      }
+    }
+  },
+  "exportCsvComment": "Comment",
+  "exportCsvAssignmentDue": "{title} ({due})",
+  "@exportCsvAssignmentDue": {
+    "description": "Gradebook CSV column: assignment title with ISO due date",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "due": {
+        "type": "String"
+      }
+    }
+  },
+  "exportCsvAverage": "Average %",
+  "exportPdfPageOf": "Page {page} of {pages}",
+  "@exportPdfPageOf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "exportPdfObjectiveCount": "{count, plural, =1{1 objective} other{{count} objectives}}",
+  "@exportPdfObjectiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportPdfWeight": "{weight}%",
+  "@exportPdfWeight": {
+    "description": "A group weight pill",
+    "placeholders": {
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "exportPdfObjective": "Objective",
+  "exportPdfDescription": "Description",
+  "exportPdfScore": "Score",
+  "exportPdfFeedback": "Feedback",
+  "exportPdfFeedbackInline": "Feedback: {comment}",
+  "@exportPdfFeedbackInline": {
+    "placeholders": {
+      "comment": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfLevelHeader": "{label} ({points})",
+  "@exportPdfLevelHeader": {
+    "description": "Detailed grid column header: level name and points",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfAchieved": "Achieved",
+  "@exportPdfAchieved": {
+    "description": "Marks the performance level a student reached"
+  },
+  "exportPdfGradingScale": "Grading scale",
+  "exportPdfGrade": "Grade",
+  "exportPdfRange": "Range",
+  "exportPdfRangeValue": "{from}% to {to}%",
+  "@exportPdfRangeValue": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfStudentNumber": "Student # {number}",
+  "@exportPdfStudentNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfComments": "Comments",
+  "exportPdfFinalGrade": "Final grade",
+  "exportPdfExcusedDetail": "Not counted toward the course grade",
+  "exportPdfNotGraded": "Not graded",
+  "exportPdfPoints": "{earned} of {possible} points",
+  "@exportPdfPoints": {
+    "placeholders": {
+      "earned": {
+        "type": "String"
+      },
+      "possible": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfMissingNote": "Work was not handed in.",
+  "exportPdfLateNote": "Handed in late.",
+  "exportPdfPenaltyNote": "Late penalty: {penalty} percentage points deducted from {raw}.",
+  "@exportPdfPenaltyNote": {
+    "placeholders": {
+      "penalty": {
+        "type": "String"
+      },
+      "raw": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfOverrideNote": "Grade set by the teacher (calculated: {raw}).",
+  "@exportPdfOverrideNote": {
+    "placeholders": {
+      "raw": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfNoStudents": "No students in this class yet.",
+  "backupTitle": "Backup & Restore",
+  "backupIntro": "Everything in Rubric lives only on this device. A backup is one file holding all your rubrics, templates, classes, students, grades, comments and settings. Keep it somewhere safe, like Files or Drive.",
+  "backupLastHint": "Last backup",
+  "backupNever": "Never backed up",
+  "backupOnDevice": "On this device",
+  "backupCountRecords": "{count, plural, =1{1 item} other{{count} items}}",
+  "@backupCountRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountRubrics": "{count, plural, =1{1 rubric} other{{count} rubrics}}",
+  "@backupCountRubrics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountTemplates": "{count, plural, =1{1 template} other{{count} templates}}",
+  "@backupCountTemplates": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountClasses": "{count, plural, =1{1 class} other{{count} classes}}",
+  "@backupCountClasses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountStudents": "{count, plural, =1{1 student} other{{count} students}}",
+  "@backupCountStudents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountAssignments": "{count, plural, =1{1 assignment} other{{count} assignments}}",
+  "@backupCountAssignments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountEvaluations": "{count, plural, =1{1 graded paper} other{{count} graded papers}}",
+  "@backupCountEvaluations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountComments": "{count, plural, =1{1 saved comment} other{{count} saved comments}}",
+  "@backupCountComments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupNowAction": "Back Up Now",
+  "backupWorking": "Working…",
+  "backupShareSubject": "Rubric backup",
+  "backupDone": "Backup saved.",
+  "backupFailed": "Backup failed. Please try again.",
+  "backupRestoreSection": "Restore",
+  "backupRestoreHint": "From a backup file",
+  "backupRestoreAction": "Restore…",
+  "backupRestoreExplain": "You will see what the file contains and choose to merge it with this device or replace everything before anything changes.",
+  "backupReadFailed": "That file could not be read.",
+  "backupProblemTitle": "Can’t restore this file",
+  "backupProblemNotJson": "This isn’t a Rubric backup file. Backups are .json files named like rubric-backup-2026-09-29.json.",
+  "backupProblemWrongFormat": "This file isn’t a Rubric backup. Pick a file made with Back Up Now.",
+  "backupProblemNewerVersion": "This backup was made by a newer version of Rubric. Update the app, then try again.",
+  "backupProblemUnsupportedVersion": "This backup’s version isn’t supported.",
+  "backupProblemCorrupt": "This backup is damaged or incomplete, so nothing was restored.",
+  "backupProblemDismiss": "OK",
+  "backupRestoreSheetTitle": "Restore backup",
+  "backupRestoreFrom": "Backed up {date}",
+  "@backupRestoreFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupModeMerge": "Merge",
+  "backupModeReplace": "Replace",
+  "backupModeMergeExplain": "Adds {added, plural, =1{1 new item} other{{added} new items}} and updates {existing, plural, =1{1 item} other{{existing} items}} already on this device. Nothing is deleted. Your settings stay as they are.",
+  "@backupModeMergeExplain": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "existing": {
+        "type": "int"
+      }
+    }
+  },
+  "backupModeReplaceExplain": "Deletes everything on this device, then restores this backup exactly, including its settings.",
+  "backupRestoreMergeAction": "Merge Backup",
+  "backupRestoreReplaceAction": "Replace Everything",
+  "backupReplaceConfirmTitle": "Replace everything?",
+  "backupReplaceConfirmMessage": "All rubrics, classes, students and grades on this device will be deleted and replaced with the backup. You can undo right after.",
+  "backupReplaceConfirmAction": "Replace",
+  "backupRestored": "{count, plural, =1{Restored 1 item.} other{Restored {count} items.}}",
+  "@backupRestored": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupRestoreFailed": "Restore failed. Nothing was changed.",
+  "backupUndo": "Undo",
+  "backupUndone": "Restore undone.",
+  "exportPdfGroupScore": "Scored {percent}",
+  "@exportPdfGroupScore": {
+    "description": "Next to a group heading on a student report",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  }
 }
