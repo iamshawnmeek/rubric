@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rubric/app/routes.dart';
@@ -44,6 +45,11 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
   );
   final _pages = PageController();
   int _page = 0;
+
+  /// Height the bottom sheet occupies, measured after layout. The logo is
+  /// centred in the space ABOVE it: v1 pinned it at 30% of the screen, which on
+  /// tall phones put it behind the taller v2 card (seen on an iPhone 17 Pro).
+  double _sheetHeight = 0;
   _Busy _busy = _Busy.none;
 
   @override
@@ -116,7 +122,6 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final height = MediaQuery.sizeOf(context).height;
     final pages = [
       (l.onboarding1Title, l.onboarding1Message),
       (l.onboarding2Title, l.onboarding2Message),
@@ -127,16 +132,19 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
       backgroundColor: secondary,
       body: Stack(
         children: [
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: height * .3),
-                FadeTransition(
-                  opacity: _logo,
-                  child: const Center(child: RubricLogo()),
+          Positioned.fill(
+            bottom: _sheetHeight,
+            child: SafeArea(
+              bottom: false,
+              child: FadeTransition(
+                opacity: _logo,
+                child: const Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: RubricLogo(),
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
           Positioned.fill(
@@ -156,43 +164,48 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
                   begin: const Offset(0, .35),
                   end: Offset.zero,
                 ).animate(_sheet),
-                child: SafeArea(
-                  child: SingleChildScrollView(
-                    reverse: true,
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: WelcomePage.maxSheetWidth,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _Pager(
-                            controller: _pages,
-                            pages: pages,
-                            onPageChanged: (page) =>
-                                setState(() => _page = page),
-                          ),
-                          _Footer(
-                            page: _page,
-                            count: pages.length,
-                            busy: _busy == _Busy.rubric,
-                            onSkip: () => _goToPage(pages.length - 1),
-                            onNext: _isLast
-                                ? _createFirstRubric
-                                : () => _goToPage(_page + 1),
-                          ),
-                          AnimatedSize(
-                            duration: const Duration(milliseconds: 250),
-                            child: _isLast
-                                ? _Alternatives(
-                                    busy: _busy,
-                                    onSample: _exploreSample,
-                                    onSkip: _skip,
-                                  )
-                                : const SizedBox(width: double.infinity),
-                          ),
-                        ],
+                child: _MeasureHeight(
+                  onChange: (h) {
+                    if (h != _sheetHeight) setState(() => _sheetHeight = h);
+                  },
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      reverse: true,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: WelcomePage.maxSheetWidth,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _Pager(
+                              controller: _pages,
+                              pages: pages,
+                              onPageChanged: (page) =>
+                                  setState(() => _page = page),
+                            ),
+                            _Footer(
+                              page: _page,
+                              count: pages.length,
+                              busy: _busy == _Busy.rubric,
+                              onSkip: () => _goToPage(pages.length - 1),
+                              onNext: _isLast
+                                  ? _createFirstRubric
+                                  : () => _goToPage(_page + 1),
+                            ),
+                            AnimatedSize(
+                              duration: const Duration(milliseconds: 250),
+                              child: _isLast
+                                  ? _Alternatives(
+                                      busy: _busy,
+                                      onSample: _exploreSample,
+                                      onSkip: _skip,
+                                    )
+                                  : const SizedBox(width: double.infinity),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -422,5 +435,39 @@ class _Alternatives extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Reports its child's laid-out height after each layout in which it changed.
+class _MeasureHeight extends SingleChildRenderObjectWidget {
+  const new({required this.onChange, required super.child});
+
+  final ValueChanged<double> onChange;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderMeasureHeight(onChange);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderMeasureHeight renderObject,
+  ) => renderObject.onChange = onChange;
+}
+
+class _RenderMeasureHeight extends RenderProxyBox {
+  new(this.onChange);
+
+  ValueChanged<double> onChange;
+  double? _last;
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    final height = size.height;
+    if (height == _last) return;
+    _last = height;
+    // Reporting during layout would setState mid-frame; defer to after it.
+    WidgetsBinding.instance.addPostFrameCallback((_) => onChange(height));
   }
 }

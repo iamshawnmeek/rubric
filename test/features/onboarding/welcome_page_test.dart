@@ -7,6 +7,7 @@ import 'package:rubric/app/settings.dart';
 import 'package:rubric/data/course_repository.dart';
 import 'package:rubric/data/providers.dart';
 import 'package:rubric/data/rubric_repository.dart';
+import 'package:rubric/design_system/design_system.dart';
 import 'package:rubric/domain/grading_scale.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/features/home/home_page.dart';
@@ -17,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/db.dart';
+import '../../helpers/fonts.dart';
 
 const _firstRun = AppSettings();
 
@@ -35,6 +37,45 @@ Future<void> _toLastPage(WidgetTester tester) async {
 }
 
 void main() {
+  // Screen size and safe-area insets (top, bottom) of real phones.
+  for (final (size, top, bottom) in const [
+    (Size(402, 874), 62.0, 34.0), // iPhone 17 Pro, where it was seen
+    (Size(375, 667), 20.0, 0.0), // iPhone SE
+    (Size(440, 956), 62.0, 34.0), // iPhone 17 Pro Max
+  ]) {
+    testWidgets('the logo sits clear above the sheet on $size', (tester) async {
+      tester.view.padding = FakeViewPadding(top: top * 3, bottom: bottom * 3);
+      tester.view.viewPadding = FakeViewPadding(
+        top: top * 3,
+        bottom: bottom * 3,
+      );
+      // Regression (seen on an iPhone 17 Pro): v1 pinned the logo at 30% of
+      // the screen height, which put it behind the taller v2 card.
+      await loadAppFonts();
+      await pumpPage(
+        tester,
+        const WelcomePage(),
+        settings: _firstRun,
+        size: size,
+      );
+      final logo = tester.getRect(find.byType(RubricLogo));
+      final card = tester.getRect(
+        find
+            .ancestor(
+              of: find.text('Grading made simple.'),
+              matching: find.byType(DecoratedBox),
+            )
+            .last,
+      );
+      expect(logo.height, greaterThan(20), reason: 'logo rendered');
+      expect(
+        logo.bottom,
+        lessThanOrEqualTo(card.top),
+        reason: 'logo $logo, card $card',
+      );
+    });
+  }
+
   testWidgets('the pager walks the three cards with Next', (tester) async {
     await pumpPage(tester, const WelcomePage(), settings: _firstRun);
 

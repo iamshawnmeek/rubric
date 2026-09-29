@@ -99,18 +99,22 @@ class StatTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // scaleDown, never up: a plain FittedBox blew "0%" up past the
+            // size of its siblings' values (seen on device).
             FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
               child: Text(
                 value,
                 style: RubricTextStyles.statValue.copyWith(color: valueColor),
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: RubricTextStyles.caption,
+            // Labels shrink to fit rather than truncating ("Me…" for Median).
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(label, maxLines: 1, style: RubricTextStyles.caption),
             ),
           ],
         ),
