@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart' hide Evaluation;
 import 'package:rubric/app/routes.dart';
 import 'package:rubric/data/assignment_repository.dart';
 import 'package:rubric/data/course_repository.dart';
 import 'package:rubric/data/database.dart';
+import 'package:rubric/data/providers.dart';
 import 'package:rubric/data/rubric_repository.dart';
 import 'package:rubric/domain/assignment.dart';
 import 'package:rubric/domain/classroom.dart';
@@ -73,6 +76,29 @@ String _gradeOf(WidgetTester tester, String studentId) =>
     tester.widget<Text>(find.byKey(Key('assignments.grade.$studentId'))).data!;
 
 void main() {
+  testWidgets('shows a spinner, not a crash, while the roster is loading', (
+    tester,
+  ) async {
+    // Regression (seen on device): with the assignment loaded but students
+    // still loading, the page built a box inside a sliver list.
+    final roster = StreamController<List<Student>>();
+    addTearDown(roster.close);
+    await pumpPage(
+      tester,
+      const AssignmentPage(courseId: 'c1', assignmentId: 'a1'),
+      seed: _seed,
+      settle: false,
+      size: const Size(390, 1600),
+      overrides: [studentsProvider('c1').overrideWith((ref) => roster.stream)],
+    );
+    expect(tester.takeException(), isNull);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    roster.add(_students);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('assignments.grade.s1')), findsOneWidget);
+  });
+
   testWidgets('shows each student status and grade from the evaluations', (
     tester,
   ) async {

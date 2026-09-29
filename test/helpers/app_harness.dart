@@ -40,6 +40,8 @@ Future<TestApp> pumpPage(
   AppSettings settings = const AppSettings(onboardingComplete: true),
   List<Override> overrides = const [],
   Size size = const Size(390, 844),
+  // False for a page left in a loading state: a spinner never settles.
+  bool settle = true,
 }) async {
   tester.view.physicalSize = size * 3;
   tester.view.devicePixelRatio = 3;
@@ -92,6 +94,11 @@ Future<TestApp> pumpPage(
       ),
     ),
   );
-  await tester.pumpAndSettle();
+  if (settle) {
+    await tester.pumpAndSettle();
+  } else {
+    await tester.pump();
+    await tester.pump();
+  }
   return TestApp(db, container, router, visited);
 }

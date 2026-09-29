@@ -82,16 +82,27 @@ class _AssignmentPageState extends ConsumerState<AssignmentPage> {
       );
     }
     if (assignment == null || students == null || evaluations == null) {
-      final pending = [
-        assignmentAsync,
-        studentsAsync,
-        evaluationsAsync,
-      ].firstWhere((a) => a.hasError, orElse: () => assignmentAsync);
+      // Show whichever source is failing, else whichever is still loading.
+      // Never hand SliverAsyncView one that already has data: its builder
+      // would then have to produce the page, and a box there is not a sliver
+      // (seen on device: "RenderViewport expected a child of type
+      // RenderSliver" while the roster was still loading).
+      final sources = [assignmentAsync, studentsAsync, evaluationsAsync];
+      final pending = sources.firstWhere(
+        (a) => a.hasError,
+        orElse: () => sources.firstWhere(
+          (a) => a.isLoading || !a.hasValue,
+          orElse: () => assignmentAsync,
+        ),
+      );
       return RubricPage(
         title: '',
         showBack: true,
         slivers: [
-          SliverAsyncView(value: pending, data: (_) => const SizedBox()),
+          SliverAsyncView(
+            value: pending,
+            data: (_) => const SliverToBoxAdapter(),
+          ),
         ],
       );
     }
