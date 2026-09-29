@@ -33,5 +33,155 @@
   "rubricStateTitleTwo": "Group 2",
   "assignGroupsHeadline": "Assign Groups",
   "assignGroupsDragMessage": "Drag objective here",
-  "assignGroupsDragTarget": "Add New Group"
+  "assignGroupsDragTarget": "Add New Group",
+  "settingsTitle": "Settings",
+  "settingsSectionProfile": "Profile",
+  "settingsTeacherNameHint": "Your name",
+  "@settingsTeacherNameHint": {
+    "description": "Card hint above the teacher name"
+  },
+  "settingsTeacherNameEmpty": "Add your name",
+  "settingsTeacherNameSheetTitle": "What should we call you?",
+  "settingsTeacherNameSheetMessage": "Used in your Home greeting and on the PDFs you export.",
+  "settingsTeacherNameFieldHint": "e.g. Ms. Rivera",
+  "settingsSave": "Save",
+  "settingsSaved": "Saved.",
+  "settingsUndo": "Undo",
+  "settingsSectionGrading": "Grading defaults",
+  "settingsDefaultModeHint": "New rubrics start as",
+  "settingsModeSimple": "Simple",
+  "settingsModeDetailed": "Detailed",
+  "settingsDefaultScaleHint": "Default grading scale",
+  "settingsScalePresetStandard": "Standard (A–F)",
+  "settingsScalePresetPlusMinus": "Plus / minus",
+  "settingsScalePresetPassFail": "Pass / fail",
+  "settingsScaleCustom": "Custom · {count, plural, =1{1 grade} other{{count} grades}}",
+  "@settingsScaleCustom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScaleUpdated": "Default grading scale updated.",
+  "settingsDecimalsHint": "Decimal places on percentages",
+  "settingsDecimalsExample": "Grades show as {example}",
+  "@settingsDecimalsExample": {
+    "placeholders": {
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLatePenaltyHint": "Late penalty",
+  "settingsLatePenaltyValue": "{percent}% off",
+  "@settingsLatePenaltyValue": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLatePenaltyDecrease": "Decrease late penalty",
+  "settingsLatePenaltyIncrease": "Increase late penalty",
+  "settingsLetterGradesHint": "Next to percentages",
+  "settingsLetterGradesTitle": "Show letter grades",
+  "settingsSectionFeedback": "Feedback",
+  "settingsCommentBankHint": "Reusable comments",
+  "settingsCommentBankTitle": "Comment bank",
+  "settingsSectionData": "Data",
+  "settingsBackupHint": "Save or restore everything",
+  "settingsBackupTitle": "Backup & restore",
+  "settingsSampleHint": "Try Rubric with a demo class",
+  "settingsSampleTitle": "Load sample data",
+  "settingsSampleLoading": "Loading sample data…",
+  "settingsSampleLoaded": "Sample data loaded.",
+  "settingsSampleFailed": "Couldn’t load sample data. Nothing was changed.",
+  "settingsEraseHint": "Classes, rubrics, grades and settings",
+  "settingsEraseTitle": "Erase all data",
+  "settingsEraseConfirmTitle": "Erase all data?",
+  "settingsEraseConfirmMessage": "This deletes every class, student, rubric, assignment, grade and saved comment on this device, and resets your settings.",
+  "settingsEraseConfirmAction": "Continue",
+  "settingsEraseFinalTitle": "This can’t be undone",
+  "settingsEraseFinalMessage": "Rubric keeps no copy anywhere else. If you might want this data later, make a backup first.",
+  "settingsEraseFinalAction": "Erase everything",
+  "settingsEraseFailed": "Couldn’t erase data. Nothing was changed.",
+  "settingsSectionApp": "App",
+  "settingsHapticsHint": "Vibration on taps",
+  "settingsHapticsTitle": "Haptic feedback",
+  "settingsOnboardingHint": "See the welcome tour again",
+  "settingsOnboardingTitle": "Replay onboarding",
+  "settingsAboutHint": "Version {version}",
+  "@settingsAboutHint": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutTitle": "About Rubric",
+  "settingsScaleEditorTitle": "Grading scale",
+  "settingsScalePresetsLabel": "Start from",
+  "settingsScaleGradeHint": "Grade",
+  "settingsScaleFromHint": "From %",
+  "settingsScaleTo": "to {max}",
+  "@settingsScaleTo": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsScaleGradeLabel": "Grade {index} name",
+  "@settingsScaleGradeLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScaleFromLabel": "Grade {index} starts at percent",
+  "@settingsScaleFromLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScaleAddGrade": "Add grade",
+  "settingsScaleRemoveGrade": "Remove grade {index}",
+  "@settingsScaleRemoveGrade": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScaleSave": "Save scale",
+  "settingsScaleIssueEmpty": "Add at least one grade.",
+  "settingsScaleIssueBlankName": "Every grade needs a name.",
+  "settingsScaleIssueDuplicateName": "Grade names must be unique.",
+  "settingsScaleIssueBadPercent": "Percentages must be numbers from 0 to 100.",
+  "settingsScaleIssueDuplicatePercent": "Two grades start at the same percentage.",
+  "settingsScaleIssueNoZero": "One grade must start at 0 so every score gets a letter.",
+  "settingsAboutPageTitle": "About",
+  "settingsAboutVersion": "Version {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutStoryHint": "Our story",
+  "settingsAboutStoryTitle": "Grading made simple.",
+  "settingsAboutStoryBody": "Rubric started at a kitchen table covered in essays. Grading by hand meant re-adding weights, re-reading criteria and hoping every student was measured the same way. Rubric does the arithmetic so you can do the teaching: build a weighted rubric once, grade a whole class against it, and see at a glance which objectives are landing.",
+  "settingsAboutCreditsHint": "Acknowledgements",
+  "settingsAboutCreditsTitle": "Designed by the Rubric founding team",
+  "settingsAboutCreditsBody": "With thanks to the teachers who tested early builds and told us what grading really looks like.",
+  "settingsAboutPrivacyHint": "Privacy",
+  "settingsAboutPrivacyTitle": "All data stays on this device",
+  "settingsAboutPrivacyBody": "Rubric has no accounts, no servers and no analytics. Your classes, students and grades are stored only on this device, and leave it only when you export or back them up.",
+  "settingsAboutLicensesHint": "Open source",
+  "settingsAboutLicensesTitle": "Licenses"
 }
