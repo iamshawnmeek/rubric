@@ -33,5 +33,214 @@
   "rubricStateTitleTwo": "Group 2",
   "assignGroupsHeadline": "Assign Groups",
   "assignGroupsDragMessage": "Drag objective here",
-  "assignGroupsDragTarget": "Add New Group"
+  "assignGroupsDragTarget": "Add New Group",
+  "gradingTitle": "Grade",
+  "gradingPosition": "{position} of {total}",
+  "@gradingPosition": {
+    "description": "Where the current student sits in the roster, e.g. 7 of 24",
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingPreviousStudent": "Previous student",
+  "gradingNextStudent": "Next student",
+  "gradingUndo": "Undo last change",
+  "gradingUndone": "Change undone",
+  "gradingProgress": "Scored {scored} of {total}",
+  "@gradingProgress": {
+    "placeholders": {
+      "scored": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingGradeLabel": "Grade",
+  "gradingNoGrade": "No grade yet",
+  "gradingExcusedGrade": "Excused",
+  "gradingGradeSemantics": "Grade {percent} {letter}",
+  "@gradingGradeSemantics": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingGroupHeader": "{title} · {weight}%",
+  "@gradingGroupHeader": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingObjectiveHint": "Objective {number}",
+  "@gradingObjectiveHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingObjectiveScored": "Objective {number} · {percent}",
+  "@gradingObjectiveScored": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingPercentField": "Percent",
+  "gradingSliderLabel": "{objective} percent",
+  "@gradingSliderLabel": {
+    "placeholders": {
+      "objective": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingClearScore": "Clear score",
+  "gradingLevelPoints": "{points} pts",
+  "@gradingLevelPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingLevelSemantics": "{label}, {points} points. {descriptor}",
+  "@gradingLevelSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      },
+      "descriptor": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingAddObjectiveComment": "Add comment",
+  "gradingEditObjectiveComment": "Comment",
+  "gradingObjectiveCommentHint": "Feedback on this objective",
+  "gradingStatusSection": "Status",
+  "gradingMissing": "Missing",
+  "gradingExcused": "Excused",
+  "gradingLate": "Late",
+  "gradingPenaltyLabel": "Late penalty",
+  "gradingPenaltyHint": "Percentage points deducted",
+  "gradingOverride": "Override",
+  "gradingOverrideActive": "Override {percent}",
+  "@gradingOverrideActive": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingOverrideTitle": "Override grade",
+  "gradingOverridePercent": "Grade (%)",
+  "gradingOverrideReason": "Reason (optional)",
+  "gradingOverrideApply": "Apply",
+  "gradingOverrideClear": "Remove override",
+  "gradingOverrideInvalid": "Enter a percentage from 0 to 100",
+  "gradingOverrideComputed": "Computed grade: {percent}",
+  "@gradingOverrideComputed": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingCommentSection": "Overall comment",
+  "gradingCommentHint": "Write feedback for this student",
+  "gradingCommentBankOpen": "Comment bank",
+  "gradingCommentSaveToBank": "Save to bank",
+  "gradingCommentSaved": "Saved to your comment bank",
+  "gradingCommentAlreadySaved": "Already in your comment bank",
+  "gradingBankTitle": "Insert a comment",
+  "gradingBankEmptyMessage": "Write a comment and tap “Save to bank”, or add some in Settings.",
+  "gradingNextUngraded": "Next ungraded",
+  "gradingFinish": "Finish",
+  "gradingFinishedTitle": "Everyone’s graded",
+  "gradingFinishedMessage": "{count, plural, =1{1 student graded.} other{{count} students graded.}}",
+  "@gradingFinishedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingClassAverage": "Class average",
+  "gradingBackToAssignment": "Back to assignment",
+  "gradingKeepReviewing": "Keep reviewing",
+  "gradingNotFoundTitle": "This assignment no longer exists",
+  "gradingNoStudentsTitle": "No students in this class yet",
+  "gradingNoStudentsMessage": "Add students to the class to start grading.",
+  "gradingNoObjectives": "This rubric has no objectives to grade.",
+  "gradingStudentsPane": "Students",
+  "gradingStudentGraded": "Graded",
+  "gradingStudentUngraded": "Not graded",
+  "gradingStudentRowSemantics": "{name}, {status}",
+  "@gradingStudentRowSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "commentBankTitle": "Comment Bank",
+  "commentBankSearch": "Search comments",
+  "commentBankAdd": "Add comment",
+  "commentBankEmptyTitle": "No saved comments yet",
+  "commentBankEmptyMessage": "Save feedback you write often and insert it with one tap while grading.",
+  "commentBankNoMatches": "No comments match “{query}”",
+  "@commentBankNoMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "commentBankAllCategories": "All",
+  "commentBankUncategorised": "Uncategorised",
+  "commentBankNewTitle": "New comment",
+  "commentBankEditTitle": "Edit comment",
+  "commentBankTextHint": "Comment text",
+  "commentBankCategoryHint": "Category (optional)",
+  "commentBankSave": "Save",
+  "commentBankDelete": "Delete",
+  "commentBankDeleteTitle": "Delete this comment?",
+  "commentBankDeleteMessage": "It will be removed from your comment bank.",
+  "commentBankDeleted": "Comment deleted",
+  "commentBankUndo": "Undo",
+  "commentBankUses": "{count, plural, =0{Never used} =1{Used once} other{Used {count} times}}",
+  "@commentBankUses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
