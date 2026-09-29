@@ -56,3 +56,6 @@ app.*.map.json
 # Generated localizations are rebuilt by `flutter gen-l10n` / every build
 lib/l10n/gen/
 .sdk/
+
+# showrunner integrate writes local-only proof files
+.showrunner/merged-proof-*.txt
