@@ -79,6 +79,7 @@ class Evaluation {
     this.late = false,
     this.penaltyPercent = 0,
     this.overridePercent,
+    this.overrideReason = '',
   });
 
   factory start({
@@ -108,6 +109,7 @@ class Evaluation {
     late: json['late'] as bool? ?? false,
     penaltyPercent: (json['penaltyPercent'] as num?)?.toDouble() ?? 0,
     overridePercent: (json['overridePercent'] as num?)?.toDouble(),
+    overrideReason: json['overrideReason'] as String? ?? '',
     updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt'] as int),
   );
 
@@ -131,6 +133,9 @@ class Evaluation {
 
   /// When set, replaces the computed percentage entirely.
   final double? overridePercent;
+
+  /// Why the teacher overrode the computed grade.
+  final String overrideReason;
   final DateTime updatedAt;
 
   Evaluation copyWith({
@@ -141,6 +146,7 @@ class Evaluation {
     bool? late,
     double? penaltyPercent,
     double? overridePercent,
+    String? overrideReason,
     bool clearOverride = false,
     DateTime? updatedAt,
   }) => Evaluation(
@@ -156,6 +162,7 @@ class Evaluation {
     overridePercent: clearOverride
         ? null
         : overridePercent ?? this.overridePercent,
+    overrideReason: clearOverride ? '' : overrideReason ?? this.overrideReason,
     updatedAt: updatedAt ?? DateTime.now(),
   );
 
@@ -181,6 +188,7 @@ class Evaluation {
     'late': late,
     'penaltyPercent': penaltyPercent,
     'overridePercent': overridePercent,
+    'overrideReason': overrideReason,
     'updatedAt': updatedAt.millisecondsSinceEpoch,
   };
 
@@ -203,6 +211,7 @@ class Evaluation {
       other.late == late &&
       other.penaltyPercent == penaltyPercent &&
       other.overridePercent == overridePercent &&
+      other.overrideReason == overrideReason &&
       other.updatedAt == updatedAt;
 
   @override
