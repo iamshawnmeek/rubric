@@ -47,3 +47,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+# llm_chat identity for this project
+.llm_chat/
+
+# FVM: only .fvmrc is tracked; the SDK link and cache are per-machine
+.fvm/
+
+# Generated localizations are rebuilt by `flutter gen-l10n` / every build
+lib/l10n/gen/
+.sdk/
+
+# showrunner integrate writes local-only proof files
+.showrunner/merged-proof-*.txt

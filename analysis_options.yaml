@@ -1,6 +1,19 @@
-includes:
-  - 'package:very_good_analysis/very_good_analysis.dart'
+# NOTE: this file said `includes:` until v2.0 — an unknown key the analyzer silently ignores —
+# so very_good_analysis never actually ran on this project. `include:` is the real key.
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - "**/*.g.dart"
+    - lib/l10n/gen/**
+  errors:
+    # Generated drift/l10n code and widget-heavy UI make these noisy without catching defects.
+    document_ignores: ignore
 
 linter:
   rules:
     public_member_api_docs: false
+    lines_longer_than_80_chars: false

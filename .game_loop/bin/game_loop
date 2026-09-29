@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+"""Entry point for game_loop. The implementation is _gl_impl.py, and that is a PERFORMANCE fact.
+
+Python compiles an imported module once and caches the bytecode in __pycache__; a script run as
+__main__ is re-parsed on every invocation, every time, forever. This implementation is ~10k lines,
+and the suite spawns this binary 3,126 times in one run — counted, by wrapping subprocess.run for a
+run. That re-parse was 31ms of every one of those spawns: ~97 seconds of pure waste per suite run,
+paid again by every mutant in a sweep and by every hook on every tool call.
+
+    as a script        0.0792s per invocation
+    stub + module      0.0475s per invocation
+
+WHAT THIS FILE MUST NEVER BECOME is a place where logic lives. Anything here is parsed on every
+spawn — that is the cost this split exists to remove — and anything here is also invisible to the
+mutation sweep, whose producers are all addressed inside _gl_impl.py. Keep it a door.
+"""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _gl_impl                                          # noqa: E402 — after the path insert
+
+# `main()` and not `sys.exit(main())`: the original ended in a bare `main()` under an
+# `if __name__ == "__main__"` guard, so a normal return exits 0 and every refusal path still exits
+# through its own die(). Wrapping it in sys.exit would change the exit code of any path that
+# returns a value, which is the kind of difference a stub has no business introducing.
+#
+# THE GUARD IS BACK, AND ITS ABSENCE HAD A COST. The note above says the original ran main() under
+# an `if __name__ == "__main__"` guard; the split to a stub kept the bare call and dropped the
+# guard, so IMPORTING this file ran the CLI — argparse saw no subcommand, printed a usage error and
+# exited 2. `test/trigger_fixtures.py` imports it exactly this way to read `log_kinds()`, so the
+# harness that exercises every shipped trigger example has been dead, and nothing said so: that
+# file is named by no rule in verify.yaml and run by neither the suite nor CI.
+#
+# Executing the file as a script is unchanged — that is what the guard is for.
+if __name__ == "__main__":
+    _gl_impl.main()

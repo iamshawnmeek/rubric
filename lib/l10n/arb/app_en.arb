@@ -1,95 +1,2201 @@
 {
-    "@@locale": "en",
-    "nextTitle": "Next",
-    "@nextTitle": {
-        "description": "Used in onboarding to continue to next step"
-    },
-    "skipTitle": "Skip",
-    "@skipTitle": {
-        "description": "Used in onboarding to go to the final page"
-    },
-    "onboarding1Title": "Grading made simple.",
-    "@onboarding1Title": {
-        "description": ""
-    },
-    "onboarding2Title": "Rubric your way.",
-    "@onboarding2Title": {
-        "description": ""
-    },
-    "onboarding3Title": "But first…",
-    "@onboarding3Title": {
-        "description": ""
-    },
-    "onboarding1Message": "Rubric is designed to take the burden out of grading the old-fashioned way. Grade faster and accurately with built in tools for all your projects and courses.",
-    "@onboarding1Message": {
-        "description": ""
-    },
-    "onboarding2Message": "Establish grading objectives, assign evaluation groups and create customized weights that fit your specific evaluation credentials for any assignment or project.",
-    "@onboarding2Message": {
-        "description": ""
-    },
-    "onboarding3Message": "Let's determine your specific grading scale preferences: simple or detailed and build your first rubric.",
-    "@onboarding3Message": {
-        "description": ""
-    },
-    "gradingScaleTitle": "Grading Scale",
-    "@gradingScaleTitle": {
-        "description": ""
-    },
-    "gradingScaleToggleSimple": "Simple",
-    "@gradingScaleToggleSimple": {
-        "description": ""
-    },
-    "gradingScaleToggleDetailed": "Detailed",
-    "@gradingScaleToggleDetailed": {
-        "description": ""
-    },
-    "gradingScaleGradeA": "A",
-    "@gradingScaleGradeA": {
-        "description": ""
-    },
-    "gradingScaleGradeB": "B",
-    "@gradingScaleGradeB": {
-        "description": ""
-    },
-    "gradingScaleGradeC": "C",
-    "@gradingScaleGradeC": {
-        "description": ""
-    },
-    "gradingScaleGradeD": "D",
-    "@gradingScaleGradeD": {
-        "description": ""
-    },
-    "gradingScaleGradeF": "F",
-    "@gradingScaleGradeF": {
-        "description": ""
-    },
-    "gradingScaleTo": "to",
-    "@gradingScaleTo": {
-        "description": ""
-    },
-    "setGradingScaleTitle": "Set Grading Scale",
-    "@setGradingScaleTitle": {
-        "description": ""
-    },
-    "rubricStateTitleOne": "Group 1",
-    "@rubricStateTitleOne": {
-        "description": ""
-    },
-    "rubricStateTitleTwo": "Group 2",
-    "@rubricStateTitleTwo": {
-        "description": ""
-    },
-    "assignGroupsHeadline": "Assign Groups",
-    "@assignGroupsHeadline": {
-        "description": ""
-    },
-    "assignGroupsDragMessage": "Drag objective here",
-    "@assignGroupsDragMessage": {
-        "description": ""
-    },
-    "assignGroupsDragTarget": "Add New Group",
-    "@assignGroupsDragTarget": {
-        "description": ""
+  "@@locale": "en",
+  "appTitle": "Rubric",
+  "navHome": "Home",
+  "navClasses": "Classes",
+  "navRubrics": "Rubrics",
+  "navSettings": "Settings",
+  "nextTitle": "Next",
+  "@nextTitle": {
+    "description": "Used in onboarding to continue to next step"
+  },
+  "skipTitle": "Skip",
+  "@skipTitle": {
+    "description": "Used in onboarding to go to the final page"
+  },
+  "onboarding1Title": "Grading made simple.",
+  "onboarding2Title": "Rubric your way.",
+  "onboarding3Title": "But first…",
+  "onboarding1Message": "Rubric is designed to take the burden out of grading the old-fashioned way. Grade faster and accurately with built in tools for all your projects and courses.",
+  "onboarding2Message": "Establish grading objectives, assign evaluation groups and create customized weights that fit your specific evaluation credentials for any assignment or project.",
+  "onboarding3Message": "Let's determine your specific grading scale preferences: simple or detailed and build your first rubric.",
+  "gradingScaleTitle": "Grading Scale",
+  "gradingScaleToggleSimple": "Simple",
+  "gradingScaleToggleDetailed": "Detailed",
+  "gradingScaleGradeA": "A",
+  "gradingScaleGradeB": "B",
+  "gradingScaleGradeC": "C",
+  "gradingScaleGradeD": "D",
+  "gradingScaleGradeF": "F",
+  "gradingScaleTo": "to",
+  "setGradingScaleTitle": "Set Grading Scale",
+  "rubricStateTitleOne": "Group 1",
+  "rubricStateTitleTwo": "Group 2",
+  "assignGroupsHeadline": "Assign Groups",
+  "assignGroupsDragMessage": "Drag objective here",
+  "assignGroupsDragTarget": "Add New Group",
+  "settingsTitle": "Settings",
+  "settingsSectionProfile": "Profile",
+  "settingsTeacherNameHint": "Your name",
+  "@settingsTeacherNameHint": {
+    "description": "Card hint above the teacher name"
+  },
+  "settingsTeacherNameEmpty": "Add your name",
+  "settingsTeacherNameSheetTitle": "What should we call you?",
+  "settingsTeacherNameSheetMessage": "Used in your Home greeting and on the PDFs you export.",
+  "settingsTeacherNameFieldHint": "e.g. Ms. Rivera",
+  "settingsSave": "Save",
+  "settingsSaved": "Saved.",
+  "settingsUndo": "Undo",
+  "settingsSectionGrading": "Grading defaults",
+  "settingsDefaultModeHint": "New rubrics start as",
+  "settingsModeSimple": "Simple",
+  "settingsModeDetailed": "Detailed",
+  "settingsDefaultScaleHint": "Default grading scale",
+  "settingsScalePresetStandard": "Standard (A–F)",
+  "settingsScalePresetPlusMinus": "Plus / minus",
+  "settingsScalePresetPassFail": "Pass / fail",
+  "settingsScaleCustom": "Custom · {count, plural, =1{1 grade} other{{count} grades}}",
+  "@settingsScaleCustom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
     }
+  },
+  "settingsScaleUpdated": "Default grading scale updated.",
+  "settingsDecimalsHint": "Decimal places on percentages",
+  "settingsDecimalsExample": "Grades show as {example}",
+  "@settingsDecimalsExample": {
+    "placeholders": {
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLatePenaltyHint": "Late penalty",
+  "settingsLatePenaltyValue": "{percent}% off",
+  "@settingsLatePenaltyValue": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLatePenaltyDecrease": "Decrease late penalty",
+  "settingsLatePenaltyIncrease": "Increase late penalty",
+  "settingsLetterGradesHint": "Next to percentages",
+  "settingsLetterGradesTitle": "Show letter grades",
+  "settingsSectionFeedback": "Feedback",
+  "settingsCommentBankHint": "Reusable comments",
+  "settingsCommentBankTitle": "Comment bank",
+  "settingsSectionData": "Data",
+  "settingsBackupHint": "Save or restore everything",
+  "settingsBackupTitle": "Backup & restore",
+  "settingsSampleHint": "Try Rubric with a demo class",
+  "settingsSampleTitle": "Load sample data",
+  "settingsSampleLoading": "Loading sample data…",
+  "settingsSampleLoaded": "Sample data loaded.",
+  "settingsSampleFailed": "Couldn’t load sample data. Nothing was changed.",
+  "settingsEraseHint": "Classes, rubrics, grades and settings",
+  "settingsEraseTitle": "Erase all data",
+  "settingsEraseConfirmTitle": "Erase all data?",
+  "settingsEraseConfirmMessage": "This deletes every class, student, rubric, assignment, grade and saved comment on this device, and resets your settings.",
+  "settingsEraseConfirmAction": "Continue",
+  "settingsEraseFinalTitle": "This can’t be undone",
+  "settingsEraseFinalMessage": "Rubric keeps no copy anywhere else. If you might want this data later, make a backup first.",
+  "settingsEraseFinalAction": "Erase everything",
+  "settingsEraseFailed": "Couldn’t erase data. Nothing was changed.",
+  "settingsSectionApp": "App",
+  "settingsHapticsHint": "Vibration on taps",
+  "settingsHapticsTitle": "Haptic feedback",
+  "settingsOnboardingHint": "See the welcome tour again",
+  "settingsOnboardingTitle": "Replay onboarding",
+  "settingsAboutHint": "Version {version}",
+  "@settingsAboutHint": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutTitle": "About Rubric",
+  "settingsScaleEditorTitle": "Grading scale",
+  "settingsScalePresetsLabel": "Start from",
+  "settingsScaleGradeHint": "Grade",
+  "settingsScaleFromHint": "From %",
+  "settingsScaleTo": "to {max}",
+  "@settingsScaleTo": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsScaleGradeLabel": "Grade {index} name",
+  "@settingsScaleGradeLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScaleFromLabel": "Grade {index} starts at percent",
+  "@settingsScaleFromLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScaleAddGrade": "Add grade",
+  "settingsScaleRemoveGrade": "Remove grade {index}",
+  "@settingsScaleRemoveGrade": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScaleSave": "Save scale",
+  "settingsScaleIssueEmpty": "Add at least one grade.",
+  "settingsScaleIssueBlankName": "Every grade needs a name.",
+  "settingsScaleIssueDuplicateName": "Grade names must be unique.",
+  "settingsScaleIssueBadPercent": "Percentages must be numbers from 0 to 100.",
+  "settingsScaleIssueDuplicatePercent": "Two grades start at the same percentage.",
+  "settingsScaleIssueNoZero": "One grade must start at 0 so every score gets a letter.",
+  "settingsAboutPageTitle": "About",
+  "settingsAboutVersion": "Version {version}",
+  "@settingsAboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutStoryHint": "Our story",
+  "settingsAboutStoryTitle": "Grading made simple.",
+  "settingsAboutStoryBody": "Rubric started at a kitchen table covered in essays. Grading by hand meant re-adding weights, re-reading criteria and hoping every student was measured the same way. Rubric does the arithmetic so you can do the teaching: build a weighted rubric once, grade a whole class against it, and see at a glance which objectives are landing.",
+  "settingsAboutCreditsHint": "Acknowledgements",
+  "settingsAboutCreditsTitle": "Designed by the Rubric founding team",
+  "settingsAboutCreditsBody": "With thanks to the teachers who tested early builds and told us what grading really looks like.",
+  "settingsAboutPrivacyHint": "Privacy",
+  "settingsAboutPrivacyTitle": "All data stays on this device",
+  "settingsAboutPrivacyBody": "Rubric has no accounts, no servers and no analytics. Your classes, students and grades are stored only on this device, and leave it only when you export or back them up.",
+  "settingsAboutLicensesHint": "Open source",
+  "settingsAboutLicensesTitle": "Licenses",
+  "rubricsLibraryTitle": "Rubrics",
+  "rubricsNewRubric": "New Rubric",
+  "rubricsSearchHint": "Search by title or subject",
+  "rubricsClearSearch": "Clear search",
+  "rubricsFilterAll": "All",
+  "rubricsStartFromTemplate": "Start from a template",
+  "rubricsTemplateCount": "{count, plural, =1{1 ready-made rubric} other{{count} ready-made rubrics}}",
+  "@rubricsTemplateCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsEmptyTitle": "Build it once. Grade with it all year.",
+  "rubricsEmptyMessage": "Set your objectives, group and weight them, pick a grading scale — then grade a whole class against it in minutes.",
+  "rubricsBrowseTemplates": "Browse templates",
+  "rubricsNoMatchesTitle": "No rubrics match",
+  "rubricsNoMatchesMessage": "Try a different word or subject.",
+  "rubricsClearFilters": "Clear filters",
+  "rubricsArchivedSection": "Archived ({count})",
+  "@rubricsArchivedSection": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsShowArchived": "Show archived rubrics",
+  "rubricsObjectiveCount": "{count, plural, =0{No objectives} =1{1 objective} other{{count} objectives}}",
+  "@rubricsObjectiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsModeSimple": "Simple",
+  "rubricsModeDetailed": "Detailed",
+  "rubricsDraft": "Draft — not ready to grade yet",
+  "rubricsMoreActions": "More actions for {title}",
+  "@rubricsMoreActions": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsActionEdit": "Edit",
+  "rubricsActionDuplicate": "Duplicate",
+  "rubricsActionSaveAsTemplate": "Save as template",
+  "rubricsActionArchive": "Archive",
+  "rubricsActionUnarchive": "Unarchive",
+  "rubricsActionDelete": "Delete",
+  "rubricsActionPrint": "Print or share PDF",
+  "rubricsCopyTitle": "{title} (copy)",
+  "@rubricsCopyTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsDuplicated": "Made a copy of “{title}”.",
+  "@rubricsDuplicated": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsOpen": "Open",
+  "rubricsSavedAsTemplate": "“{title}” saved to your templates.",
+  "@rubricsSavedAsTemplate": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsView": "View",
+  "rubricsArchived": "“{title}” archived.",
+  "@rubricsArchived": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsUnarchived": "“{title}” is back in your library.",
+  "@rubricsUnarchived": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsUndo": "Undo",
+  "rubricsDeleteTitle": "Delete this rubric?",
+  "rubricsDeleteMessage": "“{title}” will be permanently removed from your library.",
+  "@rubricsDeleteMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsDeleteUsedMessage": "“{title}” is used in {count, plural, =1{1 assignment} other{{count} assignments}}. Each assignment keeps its own copy of the rubric, so no grades will change.",
+  "@rubricsDeleteUsedMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsDeleteConfirm": "Delete",
+  "rubricsDeleted": "“{title}” deleted.",
+  "@rubricsDeleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsUntitled": "Untitled rubric",
+  "rubricsNotFoundTitle": "Rubric not found",
+  "rubricsNotFoundMessage": "It may have been deleted.",
+  "rubricsBackToLibrary": "Back to rubrics",
+  "rubricsUseInAssignment": "Use in Assignment",
+  "rubricsUseInAssignmentHint": "Open a class and add an assignment to grade with this rubric.",
+  "rubricsUseTemplate": "Use This Template",
+  "rubricsTemplateAdded": "“{title}” added to your library.",
+  "@rubricsTemplateAdded": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsStatGroups": "Groups",
+  "rubricsStatObjectives": "Objectives",
+  "rubricsStatMode": "Scoring",
+  "rubricsUsedIn": "{count, plural, =0{Not used in any assignments yet} =1{Used in 1 assignment} other{Used in {count} assignments}}",
+  "@rubricsUsedIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsDraftTitle": "Finish this rubric before grading with it",
+  "rubricsIssueNoTitle": "Give it a title.",
+  "rubricsIssueNoGroups": "Add at least one group.",
+  "rubricsIssueEmptyGroup": "Every group needs at least one objective.",
+  "rubricsIssueWeights": "Group weights must add up to 100%.",
+  "rubricsIssueNoLevels": "Add performance levels.",
+  "rubricsIssueDuplicateLevelPoints": "Two levels are worth the same points.",
+  "rubricsWeightsSection": "Groups & weights",
+  "rubricsWeightsSemantics": "Weights: {summary}",
+  "@rubricsWeightsSemantics": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsWeightPercent": "{weight}%",
+  "@rubricsWeightPercent": {
+    "placeholders": {
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsLevelsSection": "Performance levels",
+  "rubricsLevelPoints": "{points} pts",
+  "@rubricsLevelPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsDescriptorsSection": "What each level looks like",
+  "rubricsDescriptorObjective": "Objective",
+  "rubricsDescriptorMissing": "Not described",
+  "rubricsScaleSection": "Grading scale",
+  "rubricsScaleRange": "{min}% to {max}%",
+  "@rubricsScaleRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsTemplatesTitle": "Templates",
+  "rubricsTemplatesSubtitle": "Proven rubrics, ready to make your own.",
+  "rubricsTemplatesSearchHint": "Search templates",
+  "rubricsYourTemplates": "Your templates",
+  "rubricsTemplatesNoMatches": "No templates match",
+  "assignmentsNewTitle": "New assignment",
+  "assignmentsTitleLabel": "Title",
+  "assignmentsTitleHint": "Assignment title",
+  "assignmentsDescriptionLabel": "Description",
+  "assignmentsDescriptionHint": "Optional instructions or notes",
+  "assignmentsDueLabel": "Due date",
+  "assignmentsNoDueDate": "No due date",
+  "assignmentsClearDueDate": "Clear due date",
+  "assignmentsPointsLabel": "Points",
+  "assignmentsPointsHelp": "Points possible is what 100% is worth when you export grades.",
+  "assignmentsRubricLabel": "Rubric",
+  "assignmentsChooseRubric": "Choose a rubric",
+  "assignmentsChangeRubric": "Change",
+  "assignmentsSnapshotNote": "A copy of this rubric is saved with the assignment, so later edits in your library won't change it.",
+  "assignmentsCreate": "Create assignment",
+  "assignmentsCourseMissing": "This class no longer exists.",
+  "assignmentsPickerTitle": "Choose a rubric",
+  "assignmentsPickerLibrary": "Library",
+  "assignmentsPickerTemplates": "Templates",
+  "assignmentsPickerSearch": "Search rubrics",
+  "assignmentsPickerEmpty": "Your library is empty. Create a rubric or start from a template.",
+  "assignmentsPickerNoTemplates": "No templates available.",
+  "assignmentsPickerNoMatches": "No rubrics match “{query}”.",
+  "@assignmentsPickerNoMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsPickerCreate": "Create a new rubric",
+  "assignmentsUntitledRubric": "Untitled rubric",
+  "assignmentsRubricSummary": "{objectives, plural, =1{1 objective} other{{objectives} objectives}} · {groups, plural, =1{1 group} other{{groups} groups}}",
+  "@assignmentsRubricSummary": {
+    "placeholders": {
+      "objectives": {
+        "type": "int"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "assignmentsRubricNotReady": "Not ready: {problems}",
+  "@assignmentsRubricNotReady": {
+    "placeholders": {
+      "problems": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsFix": "Fix",
+  "assignmentsFixRubric": "Fix {rubric}",
+  "@assignmentsFixRubric": {
+    "placeholders": {
+      "rubric": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsIssueNoTitle": "needs a title",
+  "assignmentsIssueNoGroups": "needs a group",
+  "assignmentsIssueEmptyGroup": "a group has no objectives",
+  "assignmentsIssueWeights": "weights don't add up to 100%",
+  "assignmentsIssueNoLevels": "needs performance levels",
+  "assignmentsIssueDuplicateLevels": "two levels are worth the same points",
+  "assignmentsNotFoundTitle": "Assignment",
+  "assignmentsNotFound": "This assignment was deleted.",
+  "assignmentsDueOn": "Due {date}",
+  "@assignmentsDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsPoints": "{points} pts",
+  "@assignmentsPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMenu": "Assignment options",
+  "assignmentsStartGrading": "Start grading",
+  "assignmentsContinueGrading": "Continue grading",
+  "assignmentsClosedBanner": "This assignment is closed.",
+  "assignmentsProgressHint": "Progress",
+  "assignmentsGradedProgress": "{graded} of {total} graded",
+  "@assignmentsGradedProgress": {
+    "placeholders": {
+      "graded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assignmentsStatsTitle": "Class results",
+  "assignmentsStatsEmpty": "Class results appear once someone has a grade.",
+  "assignmentsStatMean": "Mean",
+  "assignmentsStatMedian": "Median",
+  "assignmentsStatHigh": "High",
+  "assignmentsStatLow": "Low",
+  "assignmentsLetterDistribution": "Letter grades",
+  "assignmentsWeakestObjective": "Weakest objective",
+  "assignmentsStudentsSection": "Students",
+  "assignmentsSearchStudents": "Search students",
+  "assignmentsFilterAll": "All",
+  "assignmentsFilterUngraded": "To grade",
+  "assignmentsSortLabel": "Sort",
+  "assignmentsSortName": "Name",
+  "assignmentsSortStatus": "Status",
+  "assignmentsSortGrade": "Grade",
+  "assignmentsStatusNotStarted": "Not started",
+  "assignmentsStatusInProgress": "In progress",
+  "assignmentsStatusComplete": "Complete",
+  "assignmentsStatusMissing": "Missing",
+  "assignmentsStatusExcused": "Excused",
+  "assignmentsGradeValue": "{percent} · {letter}",
+  "@assignmentsGradeValue": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsNoStudents": "No students in this class yet",
+  "assignmentsNoStudentsMessage": "Add students to the class and they'll appear here, ready to grade.",
+  "assignmentsAddStudents": "Add students",
+  "assignmentsNoMatchingStudents": "No students match",
+  "assignmentsStudentActions": "Actions for {name}",
+  "@assignmentsStudentActions": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkMissing": "Mark missing",
+  "assignmentsExcuse": "Excuse",
+  "assignmentsClearMissing": "Clear missing",
+  "assignmentsClearExcused": "Clear excused",
+  "assignmentsReset": "Reset grading",
+  "assignmentsResetTitle": "Reset {name}?",
+  "@assignmentsResetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsResetMessage": "This clears every score and comment for this student on this assignment.",
+  "assignmentsResetConfirm": "Reset",
+  "assignmentsResetDone": "{name} reset",
+  "@assignmentsResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkedMissing": "{name} marked missing",
+  "@assignmentsMarkedMissing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkedExcused": "{name} excused",
+  "@assignmentsMarkedExcused": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkCleared": "Mark cleared for {name}",
+  "@assignmentsMarkCleared": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsUndo": "Undo",
+  "assignmentsEditDetails": "Edit details",
+  "assignmentsSave": "Save",
+  "assignmentsUpdateRubric": "Update rubric from library",
+  "assignmentsUpdateRubricTitle": "Update rubric?",
+  "assignmentsUpdateRubricMessage": "This replaces the rubric on this assignment with the current “{rubric}” from your library. Scores on objectives that still exist are kept; scores on removed objectives are discarded.",
+  "@assignmentsUpdateRubricMessage": {
+    "placeholders": {
+      "rubric": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsUpdateRubricConfirm": "Update",
+  "assignmentsUpdateRubricDone": "Rubric updated",
+  "assignmentsUpdateRubricGone": "The rubric this assignment came from is no longer in your library.",
+  "assignmentsUpdateRubricNotReady": "“{rubric}” isn't ready to grade with yet.",
+  "@assignmentsUpdateRubricNotReady": {
+    "placeholders": {
+      "rubric": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsClose": "Close assignment",
+  "assignmentsReopen": "Reopen",
+  "assignmentsClosedDone": "Assignment closed",
+  "assignmentsReopenedDone": "Assignment reopened",
+  "assignmentsExportCsv": "Export scores (CSV)",
+  "assignmentsExportPdf": "Export all reports (PDF)",
+  "assignmentsDelete": "Delete assignment",
+  "assignmentsDeleteTitle": "Delete “{title}”?",
+  "@assignmentsDeleteTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsDeleteMessage": "{count, plural, =0{This assignment will be deleted.} =1{This assignment and 1 student's grade will be deleted.} other{This assignment and {count} students' grades will be deleted.}} This can't be undone.",
+  "@assignmentsDeleteMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assignmentsDeleteConfirm": "Delete",
+  "gradebookTitle": "Gradebook",
+  "gradebookTabGrid": "Grid",
+  "gradebookTabAnalytics": "Analytics",
+  "gradebookSortName": "Name",
+  "gradebookSortAverage": "Average",
+  "gradebookSortSemantics": "Sort by {field}, {direction}",
+  "@gradebookSortSemantics": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "direction": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookSortAscending": "ascending",
+  "gradebookSortDescending": "descending",
+  "gradebookShowPercent": "Percent",
+  "gradebookShowLetters": "Letters",
+  "gradebookSearchHint": "Find a student",
+  "gradebookExportCsv": "Export gradebook as CSV",
+  "gradebookStudentColumn": "Student",
+  "gradebookAverageColumn": "Avg",
+  "gradebookClassMean": "Class mean",
+  "gradebookNoDueDate": "No due date",
+  "gradebookDue": "Due {date}",
+  "@gradebookDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookCourseMissing": "This class no longer exists.",
+  "gradebookNoStudentsTitle": "No students yet",
+  "gradebookNoStudentsMessage": "Add students to this class to start its gradebook.",
+  "gradebookNoAssignmentsTitle": "No assignments yet",
+  "gradebookNoAssignmentsMessage": "Create an assignment and its grades will appear here.",
+  "gradebookNoMatches": "No students match “{query}”.",
+  "@gradebookNoMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookStatusGraded": "Graded",
+  "gradebookStatusInProgress": "Grading in progress",
+  "gradebookStatusMissing": "Missing",
+  "gradebookStatusExcused": "Excused",
+  "gradebookStatusNotGraded": "Not graded",
+  "gradebookExcusedShort": "EX",
+  "gradebookCellSemantics": "{student}, {assignment}: {grade}. {status}. Opens grading.",
+  "@gradebookCellSemantics": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "assignment": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookGradeWithLetter": "{percent}, {letter}",
+  "@gradebookGradeWithLetter": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookStudentSemantics": "{student}, average {grade}. Opens profile.",
+  "@gradebookStudentSemantics": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookAssignmentSemantics": "{assignment}, class mean {grade}. Opens assignment.",
+  "@gradebookAssignmentSemantics": {
+    "placeholders": {
+      "assignment": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookLegend": "Legend",
+  "gradebookAnalyticsEmptyTitle": "Nothing graded yet",
+  "gradebookAnalyticsEmptyMessage": "Class analytics appear once some work is graded.",
+  "gradebookClassAverage": "Class average",
+  "gradebookGradesEntered": "Grades entered",
+  "gradebookMissingTotal": "Missing work",
+  "gradebookDistributionTitle": "Score distribution",
+  "gradebookDistributionAll": "Course averages",
+  "gradebookLettersTitle": "Letter grades",
+  "gradebookLetterCount": "{count, plural, =0{none} =1{1 student} other{{count} students}}",
+  "@gradebookLetterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookTrendTitle": "Class average over time",
+  "gradebookMasteryTitle": "Objective mastery",
+  "gradebookMasteryOverall": "Overall",
+  "gradebookMasteryEmpty": "No objectives graded yet.",
+  "gradebookMasteryCellSemantics": "{objective}, {assignment}: {grade}",
+  "@gradebookMasteryCellSemantics": {
+    "placeholders": {
+      "objective": {
+        "type": "String"
+      },
+      "assignment": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookAttentionTitle": "Needs attention",
+  "gradebookAttentionNone": "Everyone is on track: nobody has 2 or more missing assignments or a falling average.",
+  "gradebookAttentionMissing": "{count, plural, =1{1 missing} other{{count} missing}}",
+  "@gradebookAttentionMissing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookAttentionDrop": "Average down {points} pts",
+  "@gradebookAttentionDrop": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookHistogramBucket": "{low} to {high}%: {count}",
+  "@gradebookHistogramBucket": {
+    "placeholders": {
+      "low": {
+        "type": "int"
+      },
+      "high": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookChartSemantics": "{title}. {values}",
+  "@gradebookChartSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "values": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookChartPoint": "{label} {grade}",
+  "@gradebookChartPoint": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookTierAtLeast": "{min}+",
+  "@gradebookTierAtLeast": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookTierRange": "{min} to {max}",
+  "@gradebookTierRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookTierBelow": "Below {max}",
+  "@gradebookTierBelow": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "studentNotFound": "This student is no longer in the class.",
+  "studentNumber": "Student #{number}",
+  "@studentNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "studentAverage": "Average",
+  "studentLetter": "Letter",
+  "studentMissing": "Missing",
+  "studentGraded": "Graded",
+  "studentGradedOf": "{graded} of {total}",
+  "@studentGradedOf": {
+    "placeholders": {
+      "graded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studentNotes": "Notes",
+  "studentNotesEmpty": "Add a note",
+  "studentTrendTitle": "Grades over time",
+  "studentTrendYou": "This student",
+  "studentTrendClass": "Class mean",
+  "studentStrengthsTitle": "Strengths",
+  "studentWeaknessesTitle": "Room to grow",
+  "studentObjectiveCompare": "{student} · class {classMean}",
+  "@studentObjectiveCompare": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "classMean": {
+        "type": "String"
+      }
+    }
+  },
+  "studentAbove": "{points} above class",
+  "@studentAbove": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "studentBelow": "{points} below class",
+  "@studentBelow": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "studentLevel": "Level with class",
+  "studentObjectivesEmpty": "Strengths and weaknesses appear once this student has graded work.",
+  "studentHistoryTitle": "Grade history",
+  "studentHistoryEmpty": "No assignments in this class yet.",
+  "studentEdit": "Edit student",
+  "studentFirstName": "First name",
+  "studentLastName": "Last name",
+  "studentNumberHint": "Student number",
+  "studentEmailHint": "Email",
+  "studentNotesHint": "Notes about this student",
+  "studentSave": "Save",
+  "studentSaved": "Student saved",
+  "studentUndo": "Undo",
+  "studentFirstNameRequired": "A first name is required.",
+  "studentExportReport": "Export a report",
+  "studentExportNothing": "Nothing graded to export yet.",
+  "builderTitle": "Build Rubric",
+  "builderStepObjectivesTitle": "Grading Objectives",
+  "builderStepWeightsTitle": "Assign Weights",
+  "builderStepReviewTitle": "Review & Save",
+  "builderStepProgress": "Step {current} of {total}",
+  "@builderStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "builderLoadFailed": "Couldn't open this rubric.",
+  "builderMissingTitle": "Rubric not found",
+  "builderMissingMessage": "It may have been deleted on another screen.",
+  "builderMissingAction": "Back to Rubrics",
+  "builderDiscardTitle": "Discard changes?",
+  "builderDiscardMessage": "Your edits to this rubric haven't been saved.",
+  "builderDiscardConfirm": "Discard",
+  "builderKeepEditing": "Keep editing",
+  "builderSaved": "Rubric saved",
+  "builderSaveFailed": "Couldn't save the rubric. Please try again.",
+  "builderSaveLabel": "Save Rubric",
+  "builderSaveChangesLabel": "Save Changes",
+  "builderObjectivesEmptyTitle": "What will you grade?",
+  "builderObjectivesEmptyMessage": "Add each skill or quality you'll look for, like grammar, use of evidence or creativity.",
+  "builderObjectiveHint": "Objective {number}",
+  "@builderObjectiveHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "builderObjectiveInGroup": "In {group}",
+  "@builderObjectiveInGroup": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderAddObjective": "Add an Objective",
+  "builderEditObjective": "Edit Objective",
+  "builderObjectiveTitleHint": "example: Grammar, usage and mechanics",
+  "builderObjectiveTitleLabel": "Objective title",
+  "builderObjectiveDescriptionHint": "Add a note for you or your students (optional)",
+  "builderObjectiveAdd": "Add objective",
+  "builderObjectiveSave": "Save objective",
+  "builderObjectiveDeleted": "Deleted “{title}”",
+  "@builderObjectiveDeleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "builderUndo": "Undo",
+  "builderDelete": "Delete",
+  "builderEdit": "Edit",
+  "builderRemove": "Remove",
+  "builderMoveUp": "Move up",
+  "builderMoveDown": "Move down",
+  "builderReorderHandle": "Drag to reorder {title}",
+  "@builderReorderHandle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "builderGroupsIntro": "Drag each objective into a group, or tap it to pick one. You will weight the groups next.",
+  "builderGroupEverything": "Put everything in one group",
+  "builderGroupDefaultTitle": "Group {number}",
+  "@builderGroupDefaultTitle": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "builderGroupTitleHint": "Group name",
+  "builderAddToGroup": "Add to {group}",
+  "@builderAddToGroup": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderRemoveGroup": "Remove group {group}",
+  "@builderRemoveGroup": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderUntitledGroup": "Untitled group",
+  "builderUngroupedCount": "{count, plural, =1{1 objective to group} other{{count} objectives to group}}",
+  "@builderUngroupedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "builderMoveTo": "Move “{title}” to",
+  "@builderMoveTo": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "builderMoveToNewGroup": "A new group",
+  "builderMoveToTray": "Not grouped yet",
+  "builderGroupsEmptyTitle": "No objectives yet",
+  "builderGroupsEmptyMessage": "Add the objectives you will grade, then group them here.",
+  "builderGroupsEmptyAction": "Add objectives",
+  "builderWeightsIntro": "Drag the handles to change how much each group counts. Tap a percentage to type it, or lock a group to hold it while you drag.",
+  "builderWeightsSingle": "With one group, it counts for the whole grade.",
+  "builderEvenSplit": "Even split",
+  "builderPercent": "{value}%",
+  "@builderPercent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "builderWeightSemantics": "{group}, {value} percent",
+  "@builderWeightSemantics": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "builderBoundarySemantics": "Weight between {above} and {below}",
+  "@builderBoundarySemantics": {
+    "placeholders": {
+      "above": {
+        "type": "String"
+      },
+      "below": {
+        "type": "String"
+      }
+    }
+  },
+  "builderSetWeightTitle": "Weight for {group}",
+  "@builderSetWeightTitle": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderSetWeightHint": "Percent",
+  "builderSetWeightHelp": "1 to 99. Unlocked groups adjust so the total stays 100%.",
+  "builderSetWeightAction": "Set Weight",
+  "builderWeightsEmptyTitle": "No groups yet",
+  "builderWeightsEmptyMessage": "Group your objectives first, then decide how much each group counts.",
+  "builderWeightsEmptyAction": "Assign groups",
+  "builderModeSimpleMessage": "Score each objective as a percentage from 0 to 100.",
+  "builderModeDetailedMessage": "Place each objective on a ladder of performance levels, each worth points.",
+  "builderLetterGrades": "Letter grades",
+  "builderPresetStandard": "Standard",
+  "builderPresetPlusMinus": "Plus / minus",
+  "builderPresetPassFail": "Pass / fail",
+  "builderGradeNameHint": "Grade",
+  "builderGradeNameLabel": "Grade name",
+  "builderGradeMinLabel": "{grade} starts at",
+  "@builderGradeMinLabel": {
+    "placeholders": {
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "builderGradeMaxLabel": "{grade} goes up to {value}",
+  "@builderGradeMaxLabel": {
+    "placeholders": {
+      "grade": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "builderAddGrade": "Add a grade",
+  "builderRemoveGrade": "Remove grade {grade}",
+  "@builderRemoveGrade": {
+    "placeholders": {
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "builderLevels": "Performance levels",
+  "builderLevelsIntro": "Best first. Each objective is scored by the level it reaches.",
+  "builderLevelLabelHint": "Level name",
+  "builderLevelPointsLabel": "Points for {level}",
+  "@builderLevelPointsLabel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderPointsSuffix": "pts",
+  "builderLevelWithPoints": "{level} · {points} pts",
+  "@builderLevelWithPoints": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "builderLevelActions": "Options for {level}",
+  "@builderLevelActions": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderAddLevel": "Add a level",
+  "builderNewLevelLabel": "New level",
+  "builderDescriptors": "Descriptors",
+  "builderDescriptorsIntro": "Describe what each level looks like for each objective. Optional, but it makes grading faster and fairer.",
+  "builderDescriptorHint": "What does {level} look like?",
+  "@builderDescriptorHint": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderDescriptorLabel": "{objective}, {level}",
+  "@builderDescriptorLabel": {
+    "placeholders": {
+      "objective": {
+        "type": "String"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderTitleHint": "Rubric title (required)",
+  "builderTitleLabel": "Rubric title",
+  "builderSubjectHint": "Subject (optional)",
+  "builderDescriptionHint": "Description (optional)",
+  "builderFixesTitle": "Before you save",
+  "builderFix": "Fix",
+  "builderIssueNoObjectives": "Add at least one objective.",
+  "builderIssueUngrouped": "{count, plural, =1{1 objective is not in a group yet.} other{{count} objectives are not in a group yet.}}",
+  "@builderIssueUngrouped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "builderIssueNoGroups": "Put your objectives into at least one group.",
+  "builderIssueEmptyGroup": "Remove or fill the empty group.",
+  "builderIssueUntitledGroup": "Every group needs a name.",
+  "builderIssueWeights": "Group weights add up to {total}%, not 100%.",
+  "@builderIssueWeights": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "builderIssueNoLevels": "Add at least one performance level.",
+  "builderIssueDuplicatePoints": "Two performance levels are worth the same points.",
+  "builderIssueNoTitle": "Give your rubric a title.",
+  "builderPreviewTitle": "Preview",
+  "builderUntitledRubric": "Untitled rubric",
+  "builderPreviewRange": "{min} to {max}",
+  "@builderPreviewRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingTitle": "Grade",
+  "gradingPosition": "{position} of {total}",
+  "@gradingPosition": {
+    "description": "Where the current student sits in the roster, e.g. 7 of 24",
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingPreviousStudent": "Previous student",
+  "gradingNextStudent": "Next student",
+  "gradingUndo": "Undo last change",
+  "gradingUndone": "Change undone",
+  "gradingProgress": "Scored {scored} of {total}",
+  "@gradingProgress": {
+    "placeholders": {
+      "scored": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingGradeLabel": "Grade",
+  "gradingNoGrade": "No grade yet",
+  "gradingExcusedGrade": "Excused",
+  "gradingGradeSemantics": "Grade {percent} {letter}",
+  "@gradingGradeSemantics": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingGroupHeader": "{title} · {weight}%",
+  "@gradingGroupHeader": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingObjectiveHint": "Objective {number}",
+  "@gradingObjectiveHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingObjectiveScored": "Objective {number} · {percent}",
+  "@gradingObjectiveScored": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingPercentField": "Percent",
+  "gradingSliderLabel": "{objective} percent",
+  "@gradingSliderLabel": {
+    "placeholders": {
+      "objective": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingClearScore": "Clear score",
+  "gradingLevelPoints": "{points} pts",
+  "@gradingLevelPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingLevelSemantics": "{label}, {points} points. {descriptor}",
+  "@gradingLevelSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      },
+      "descriptor": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingAddObjectiveComment": "Add comment",
+  "gradingEditObjectiveComment": "Comment",
+  "gradingObjectiveCommentHint": "Feedback on this objective",
+  "gradingStatusSection": "Status",
+  "gradingMissing": "Missing",
+  "gradingExcused": "Excused",
+  "gradingLate": "Late",
+  "gradingPenaltyLabel": "Late penalty",
+  "gradingPenaltyHint": "Percentage points deducted",
+  "gradingOverride": "Override",
+  "gradingOverrideActive": "Override {percent}",
+  "@gradingOverrideActive": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingOverrideTitle": "Override grade",
+  "gradingOverridePercent": "Grade (%)",
+  "gradingOverrideReason": "Reason (optional)",
+  "gradingOverrideApply": "Apply",
+  "gradingOverrideClear": "Remove override",
+  "gradingOverrideInvalid": "Enter a percentage from 0 to 100",
+  "gradingOverrideComputed": "Computed grade: {percent}",
+  "@gradingOverrideComputed": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "gradingCommentSection": "Overall comment",
+  "gradingCommentHint": "Write feedback for this student",
+  "gradingCommentBankOpen": "Comment bank",
+  "gradingCommentSaveToBank": "Save to bank",
+  "gradingCommentSaved": "Saved to your comment bank",
+  "gradingCommentAlreadySaved": "Already in your comment bank",
+  "gradingBankTitle": "Insert a comment",
+  "gradingBankEmptyMessage": "Write a comment and tap “Save to bank”, or add some in Settings.",
+  "gradingNextUngraded": "Next ungraded",
+  "gradingFinish": "Finish",
+  "gradingFinishedTitle": "Everyone’s graded",
+  "gradingFinishedMessage": "{count, plural, =1{1 student graded.} other{{count} students graded.}}",
+  "@gradingFinishedMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradingClassAverage": "Class average",
+  "gradingBackToAssignment": "Back to assignment",
+  "gradingKeepReviewing": "Keep reviewing",
+  "gradingNotFoundTitle": "This assignment no longer exists",
+  "gradingNoStudentsTitle": "No students in this class yet",
+  "gradingNoStudentsMessage": "Add students to the class to start grading.",
+  "gradingNoObjectives": "This rubric has no objectives to grade.",
+  "gradingStudentsPane": "Students",
+  "gradingStudentGraded": "Graded",
+  "gradingStudentUngraded": "Not graded",
+  "gradingStudentRowSemantics": "{name}, {status}",
+  "@gradingStudentRowSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "commentBankTitle": "Comment Bank",
+  "commentBankSearch": "Search comments",
+  "commentBankAdd": "Add comment",
+  "commentBankEmptyTitle": "No saved comments yet",
+  "commentBankEmptyMessage": "Save feedback you write often and insert it with one tap while grading.",
+  "commentBankNoMatches": "No comments match “{query}”",
+  "@commentBankNoMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "commentBankAllCategories": "All",
+  "commentBankUncategorised": "Uncategorised",
+  "commentBankNewTitle": "New comment",
+  "commentBankEditTitle": "Edit comment",
+  "commentBankTextHint": "Comment text",
+  "commentBankCategoryHint": "Category (optional)",
+  "commentBankSave": "Save",
+  "commentBankDelete": "Delete",
+  "commentBankDeleteTitle": "Delete this comment?",
+  "commentBankDeleteMessage": "It will be removed from your comment bank.",
+  "commentBankDeleted": "Comment deleted",
+  "commentBankUndo": "Undo",
+  "commentBankUses": "{count, plural, =0{Never used} =1{Used once} other{Used {count} times}}",
+  "@commentBankUses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesTitle": "Classes",
+  "classesActive": "Active",
+  "classesArchived": "Archived",
+  "classesNewClass": "New Class",
+  "classesEditClass": "Edit Class",
+  "classesCreate": "Create Class",
+  "classesSave": "Save",
+  "classesEmptyTitle": "No classes yet",
+  "classesEmptyMessage": "Add a class, then its students, and you're ready to grade.",
+  "classesArchivedEmptyTitle": "Nothing archived",
+  "classesArchivedEmptyMessage": "Archive a class at the end of a term to tidy it away. Its students and grades are kept.",
+  "classesStudentCount": "{count, plural, =0{No students} =1{1 student} other{{count} students}}",
+  "@classesStudentCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesNameLabel": "Class name",
+  "classesNameHint": "e.g. Biology",
+  "classesNameRequired": "A class needs a name.",
+  "classesSectionLabel": "Section",
+  "classesSectionHint": "e.g. Period 3",
+  "classesTermLabel": "Term",
+  "classesTermHint": "e.g. Fall 2026",
+  "classesActionsFor": "Actions for {name}",
+  "@classesActionsFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesMoreActions": "More actions",
+  "classesEdit": "Edit",
+  "classesArchive": "Archive",
+  "classesRestore": "Restore",
+  "classesDelete": "Delete",
+  "classesUndo": "Undo",
+  "classesArchivedSnack": "{name} archived",
+  "@classesArchivedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesRestoredSnack": "{name} restored",
+  "@classesRestoredSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeletedSnack": "{name} deleted",
+  "@classesDeletedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteTitle": "Delete {name}?",
+  "@classesDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteStudents": "{count, plural, =1{1 student} other{{count} students}}",
+  "@classesDeleteStudents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesDeleteAssignments": "{count, plural, =1{1 assignment} other{{count} assignments}}",
+  "@classesDeleteAssignments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesDeleteMessage": "Deleting this class also permanently deletes its {students}, its {assignments} and every grade in them. This can't be undone.",
+  "@classesDeleteMessage": {
+    "placeholders": {
+      "students": {
+        "type": "String"
+      },
+      "assignments": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteArchiveInstead": "To keep the grades, archive the class instead.",
+  "classesDeleteTypeToConfirm": "This class has grades. Type {name} to confirm.",
+  "@classesDeleteTypeToConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteConfirm": "Delete Class",
+  "classesCourseNotFound": "This class no longer exists.",
+  "classesBackToClasses": "Back to Classes",
+  "classesGradebook": "Gradebook",
+  "classesAssignmentsTab": "Assignments",
+  "classesStudentsTab": "Students",
+  "classesNewAssignment": "New Assignment",
+  "classesAssignmentsEmptyTitle": "No assignments yet",
+  "classesAssignmentsEmptyMessage": "Create an assignment from one of your rubrics to start grading.",
+  "classesDue": "Due {date}",
+  "@classesDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "classesNoDueDate": "No due date",
+  "classesClosed": "Closed",
+  "classesGradedProgress": "{graded} of {total} graded",
+  "@classesGradedProgress": {
+    "placeholders": {
+      "graded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "classesAddStudent": "Add Student",
+  "classesEditStudent": "Edit Student",
+  "classesPasteNames": "Paste Names",
+  "classesImportRoster": "Import Roster",
+  "classesSearchStudents": "Search students",
+  "classesNoSearchResults": "No students match “{query}”",
+  "@classesNoSearchResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentsEmptyTitle": "No students yet",
+  "classesStudentsEmptyMessage": "Add students one at a time, paste a list of names, or import a CSV from your school system.",
+  "classesShowArchivedStudents": "{count, plural, =1{Show 1 archived student} other{Show {count} archived students}}",
+  "@classesShowArchivedStudents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesHideArchivedStudents": "Hide archived students",
+  "classesArchivedTag": "Archived",
+  "classesFirstName": "First name",
+  "classesFirstNameHint": "Required",
+  "classesLastName": "Last name",
+  "classesStudentNumber": "Student #",
+  "classesEmail": "Email",
+  "classesOptional": "Optional",
+  "classesStudentNumberTag": "#{number}",
+  "@classesStudentNumberTag": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentDuplicate": "Someone with this name or number is already in this class.",
+  "classesStudentAdded": "{name} added",
+  "@classesStudentAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentSaved": "{name} saved",
+  "@classesStudentSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentArchivedSnack": "{name} archived",
+  "@classesStudentArchivedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentRestoredSnack": "{name} restored",
+  "@classesStudentRestoredSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentRemove": "Remove from Class",
+  "classesStudentRemoveTitle": "Remove {name}?",
+  "@classesStudentRemoveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentRemoveMessage": "Their grades in this class are permanently deleted too. Archive them instead to keep their grades.",
+  "classesStudentRemoveConfirm": "Remove",
+  "classesStudentRemovedSnack": "{name} removed",
+  "@classesStudentRemovedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesPasteHint": "One name per line\nLovelace, Ada\nGrace Hopper",
+  "classesPasteSummary": "{count, plural, =0{Paste or type names above} =1{1 student will be added} other{{count} students will be added}}",
+  "@classesPasteSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesPasteSkipped": "{count, plural, =1{1 name is already in the class and will be skipped} other{{count} names are already in the class and will be skipped}}",
+  "@classesPasteSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesPasteAdd": "{count, plural, =0{Add Students} =1{Add 1 Student} other{Add {count} Students}}",
+  "@classesPasteAdd": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesStudentsAdded": "{count, plural, =1{1 student added} other{{count} students added}}",
+  "@classesStudentsAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportTitle": "Import Roster",
+  "classesImportIntro": "Export a roster from your school system as CSV. We'll find the name, number and email columns for you.",
+  "classesImportChooseFile": "Choose a CSV file",
+  "classesImportOrPaste": "Or paste CSV",
+  "classesImportPasteHint": "First Name,Last Name,Student ID\nAda,Lovelace,1001",
+  "classesImportPreview": "Preview",
+  "classesImportReadError": "Couldn't read that file. Is it a CSV or text file?",
+  "classesImportEmpty": "That CSV has no rows.",
+  "classesImportHasHeader": "First row is column names",
+  "classesImportColumnsSection": "Columns",
+  "classesImportColumn": "Column {number}",
+  "@classesImportColumn": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportColumnSample": "e.g. {sample}",
+  "@classesImportColumnSample": {
+    "placeholders": {
+      "sample": {
+        "type": "String"
+      }
+    }
+  },
+  "classesImportColumnHolds": "Column holds…",
+  "classesImportFieldIgnore": "Don't import",
+  "classesImportFieldFullName": "Full name",
+  "classesImportNeedName": "Choose which column holds the student names.",
+  "classesImportRowsSection": "Students",
+  "classesImportSelectedSummary": "{selected} of {total} selected",
+  "@classesImportSelectedSummary": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportSelectAll": "Select all",
+  "classesImportIssueMissingName": "No name, can't import",
+  "classesImportIssueOnRoster": "Already in this class",
+  "classesImportIssueDuplicate": "Repeats an earlier row",
+  "classesImportButton": "{count, plural, =0{Import} =1{Import 1 Student} other{Import {count} Students}}",
+  "@classesImportButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportStartOver": "Start over",
+  "welcomeFirstRubricTitle": "Let’s create your first rubric.",
+  "welcomeFirstObjectivePrompt": "What is your first grading objective?",
+  "welcomeFirstObjectiveHint": "example: Grammar, usage and mechanics",
+  "welcomeFirstObjectiveCreate": "Create rubric with this objective",
+  "welcomeSampleData": "Explore with sample data",
+  "welcomeSkipForNow": "Skip for now",
+  "welcomeActionError": "Something went wrong. Please try again.",
+  "welcomePageIndicator": "Page {current} of {total}",
+  "@welcomePageIndicator": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeGreeting": "{period, select, morning{Good morning} afternoon{Good afternoon} other{Good evening}}",
+  "@homeGreeting": {
+    "description": "Home title when no teacher name is set",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "homeGreetingNamed": "{period, select, morning{Good morning, {name}} afternoon{Good afternoon, {name}} other{Good evening, {name}}}",
+  "@homeGreetingNamed": {
+    "description": "Home title with the teacher name from settings",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeStatClasses": "{count, plural, =1{Class} other{Classes}}",
+  "@homeStatClasses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStatStudents": "{count, plural, =1{Student} other{Students}}",
+  "@homeStatStudents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStatGradedThisWeek": "Graded this week",
+  "homeToGradeSection": "To grade",
+  "homeToGradeProgress": "{done} of {total} graded",
+  "@homeToGradeProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeToGradeRemaining": "{count, plural, =1{1 paper left} other{{count} papers left}}",
+  "@homeToGradeRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeToGradeLeft": "left",
+  "@homeToGradeLeft": {
+    "description": "Under the number of papers still to grade"
+  },
+  "homeAllCaughtUp": "All caught up",
+  "homeAllCaughtUpMessage": "Nothing is waiting to be graded.",
+  "homeNoClassesTitle": "No classes yet",
+  "homeNoClassesMessage": "Create a class to start grading with your rubrics.",
+  "homeComingUpSection": "Coming up",
+  "homeDueOn": "Due {date}",
+  "@homeDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "homeWasDue": "Was due {date}",
+  "@homeWasDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "homeDueToday": "Due today",
+  "homeDueTomorrow": "Due tomorrow",
+  "homeNoDueDate": "No due date",
+  "homeRecentRubricsSection": "Recent rubrics",
+  "homeSeeAll": "See all",
+  "homeUntitledRubric": "Untitled rubric",
+  "homeRubricSummary": "{mode, select, detailed{Detailed} other{Simple}} · {count, plural, =1{1 objective} other{{count} objectives}}",
+  "@homeRubricSummary": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeQuickActionsSection": "Quick actions",
+  "homeNewRubric": "New rubric",
+  "homeNewClass": "New class",
+  "homeNewAssignment": "New assignment",
+  "homePickClassTitle": "Which class?",
+  "homeEmptyTitle": "Welcome to Rubric",
+  "homeEmptyMessage": "Start with a class or a rubric — or look around a demo classroom first.",
+  "homeEmptyCreateClass": "Create a class",
+  "homeEmptyCreateClassHint": "Add your roster",
+  "homeEmptyCreateRubric": "Build a rubric",
+  "homeEmptyCreateRubricHint": "Objectives, groups and weights",
+  "homeEmptySampleData": "Load sample data",
+  "homeSampleDataLoaded": "Sample classes loaded.",
+  "homeSampleDataError": "Couldn’t load the sample data. Please try again.",
+  "exportSheetTitle": "Export",
+  "exportSheetPrint": "Print",
+  "exportSheetPrintHint": "Paper copy",
+  "exportSheetShare": "Share PDF",
+  "exportSheetShareHint": "Mail, Files, Drive…",
+  "exportFailed": "Export failed. Please try again.",
+  "exportUntitledRubric": "Untitled rubric",
+  "exportReportsName": "{assignment} - reports",
+  "@exportReportsName": {
+    "placeholders": {
+      "assignment": {
+        "type": "String"
+      }
+    }
+  },
+  "exportScoresFileSuffix": "scores",
+  "@exportScoresFileSuffix": {
+    "description": "Part of an exported CSV filename, e.g. essay-scores-2026-09-29.csv"
+  },
+  "exportGradebookFileSuffix": "gradebook",
+  "@exportGradebookFileSuffix": {
+    "description": "Part of an exported CSV filename"
+  },
+  "exportStatusNotStarted": "Not started",
+  "exportStatusInProgress": "In progress",
+  "exportStatusComplete": "Complete",
+  "exportStatusExcused": "Excused",
+  "exportStatusMissing": "Missing",
+  "exportModeSimple": "Simple rubric",
+  "exportModeDetailed": "Detailed rubric",
+  "exportCsvLastName": "Last name",
+  "exportCsvFirstName": "First name",
+  "exportCsvStudentNumber": "Student #",
+  "exportCsvStatus": "Status",
+  "exportCsvGroupPercent": "{group} %",
+  "@exportCsvGroupPercent": {
+    "description": "CSV column header for a rubric group percentage",
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "exportCsvFinalPercent": "Final %",
+  "exportCsvLetter": "Letter",
+  "exportCsvPoints": "Points (of {possible})",
+  "@exportCsvPoints": {
+    "placeholders": {
+      "possible": {
+        "type": "String"
+      }
+    }
+  },
+  "exportCsvComment": "Comment",
+  "exportCsvAssignmentDue": "{title} ({due})",
+  "@exportCsvAssignmentDue": {
+    "description": "Gradebook CSV column: assignment title with ISO due date",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "due": {
+        "type": "String"
+      }
+    }
+  },
+  "exportCsvAverage": "Average %",
+  "exportPdfPageOf": "Page {page} of {pages}",
+  "@exportPdfPageOf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "exportPdfObjectiveCount": "{count, plural, =1{1 objective} other{{count} objectives}}",
+  "@exportPdfObjectiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportPdfWeight": "{weight}%",
+  "@exportPdfWeight": {
+    "description": "A group weight pill",
+    "placeholders": {
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "exportPdfObjective": "Objective",
+  "exportPdfDescription": "Description",
+  "exportPdfScore": "Score",
+  "exportPdfFeedback": "Feedback",
+  "exportPdfFeedbackInline": "Feedback: {comment}",
+  "@exportPdfFeedbackInline": {
+    "placeholders": {
+      "comment": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfLevelHeader": "{label} ({points})",
+  "@exportPdfLevelHeader": {
+    "description": "Detailed grid column header: level name and points",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfAchieved": "Achieved",
+  "@exportPdfAchieved": {
+    "description": "Marks the performance level a student reached"
+  },
+  "exportPdfGradingScale": "Grading scale",
+  "exportPdfGrade": "Grade",
+  "exportPdfRange": "Range",
+  "exportPdfRangeValue": "{from}% to {to}%",
+  "@exportPdfRangeValue": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfStudentNumber": "Student # {number}",
+  "@exportPdfStudentNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfComments": "Comments",
+  "exportPdfFinalGrade": "Final grade",
+  "exportPdfExcusedDetail": "Not counted toward the course grade",
+  "exportPdfNotGraded": "Not graded",
+  "exportPdfPoints": "{earned} of {possible} points",
+  "@exportPdfPoints": {
+    "placeholders": {
+      "earned": {
+        "type": "String"
+      },
+      "possible": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfMissingNote": "Work was not handed in.",
+  "exportPdfLateNote": "Handed in late.",
+  "exportPdfPenaltyNote": "Late penalty: {penalty} percentage points deducted from {raw}.",
+  "@exportPdfPenaltyNote": {
+    "placeholders": {
+      "penalty": {
+        "type": "String"
+      },
+      "raw": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfOverrideNote": "Grade set by the teacher (calculated: {raw}).",
+  "@exportPdfOverrideNote": {
+    "placeholders": {
+      "raw": {
+        "type": "String"
+      }
+    }
+  },
+  "exportPdfNoStudents": "No students in this class yet.",
+  "backupTitle": "Backup & Restore",
+  "backupIntro": "Everything in Rubric lives only on this device. A backup is one file holding all your rubrics, templates, classes, students, grades, comments and settings. Keep it somewhere safe, like Files or Drive.",
+  "backupLastHint": "Last backup",
+  "backupNever": "Never backed up",
+  "backupOnDevice": "On this device",
+  "backupCountRecords": "{count, plural, =1{1 item} other{{count} items}}",
+  "@backupCountRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountRubrics": "{count, plural, =1{1 rubric} other{{count} rubrics}}",
+  "@backupCountRubrics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountTemplates": "{count, plural, =1{1 template} other{{count} templates}}",
+  "@backupCountTemplates": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountClasses": "{count, plural, =1{1 class} other{{count} classes}}",
+  "@backupCountClasses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountStudents": "{count, plural, =1{1 student} other{{count} students}}",
+  "@backupCountStudents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountAssignments": "{count, plural, =1{1 assignment} other{{count} assignments}}",
+  "@backupCountAssignments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountEvaluations": "{count, plural, =1{1 graded paper} other{{count} graded papers}}",
+  "@backupCountEvaluations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupCountComments": "{count, plural, =1{1 saved comment} other{{count} saved comments}}",
+  "@backupCountComments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupNowAction": "Back Up Now",
+  "backupWorking": "Working…",
+  "backupShareSubject": "Rubric backup",
+  "backupDone": "Backup saved.",
+  "backupFailed": "Backup failed. Please try again.",
+  "backupRestoreSection": "Restore",
+  "backupRestoreHint": "From a backup file",
+  "backupRestoreAction": "Restore…",
+  "backupRestoreExplain": "You will see what the file contains and choose to merge it with this device or replace everything before anything changes.",
+  "backupReadFailed": "That file could not be read.",
+  "backupProblemTitle": "Can’t restore this file",
+  "backupProblemNotJson": "This isn’t a Rubric backup file. Backups are .json files named like rubric-backup-2026-09-29.json.",
+  "backupProblemWrongFormat": "This file isn’t a Rubric backup. Pick a file made with Back Up Now.",
+  "backupProblemNewerVersion": "This backup was made by a newer version of Rubric. Update the app, then try again.",
+  "backupProblemUnsupportedVersion": "This backup’s version isn’t supported.",
+  "backupProblemCorrupt": "This backup is damaged or incomplete, so nothing was restored.",
+  "backupProblemDismiss": "OK",
+  "backupRestoreSheetTitle": "Restore backup",
+  "backupRestoreFrom": "Backed up {date}",
+  "@backupRestoreFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupModeMerge": "Merge",
+  "backupModeReplace": "Replace",
+  "backupModeMergeExplain": "Adds {added, plural, =1{1 new item} other{{added} new items}} and updates {existing, plural, =1{1 item} other{{existing} items}} already on this device. Nothing is deleted. Your settings stay as they are.",
+  "@backupModeMergeExplain": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "existing": {
+        "type": "int"
+      }
+    }
+  },
+  "backupModeReplaceExplain": "Deletes everything on this device, then restores this backup exactly, including its settings.",
+  "backupRestoreMergeAction": "Merge Backup",
+  "backupRestoreReplaceAction": "Replace Everything",
+  "backupReplaceConfirmTitle": "Replace everything?",
+  "backupReplaceConfirmMessage": "All rubrics, classes, students and grades on this device will be deleted and replaced with the backup. You can undo right after.",
+  "backupReplaceConfirmAction": "Replace",
+  "backupRestored": "{count, plural, =1{Restored 1 item.} other{Restored {count} items.}}",
+  "@backupRestored": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupRestoreFailed": "Restore failed. Nothing was changed.",
+  "backupUndo": "Undo",
+  "backupUndone": "Restore undone.",
+  "exportPdfGroupScore": "Scored {percent}",
+  "@exportPdfGroupScore": {
+    "description": "Next to a group heading on a student report",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  }
 }

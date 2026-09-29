@@ -1,0 +1,898 @@
+#!/usr/bin/env python3
+"""verify — run what a change owes, and record that it was run. `verify --check` refuses if it wasn't.
+
+THE FAILURE THIS PREVENTS: a change with an OUTPUT that is not the thing you edited — a code
+generator, a template, a migration, a schema, a compiled asset — can pass every check you happen to
+run while the real output is broken, because none of those checks compiled/rendered/applied the
+actual artifact. Green signals that answer questions nobody asked.
+
+WHAT THIS IS: a map (`.game_loop/verify.yaml`) from "you changed files matching <glob>" to "then these
+commands must pass", plus a record of when each last passed. `verify --check` compares each changed
+file's mtime against the last successful run of its commands and REFUSES if the file is newer. So the
+gate is not "did you remember" — it is "is the evidence newer than the change".
+
+Wired (optionally) into the write guard so `git commit` is refused when owed checks are stale. It is
+entirely opt-in: an empty verify.yaml means nothing owes anything and this is a no-op.
+
+THE SECOND FAILURE, AND WHY `--coverage` EXISTS (issue #25): a map of listed paths defaults to
+OWES-NOTHING. A whole new package was built, hand-tested and committed while `verify --check`
+reported clean — the manifest enumerated the paths to check and the new package was not among them.
+Green meant "nothing LISTED here is stale", never "nothing is unverified". A rail is silent exactly
+where it is blind, and silence reads as safety.
+
+So coverage is computed the other way round: every changed path is presumed UNCHECKED until a rule
+claims it or a human excludes it out loud (`unchecked-ok:` in verify.yaml). `--coverage` prints that
+third set, `status` re-prints it every session, and the write guard names it at `git commit`.
+
+DEFAULT-DENY FOR VISIBILITY, DEFAULT-ALLOW FOR BLOCKING — deliberately, not as a compromise. The
+manifest SHIPS EMPTY (game_loop does not know your project), so "unlisted ⇒ blocked" would refuse a
+fresh install's very first commit, with the fix — writing the rules — sitting behind the gate that
+is blocking it. That is INV5 (a guard must never block its own fix) and INV4 (no gate without a
+logged observed failure; the logged failure here is the opposite one — installs that inherited this
+repo's rules and could not commit). Making the gap LOUD closes the issue's failure without buying
+that one back: you can no longer commit an unchecked package believing the gate looked at it. A
+project that wants the hard version can opt in with a catch-all rule — `"*": ["<command>"]`.
+
+HONEST ABOUT ITS RUNG (CHECKED): it cannot know whether a command is a REAL check or a tautology —
+a test that asserts `1 == 1` would be recorded as verified. That is why the commands in verify.yaml
+should be ones you have confirmed actually fail when the thing is broken. Silence here is a floor,
+not a proof. Coverage is honest about a narrower thing still: it reports what NOTHING claims, not
+what is well tested.
+"""
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+from fnmatch import fnmatch
+
+CODE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # the .game_loop/ this CODE is in
+
+# THE HOME, WHICH IS THE TREE THIS CHECKS. Resolved from GAME_LOOP_HOME when set, so the harness can
+# run from a pinned checkout while still checking the PROJECT. Getting this wrong is not a cosmetic
+# bug and it is not loud: ROOT decides which verify.yaml is the manifest and REPO decides which git
+# tree `git status` reads and whose mtimes are compared. A pinned copy resolving both to ITSELF finds
+# no changed files and no rules, prints "nothing owes a check", and the commit gate passes — so
+# editing the repo's own gates would owe nothing at all. That is dogfooding switched off while
+# reporting success. Duplicated from bin/game_loop's resolve_home on purpose: `verify` must keep
+# working when the rest of the harness is mid-edit, and a shared import is one more thing to break.
+# The two are kept in step by a test that runs the same refusals through every entrypoint.
+HOME_ENV = "GAME_LOOP_HOME"
+PINNED_MARK = "PINNED"
+
+
+def resolve_home(code_root, prog):
+    """Unset → the code's own directory (unchanged). Set → must exist and carry config.json, else
+    REFUSE; a silent fallback to __file__ is the trap above. Pinned code with no home is refused
+    too — that combination looks identical to an ordinary install from the inside."""
+    raw = os.environ.get(HOME_ENV)
+    if raw is None:
+        if os.path.exists(os.path.join(code_root, PINNED_MARK)):
+            sys.stderr.write(
+                f"{prog} REFUSED — this is a PINNED code checkout and no {HOME_ENV} names its "
+                f"project.\n    code : {code_root}\n\n"
+                "A pinned checkout carries CODE only. Its verify.yaml is a copy of some older "
+                "commit's,\nand any state written beside it is destroyed by the next re-pin. Name "
+                "the project's home:\n"
+                f"    {HOME_ENV}=<project>/.game_loop {code_root}/bin/{prog} ...\n"
+                "  → `game_loop self` prints the hook wiring that sets it.\n")
+            raise SystemExit(2)
+        return code_root
+    home = os.path.abspath(os.path.expanduser(raw.strip())) if raw.strip() else ""
+    if home and os.path.isfile(os.path.join(home, "config.json")):
+        return home
+    sys.stderr.write(
+        f"{prog} REFUSED — {HOME_ENV} does not name a game_loop home.\n"
+        f"    {HOME_ENV} : {raw!r}\n"
+        f"    looked for : {os.path.join(home, 'config.json') if home else '(empty value)'}\n\n"
+        "It must name the .game_loop/ holding the PROJECT's own identity — config.json, "
+        "verify.yaml,\nINVARIANTS.md, state, log.jsonl, pins, the ruled-out list. Falling back to "
+        "this code's own\ndirectory would check the PINNED copy instead of the project and report "
+        "success while gating\nnothing, so this refuses. Point it at a real .game_loop/, or unset it "
+        "entirely.\n")
+    raise SystemExit(2)
+
+
+ROOT = resolve_home(CODE_ROOT, "verify")            # .game_loop/ — the manifest and the record
+REPO = os.path.dirname(ROOT)                        # the tree whose files are checked
+MAP_F = os.path.join(ROOT, "verify.yaml")
+MAP_UNREADABLE = ""      # set by load_map(): why the rulebook could not be opened, "" if it was
+REC_F = os.path.join(ROOT, "verified.json")
+
+# The one reserved key in verify.yaml. Its list entries are GLOBS, not commands: paths a human has
+# said out loud need no check. An exclusion is a stated decision that stays visible in the manifest
+# and gets counted in every report — the opposite of a path that is unchecked because nobody ever
+# thought about it.
+EXCLUDE_KEY = "unchecked-ok"
+
+# Not a project's own source, so not something to nag about: game_loop's own runtime state, plus
+# generated and vendored output, which belongs to a tool or a third party rather than to whoever is
+# committing. Deliberately the same shape and (almost) the same entries as the write guard's
+# blast-radius exemptions in bin/guard-writes-impl.sh — one idea, two places, kept in step by a test.
+NOT_SOURCE = [".game_loop/sessions/*", ".game_loop/edited.txt", ".game_loop/log.jsonl",
+              ".game_loop/state.json", ".game_loop/verified.json", ".game_loop/limits.json",
+              ".game_loop/VERSION", ".game_loop/.update_cache.json", ".game_loop/HANDOFF.md",
+              "vendor/*", "*/vendor/*", "node_modules/*", "*/node_modules/*",
+              "third_party/*", "*/third_party/*", "dist/*", "*/dist/*", "build/*", "*/build/*",
+              "*.lock", "*-lock.json", "*-lock.yaml", "*.g.dart", "*.freezed.dart", "*.pb.go",
+              "*_pb2.py", "*.generated.*", "*.min.js", "*.min.css", "*.snap"]
+
+UNCHECKED_SHOWN = 10
+
+
+DUPLICATE_KEYS = {}             # glob -> how many times the manifest declared it
+ESCAPED_LINES = []              # (lineno, text) for rules carrying a backslash — see escaped_tail()
+
+
+def load_map():
+    """Tiny YAML subset: '<glob>:' then '  - <command>' lines. No third-party dependency."""
+    global MAP_UNREADABLE
+    out, key = {}, None
+    DUPLICATE_KEYS.clear()
+    del ESCAPED_LINES[:]
+    MAP_UNREADABLE = ""
+    try:
+        f = open(MAP_F)
+    except OSError as exc:
+        # AN ABSENT RULEBOOK IS NOT AN EMPTY ONE. Both produce {} here, and every message downstream
+        # then said "no rules in .game_loop/verify.yaml" — a sentence that asserts the file was READ
+        # and found to declare nothing. Said of a file that does not exist, it sends whoever is
+        # debugging to inspect contents that are not there, while the real fault is a broken install,
+        # a GAME_LOOP_HOME pointing somewhere else, or a permission error.
+        #
+        # The refusal is unchanged and still loud: NOTHING IS CHECKED either way. What changes is
+        # that the two reasons stop sharing a sentence.
+        MAP_UNREADABLE = "%s: %s" % (exc.__class__.__name__, str(exc)[:70])
+        return out
+    with f:
+        for lineno, line in enumerate(f, 1):
+            s = line.rstrip("\n")
+            if not s.strip() or s.lstrip().startswith("#"):
+                continue
+            if not s.startswith(" ") and s.rstrip().endswith(":"):
+                if "\\" in s:
+                    ESCAPED_LINES.append((lineno, s.strip()))
+                key = s.rstrip()[:-1].strip().strip('"')
+                # A REPEATED KEY USED TO RESET THE LIST, so the rule declared FIRST vanished with no
+                # output anywhere. This repo declared `.game_loop/bin/guard-writes-impl.sh` twice —
+                # once owing the suite, once owing the behaviour gate — and the second silently won.
+                # The 1621-line write guard therefore owed the suite in the manifest and did not owe
+                # it in fact. `--coverage` could not see it either: a rule DID claim that path, so it
+                # reported the file CHECKED. A hole shaped exactly like coverage.
+                #
+                # Accumulate instead. That fails toward running MORE checks than intended rather than
+                # fewer, which is the only safe direction for a gate — and it is said out loud below,
+                # because a merge nobody is told about is the same silence one level up.
+                if key in out:
+                    DUPLICATE_KEYS[key] = DUPLICATE_KEYS.get(key, 1) + 1
+                out.setdefault(key, [])
+            elif key and s.lstrip().startswith("- "):
+                # REFUSED, NOT DECODED — reported by wcs, who ran it rather than reading it.
+                # This parser strips surrounding quotes and decodes NOTHING, so a YAML escape
+                # survives as literal bytes: `bash -n \\"$f\\"` reaches the shell with the
+                # backslashes still on, and it looks for a file called "$f" quotes included.
+                #
+                # THE VISIBLE FAILURE IS THE LUCKY MEMBER OF ITS FAMILY, which is wcs's point and
+                # the reason this refuses instead of warning. Their instance failed CLOSED: the
+                # mangled filename errored, `|| exit 1` fired, verify went red and somebody
+                # eventually looked. A backslash in a rule shaped to fail OPEN — anything ending
+                # `|| true`, a grep whose pattern merely stops matching, a test guarding an echo —
+                # prints green while the check never ran. Same defect, no symptom, nothing to
+                # spend a session on.
+                #
+                # Decoding was the other option and it is worse here. There is no yaml module to
+                # lean on (this payload carries no dependencies), and a hand-rolled decoder that
+                # handles most escapes and mis-executes the rest is exactly the 95/5 split wcs
+                # named. Refusing is the only answer that cannot be subtly wrong.
+                if "\\" in s:
+                    ESCAPED_LINES.append((lineno, s.strip()))
+                cmd = s.lstrip()[2:].strip().strip('"')
+                if cmd not in out[key]:      # a key repeated with the same command owes it once
+                    out[key].append(cmd)
+    return out
+
+
+def duplicate_key_tail():
+    """A merged duplicate is still a manifest somebody should repair, so it never merges quietly."""
+    if not DUPLICATE_KEYS:
+        return ""
+    lines = ["\nDUPLICATE RULE KEY(S) — declared more than once, and MERGED: every command listed "
+             "under\nany copy is owed. A repeated key used to DISCARD the rule declared first, in "
+             "silence."]
+    for k, n in DUPLICATE_KEYS.items():
+        lines.append(f"    {k}   declared {n}x")
+    lines.append("  → give each path ONE entry that lists every command it owes.")
+    return "\n".join(lines)
+
+
+def escaped_tail():
+    """A backslash in a rule is REFUSED, because this reader decodes nothing and the shell will not.
+
+    Returns "" when the manifest is clean. Non-empty means verify must not run: every command in
+    the file is suspect, not only the offending line, because a reader that mis-handles one escape
+    has no claim to the rest.
+    """
+    if not ESCAPED_LINES:
+        return ""
+    lines = ["\nREFUSED — a rule in this manifest contains a BACKSLASH, and this reader does not "
+             "decode\nYAML escapes. The bytes reach the shell as written, so the command that runs "
+             "is not the\ncommand the file appears to say. NOTHING WAS CHECKED."]
+    for n, text in ESCAPED_LINES:
+        lines.append(f"    line {n}: {text[:100]}")
+    lines += ["  → write the command so it needs no escape: prefer single quotes inside a "
+              "double-quoted",
+              "    scalar, or a YAML block scalar (|) for anything with nested quoting.",
+              "  WHY THIS REFUSES RATHER THAN WARNS: the failure you can SEE is the lucky one. A "
+              "rule that",
+              "    fails closed goes red and gets looked at; the same escape in a rule ending "
+              "`|| true`, or a",
+              "    grep whose pattern merely stops matching, prints GREEN while the check never "
+              "ran."]
+    return "\n".join(lines)
+
+
+def load_manifest():
+    """(rules, exclusions). The reserved key is split OUT of the rules — its entries are globs, and
+    handing a glob to subprocess as if it were a command is how a config typo becomes a shell run."""
+    raw = load_map()
+    exclusions = raw.pop(EXCLUDE_KEY, [])
+    return raw, exclusions
+
+
+def matches(path, pattern):
+    """The manifest's glob semantics, in ONE place: fnmatch, plus `<dir>/**` for a whole subtree."""
+    return fnmatch(path, pattern) or (pattern.endswith("/**") and path.startswith(pattern[:-3]))
+
+
+def load_rec():
+    try:
+        with open(REC_F) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def changed_files():
+    """Files changed vs HEAD, plus untracked. What a commit would actually carry."""
+    # -uall is load-bearing: plain --porcelain collapses untracked directories to "?? dir/", so we
+    # would read the DIRECTORY's mtime — which does not change when a file inside it is edited.
+    r = subprocess.run(["git", "status", "--porcelain", "-uall"], cwd=REPO,
+                       capture_output=True, text=True)
+    files = []
+    for line in r.stdout.splitlines():
+        p = line[3:].strip()
+        if " -> " in p:
+            p = p.split(" -> ")[1]
+        if p:
+            files.append(p)
+    return files
+
+
+def staged_files():
+    """What the index would actually commit. Narrower than changed_files() on purpose: at `git
+    commit` the question is what THIS commit carries, not what the tree happens to hold."""
+    r = subprocess.run(["git", "diff", "--cached", "--name-only"], cwd=REPO,
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return []
+    return [line.strip() for line in r.stdout.splitlines() if line.strip()]
+
+
+# THE SCOPE FLAG, AND WHY THE CALLER COMPUTES IT RATHER THAN THIS SCRIPT.
+#
+# `verify` run by hand asks about the TREE: what have I changed that owes a check. The commit gate
+# asks a narrower question -- what does THIS COMMIT carry -- and the two shared one answer, so a
+# commit carrying a single README was gated on every dirty file in the tree and charged the full
+# suite for the privilege. That is the tax that gets a rule deleted rather than obeyed.
+#
+# The narrow scope cannot be computed HERE, and that is the whole design. A `-a` commit, a pathspec
+# commit and a plain one carry three different sets, and the only thing that distinguishes them is
+# the COMMAND -- which this script never sees. Worse, the guard runs at PreToolUse, BEFORE the
+# command body: at that moment a `-a` commit has staged NOTHING, so an index read here comes back
+# EMPTY and every rule goes unconsulted. Observed, not predicted -- an empty `git diff --cached`
+# beside a ` M gate.py` working tree, and the change landing in HEAD anyway. So a `verify` that
+# helpfully guessed "the index" would BE the bypass rather than the gate.
+#
+# The caller therefore resolves the set and names it. Absent this flag nothing changes: the tree is
+# the scope, which is what every hand-run and every pre-existing caller gets.
+SCOPE_FLAG = "--scope-from"
+
+
+def scope_arg(argv):
+    """The path given to --scope-from, or None. Accepts `--scope-from X` and `--scope-from=X`."""
+    for i, a in enumerate(argv):
+        if a == SCOPE_FLAG:
+            return argv[i + 1] if i + 1 < len(argv) else ""
+        if a.startswith(SCOPE_FLAG + "="):
+            return a[len(SCOPE_FLAG) + 1:]
+    return None
+
+
+def read_scope(path, prog="verify"):
+    """The caller's list of paths a commit carries -- one per line, repo-relative.
+
+    An EMPTY list is a legitimate answer (an empty index, which git itself then refuses) and comes
+    back as one. An UNREADABLE one is not. Falling back to an empty scope would pass every commit
+    unexamined, and falling back to the whole tree would refuse over files the commit does not
+    contain: two answers to a question nobody asked. So this refuses, naming the file it could not
+    read."""
+    if not path:
+        sys.stderr.write(f"{prog} REFUSED -- {SCOPE_FLAG} was given no path.\n")
+        raise SystemExit(2)
+    try:
+        raw = sys.stdin.read() if path == "-" else open(path).read()
+    except OSError as e:
+        sys.stderr.write(
+            f"{prog} REFUSED -- {SCOPE_FLAG} names a file this cannot read.\n"
+            f"    path : {path}\n    error: {e}\n\n"
+            "The caller passes this flag to say what a commit CARRIES. An empty scope would pass "
+            "every\ncommit unexamined and the whole tree would refuse over files the commit does "
+            "not contain,\nso neither fallback is honest and this refuses instead.\n")
+        raise SystemExit(2)
+    return [ln.strip() for ln in raw.splitlines() if ln.strip()]
+
+
+def outside_scope(scoped):
+    """Dirty paths a scoped run did NOT look at. A rail is silent exactly where it is blind, and a
+    scoped run is blind by construction -- so it says so on the PASSING path, where the silence
+    would otherwise read as a statement about the whole tree."""
+    inside = set(scoped)
+    return [f for f in changed_files() if f not in inside]
+
+
+def owed(files, mapping):
+    """{glob: [files]} for every rule a changed file trips."""
+    hits = {}
+    for pattern in mapping:
+        for f in files:
+            if matches(f, pattern):
+                hits.setdefault(pattern, []).append(f)
+    return hits
+
+
+def ci_commands(root):
+    """Commands CI runs, from .github/workflows/*.yml — ([], "no workflows") when there are none.
+
+    Deliberately not a YAML parse: stdlib has no yaml, and a dependency for this would be a poor
+    trade. It reads `run:` steps, inline and block-scalar, which is where a workflow's commands live.
+    A miss here under-reports and is stated as such, rather than being presented as coverage.
+    """
+    import glob as _glob
+    out, files = [], []
+    for pat in ("*.yml", "*.yaml"):
+        files += sorted(_glob.glob(os.path.join(root, ".github", "workflows", pat)))
+    if not files:
+        return [], "no .github/workflows/ — nothing to compare against"
+    for fp in files:
+        try:
+            lines = open(fp).read().split("\n")
+        except OSError:
+            continue
+        i = 0
+        while i < len(lines):
+            ln = lines[i]
+            m = re.match(r"^(\s*)-?\s*run:\s*(\|[-+]?|>[-+]?)?\s*(.*)$", ln)
+            if m:
+                indent, block, inline = len(m.group(1)), m.group(2), m.group(3).strip()
+                if block:
+                    i += 1
+                    while i < len(lines) and (not lines[i].strip()
+                                              or len(lines[i]) - len(lines[i].lstrip()) > indent):
+                        if lines[i].strip():
+                            out.append((os.path.basename(fp), lines[i].strip()))
+                        i += 1
+                    continue
+                if inline:
+                    out.append((os.path.basename(fp), inline))
+            i += 1
+    return out, ""
+
+
+def ci_gap(root, mapping):
+    """CI commands whose leading words appear in NO gate. A DIFFERENCE, never a verdict."""
+    cmds, why = ci_commands(root)
+    if why:
+        return [], why
+    gates = " \n".join(c for cs in mapping.values() for c in cs)
+    missing = []
+    for fname, cmd in cmds:
+        head = " ".join(cmd.split()[:2])
+        if not head or head.startswith("#"):
+            continue
+        if head not in gates and cmd.split()[0] not in gates:
+            missing.append((fname, cmd))
+    return missing, ""
+
+
+def exemptions_the_suite_reads(root, exclusions, test_sources=None, tracked=None):
+    """Exemptions whose files the SUITE now reads — {glob: [paths]}, empty when it cannot be asked.
+
+    THE COMPLEMENT OF `vacuous_rules` OVER EXCLUSIONS, and the direction that actually bit here. An
+    entry in unchecked-ok claims no command exists that fails when what those files SAY is wrong.
+    That is a claim about a MOMENT, and nothing watches for the moment to pass: the day the suite
+    grows an assertion about a file under the glob, the claim is false and the entry keeps standing.
+    This file's own words for that are that it "launders a gap into a decision".
+
+    Observed the same day in two repos that did not know about each other — `templates/**` here,
+    while the suite had grown assertions about shipped skills, and `*.md` in llm_chat's verify.yaml
+    while three of its test files had started reading those documents. Neither entry was touched;
+    the world moved under both.
+
+    ASKED OF PATHS THE SUITE CONSTRUCTS, NEVER OF THE WORD APPEARING IN IT. The suite names these
+    directories constantly in assertion prose, and a substring match reports every exemption as
+    contradicted — a check that cannot come back clean. Measured: the crude version flagged four of
+    five including `.gitignore`; this one flags three and leaves LICENSE and .gitignore honest.
+
+    WHY IT COUNTS ONLY PATHS A COMMAND NAMES, and why that is the definition rather than a
+    limitation. This repo's house-voice check opens EVERY tracked file and asserts none contains the
+    banned word. Read literally, that is "a command that fails when the content is wrong" for every
+    path in the tree, and every exemption is contradicted — including LICENSE. An instrument that
+    flags all of its input has measured nothing, and it looks exactly like a thorough audit.
+
+    The resolution is not to exclude that scan by name. It is that `unchecked-ok` exempts a path
+    from the per-path RULES that say what a change owes, and a universal rule holds regardless of
+    what is on the list — it is not evidence that any particular exemption has gone stale. So the
+    question is whether a command names THIS surface, and a path a command constructs is exactly
+    that. A whole-tree sweep names nothing.
+
+    llm_chat reached the same answer by excluding two whole-tree readers by module, and said a
+    two-name list is what their repo distrusts. It is the same judgement; this form needs no list
+    and cannot rot when a module is renamed.
+
+    THE BLIND SPOT, MEASURED RATHER THAN CONCEDED. Counting only literal names misses a call site
+    that opens ONE specific file through a variable — `open(FLOOR)`, where FLOOR is a module
+    constant. In this suite that is 323 of 525 `open()` sites, so the gap is large in call-site
+    terms. It changes NO verdict here: every exemption that survives is opened only by whole-tree
+    sweeps, which the criterion above excludes on purpose. Both facts belong together, because the
+    first alone reads as a broken instrument and the second alone reads as a complete one.
+
+    llm_chat built the other form — "was the caller a whole-tree sweep?" — and found their tree
+    partitions identically under both, so their data cannot separate the two rules. Nor can this
+    one at the verdict level, for the same reason from the other side. Two repos, no separating
+    case yet; the comparison is still worth running, and neither result should be read as the
+    criteria having been confirmed against each other.
+
+    A REPORT, never a gate. Three entries here are contradicted today and all three are decisions a
+    human has to make; failing the build on them would make the report the thing to route around.
+    """
+    if tracked is None:
+        try:
+            r = subprocess.run(["git", "-C", root, "ls-files"], capture_output=True, text=True,
+                               timeout=20)
+        except (OSError, subprocess.TimeoutExpired):
+            return {}
+        if r.returncode != 0:
+            return {}
+        tracked = [t for t in (r.stdout or "").split("\n") if t.strip()]
+    if not tracked:
+        return {}
+    if test_sources is None:
+        test_sources = []
+        for t in tracked:
+            if t.startswith("test/") and t.endswith(".py"):
+                try:
+                    with open(os.path.join(root, t), encoding="utf-8", errors="replace") as fh:
+                        test_sources.append(fh.read())
+                except OSError:
+                    pass
+    if not test_sources:
+        return {}
+    blob = "\n".join(test_sources)
+    built = set()
+    for j in re.findall(r'os\.path\.join\(\s*REPO\s*,\s*((?:"[^"]+"\s*,?\s*)+)\)', blob):
+        built.add("/".join(re.findall(r'"([^"]+)"', j)))
+    built |= set(re.findall(r'"((?:[\w.\-]+/)+[\w.\-]+\.(?:md|txt|yaml|json|sh))"', blob))
+    # ONLY REAL, TRACKED FILES, on both sides. Two corrections the first version needed, and both
+    # were visible the moment it ran rather than reasoned out:
+    #   · a constructed path that is not tracked is a FIXTURE, not this repo's surface — the first
+    #     version reported "the suite reads docs", naming a directory, and `.game_loop/notify.json`,
+    #     which matches no tracked file at all;
+    #   · an exemption matching no tracked file is already the check above's subject, and having
+    #     two reports name the same entry for opposite reasons helps nobody.
+    # So: the exemption must cover something that EXISTS, and the suite must read one of those.
+    trackset = set(tracked)
+    # THE BASIS, RETURNED ALONGSIDE THE FINDING. llm_chat's implementation of this check reported
+    # 6 of 6 and read as a thorough audit; mine reported 4 and was legible as different only
+    # because theirs could be held against it. A count with no denominator cannot be compared, and
+    # comparison is what caught both of us. So the report says what it looked at, not just what it
+    # found — under the key "" so a caller that only wants entries can ignore it.
+    out = {"": {"constructed": len(built), "in_tree": len(built & trackset),
+                "tracked": len(tracked)}}
+    for pat in exclusions:
+        covered = [t for t in tracked if matches(t, pat)]
+        if not covered:
+            continue                      # the vacuous-exemption report owns this one
+        # `matches` and not a second copy of the rule: this file keeps glob semantics in ONE
+        # place on purpose, and my duplicate already differed from it by a trailing slash.
+        hit = sorted(p for p in built if p in trackset and matches(p, pat))
+        if hit:
+            out[pat] = hit
+    return out if len(out) > 1 else {}
+
+
+def vacuous_rules(root, mapping):
+    """Rules whose glob matches NO tracked file — ([], why) when the question cannot be asked.
+
+    A rule that matches nothing runs nothing and fails nothing, so `verify` reports every owed
+    check passed while covering zero files. The count it is derived from — files matched — goes to
+    zero on absence, and zero is the CLEAN score. That is the dangerous direction: a verdict must
+    be derived from something absence makes look WORSE.
+
+    Asked of git rather than the filesystem, so an untracked scratch file cannot make a dead rule
+    look alive — which is the same reason the sweep's source set is asked of git.
+    """
+    try:
+        r = subprocess.run(["git", "-C", root, "ls-files"], capture_output=True, text=True,
+                           timeout=20)
+    except (OSError, subprocess.TimeoutExpired):
+        return [], "git did not answer, so nothing was compared"
+    if r.returncode != 0:
+        return [], "not a git checkout, so there is no tracked set to match against"
+    tracked = [t for t in (r.stdout or "").split("\n") if t.strip()]
+    if not tracked:
+        return [], "no tracked files at all — an empty checkout says nothing about a rule"
+    dead = []
+    for pat in mapping:
+        hits = [t for t in tracked
+                if fnmatch(t, pat) or fnmatch(t, pat.rstrip("/") + "/*")]
+        if not hits:
+            dead.append(pat)
+    return dead, ""
+
+
+def coverage(files, mapping, exclusions):
+    """(checked, excluded, unchecked) — the inversion this whole flag exists for.
+
+    `owed()` asks each RULE which files it claims, so a file no rule mentions produces no output at
+    all. This asks each FILE what claims it, and the answer "nothing" is a result rather than an
+    absence. That third bucket is the coverage gap: real changes that owe nothing, pass `--check`
+    in silence, and look identical to work that was verified.
+    """
+    checked, excluded, unchecked = [], [], []
+    skip = list(exclusions) + NOT_SOURCE
+    for f in files:
+        if any(matches(f, p) for p in mapping):
+            checked.append(f)
+        elif any(matches(f, p) for p in skip):
+            excluded.append(f)
+        else:
+            unchecked.append(f)
+    return checked, excluded, unchecked
+
+
+def unchecked_tail(mapping, exclusions, files):
+    """The one line that turns a green `verify` from 'nothing is stale' into a statement about
+    reach. Printed on every PASSING path, because that is the path the failure hid behind."""
+    _, _, unchecked = coverage(files, mapping, exclusions)
+    if not unchecked:
+        return ""
+    return (f"verify: NOT CHECKED — {len(unchecked)} changed path(s) match no rule, so nothing above "
+            "looked at them:\n"
+            + "\n".join(f"    {f}" for f in unchecked[:UNCHECKED_SHOWN])
+            + (f"\n    ... {len(unchecked) - UNCHECKED_SHOWN} more" if len(unchecked) > UNCHECKED_SHOWN
+               else "")
+            + "\n  → ./.game_loop/bin/verify --coverage")
+
+
+def outside_scope_tail(skipped):
+    """The sentence a scoped run owes. `unchecked_tail` says 'these paths matched no rule'; this
+    says 'these paths were not even looked at', which is the different and larger blindness a
+    narrowed scope buys. Both are printed on the same passing paths, for the same reason."""
+    if not skipped:
+        return ""
+    return (f"verify: OUT OF SCOPE — {len(skipped)} dirty path(s) are not in this commit, so "
+            "nothing above\n  looked at them. They stay dirty and will be asked about when a "
+            "commit carries them:\n"
+            + "\n".join(f"    {f}" for f in skipped[:UNCHECKED_SHOWN])
+            + (f"\n    ... {len(skipped) - UNCHECKED_SHOWN} more"
+               if len(skipped) > UNCHECKED_SHOWN else ""))
+
+
+def report_coverage(staged=False, porcelain=False, scope=None):
+    """`verify --coverage` — the answer to 'what am I NOT checking?'. A REPORT: always exit 0.
+
+    It must never be a gate. The manifest ships empty, so on a fresh install every path is
+    unchecked, and a non-zero exit here would wire straight into the commit gate and refuse the
+    project's first commit — the exact regression this repo already fixed once.
+    """
+    mapping, exclusions = load_manifest()
+    if (_dup := duplicate_key_tail()):
+        print(_dup)
+    if (_esc := escaped_tail()):
+        print(_esc)      # reported, never blocking: this function is a report (see the docstring)
+    files = read_scope(scope) if scope is not None else (
+        staged_files() if staged else changed_files())
+    checked, excluded, unchecked = coverage(files, mapping, exclusions)
+
+    if porcelain:
+        json.dump({"rules": len(mapping), "exclusions": len(exclusions), "scanned": len(files),
+                   "checked": len(checked), "excluded": len(excluded), "unchecked": unchecked},
+                  sys.stdout)
+        sys.stdout.write("\n")
+        return 0
+
+    scope_label = "in this commit" if scope is not None else ("staged" if staged else "changed")
+    print("verify --coverage — what this manifest is NOT checking.\n")
+    print(f"  rules in .game_loop/verify.yaml : {len(mapping)}")
+    print(f'  deliberate exclusions ("{EXCLUDE_KEY}") : {len(exclusions)}')
+    print(f"  {scope_label} paths : {len(files)}  (checked {len(checked)} · excluded "
+          f"{len(excluded)} · "
+          f"UNCHECKED {len(unchecked)})")
+    if not mapping:
+        if MAP_UNREADABLE:
+            print("\n  THE RULEBOOK COULD NOT BE READ (%s). `verify` and the commit gate are "
+                  "no-ops\n  here, and this is NOT the shipped no-rules default — the file was "
+                  "never opened, so\n  nothing below describes what this project asks for."
+                  % MAP_UNREADABLE)
+        else:
+            print("\n  NO RULES AT ALL — `verify` and the commit gate are no-ops here. That is the "
+                  "shipped\n  default (game_loop does not know your project), and it is not the "
+                  "same thing as safe.")
+    # EXEMPTIONS TOO, and this was the blind spot in my own version of this check: I shipped it
+    # over RULES and left EXCLUSIONS unexamined, one field away. An exemption matching nothing is
+    # WORSE than a vacuous rule — a rule that matches nothing merely fails to run, but an exemption
+    # that matches nothing is a STANDING AUTHORISATION for a surface that does not exist yet. The
+    # day somebody tracks a file there it arrives ALREADY EXEMPT, and coverage reports clean having
+    # never looked. Found by a consumer pointing this same check at my repo an hour after I wrote it.
+    _dead_x, _why_x = vacuous_rules(REPO, {e: [] for e in exclusions})
+    if _dead_x:
+        print(f"\nEXEMPTIONS THAT MATCH NO TRACKED FILE ({len(_dead_x)}) — each is a decision "
+              "already spent on")
+        print("a surface that does not exist:")
+        for _p in _dead_x:
+            print(f"    {_p}")
+        print("  When a file finally lands under one of these, it arrives EXEMPT and this report")
+        print("  says clean without ever looking. Delete the entry and let the gate ask you then —")
+        print("  which is what it is for.")
+    _stale_x = exemptions_the_suite_reads(REPO, exclusions)
+    _basis = _stale_x.pop("", {}) if _stale_x else {}
+    if _stale_x:
+        # COUNTED AFTER THE BASIS IS REMOVED. The first version printed 5 for 4 entries because the
+        # basis rides in the same dict — a report about miscounting, miscounting.
+        print(f"\nEXEMPTIONS THE SUITE NOW READS ({len(_stale_x)}) — each says no command can fail "
+              "on these files,")
+        print("and a command in this repo opens them:")
+        if _basis:
+            print(f"  (looked at {_basis['constructed']} path(s) the suite constructs by name, "
+                  f"{_basis['in_tree']} of them tracked, out of {_basis['tracked']} tracked files)")
+        for _p, _hits in sorted(_stale_x.items()):
+            print(f"    {_p}")
+            for _h in _hits[:4]:
+                print(f"        the suite reads {_h}")
+            if len(_hits) > 4:
+                print(f"        ... {len(_hits) - 4} more")
+        print("  An exemption records a judgement about a MOMENT and nothing watches for the moment")
+        print("  to pass. These were true when written; the suite grew assertions about what is IN")
+        print("  those files and nobody edited the entry. That is this file's own 'launders a gap")
+        print("  into a decision', arrived at by standing still.")
+        print("  NOT A GATE, and not an accusation that the entries are wrong: promoting one to a")
+        print("  real rule is a decision about what a change OWES, which is a human's. What is not")
+        print("  defensible is the entry claiming a command cannot fail while one reads the file.")
+    _dead, _why = vacuous_rules(REPO, mapping)
+    if _dead:
+        print(f"\nRULES THAT MATCH NO TRACKED FILE ({len(_dead)}) — they run nothing and fail "
+              "nothing:")
+        for _p in _dead:
+            print(f"    {_p}")
+        print("  A rule matching zero files reports CLEAN while covering nothing, because the count")
+        print("  it rests on — files matched — goes to zero on absence, and zero is the passing")
+        print("  score. Renaming a directory is enough to do this silently.")
+        print("  Not refused: a rule written ahead of the file it will guard is legitimate. Not")
+        print("  knowing is not.")
+    elif _why:
+        print(f"\n  (could not check for rules matching nothing: {_why})")
+    if unchecked:
+        print(f"\nUNCHECKED — changed, matched by no rule, so `verify --check` will never mention "
+              f"them:")
+        for f in unchecked[:UNCHECKED_SHOWN]:
+            print(f"    {f}")
+        if len(unchecked) > UNCHECKED_SHOWN:
+            print(f"    ... {len(unchecked) - UNCHECKED_SHOWN} more")
+        print("\n  → add a rule that fails when it breaks, or say out loud that it needs none:")
+        print(f'      "{EXCLUDE_KEY}":')
+        print('        - "<glob>"')
+    else:
+        print("\n  Every path above is claimed by a rule or excluded on purpose.")
+
+    # #72: A GATE CAN BE A PLAUSIBLE LOCAL APPROXIMATION OF CI AND REPORT THE SAME GREEN. A
+    # consumer ran `flutter analyze lib` for a year against a CI running `dart analyze
+    # --fatal-infos` over the whole tree — different scope, different severity, neither visible by
+    # reading the rule. The CI definition is usually right there in the repo, so this compares them.
+    _gap, _why = ci_gap(REPO, mapping)
+    if _why:
+        print(f"\nCI CROSS-CHECK: {_why}.")
+    elif _gap:
+        print(f"\nCI RUNS {len(_gap)} COMMAND(S) NO GATE RUNS — a gate that approximates CI reports")
+        print("green where CI would not, which is the check-that-cannot-fail one level up:")
+        for _f, _c in _gap[:8]:
+            print(f"    {_f}: {_c[:88]}")
+        if len(_gap) > 8:
+            print(f"    ...and {len(_gap) - 8} more")
+        print("  Paste CI's command into the rule, or write the difference above it — what it")
+        print("  covers, and what it treats as fatal.")
+    else:
+        print("\nCI CROSS-CHECK: every command your workflows run appears in some gate.")
+    print("  IT COMPARES COMMAND TEXT, NOT BEHAVIOUR: two spellings of one check read as a")
+    print("  difference, and two different checks that share a prefix read as a match. It reports")
+    print("  a difference for you to judge, never a verdict.")
+
+    print("\nThis is a REPORT, never a block: a manifest that ships empty must not refuse a "
+          "project's\nfirst commit. WHAT IT CANNOT TELL YOU: whether a listed command is a real "
+          "check or a\ntautology, whether an exclusion was honest, or anything at all about paths "
+          "that have not\nchanged — an untouched module nobody ever checked is invisible here.")
+    return 0
+
+
+def main():
+    # BEFORE the empty-manifest early-out: "there are no rules" is precisely the state that must
+    # still be able to report, and an empty manifest that returned in silence is the bug.
+    if "--coverage" in sys.argv:
+        return report_coverage(staged="--staged" in sys.argv, porcelain="--porcelain" in sys.argv,
+                               scope=scope_arg(sys.argv))
+
+    mapping, exclusions = load_manifest()
+    if (_dup := duplicate_key_tail()):
+        print(_dup)
+    # REFUSES, and refuses HERE rather than in the coverage report: coverage is a REPORT and must
+    # never block a fresh install's first commit, but this path is the gate. A manifest this reader
+    # cannot faithfully execute means nothing was checked, and saying so loudly is the only honest
+    # exit — the alternative is a green verify over commands that never ran.
+    if (_esc := escaped_tail()):
+        print(_esc)
+        return 1
+    # SCOPE. Absent --scope-from this is the tree, byte-for-byte what it always was. Present, it is
+    # the set the caller says a commit carries, and `skipped` is what that narrowing did not look
+    # at -- computed here, printed on the passing paths, because a scoped pass is a smaller claim
+    # than an unscoped one and must not be spelled the same way.
+    _scope = scope_arg(sys.argv)
+    scoped = _scope is not None
+    files = read_scope(_scope) if scoped else changed_files()
+    skipped = outside_scope(files) if scoped else []
+    if not mapping:
+        if MAP_UNREADABLE:
+            print("verify: .game_loop/verify.yaml COULD NOT BE READ (%s) — so this run compared "
+                  "nothing\n  against nothing. That is not the same as a project that declares no "
+                  "rules." % MAP_UNREADABLE)
+        else:
+            print("verify: no rules in .game_loop/verify.yaml — nothing owes a check.")
+        _, _, unchecked = coverage(files, mapping, exclusions)
+        if unchecked:
+            print(f"verify: which means NOTHING IS CHECKED — {len(unchecked)} changed path(s) owe "
+                  "nothing.\n  → ./.game_loop/bin/verify --coverage")
+        return 0
+    hits = owed(files, mapping)
+    check_only = "--check" in sys.argv
+
+    if not hits:
+        print("verify: nothing in this commit owes a check." if scoped
+              else "verify: nothing changed that owes a check.")
+        if (tail := unchecked_tail(mapping, exclusions, files)):
+            print(tail)
+        if (tail := outside_scope_tail(skipped)):
+            print(tail)
+        return 0
+
+    rec = load_rec()
+    stale = []
+    for pattern, changed in hits.items():
+        last = rec.get(pattern, {}).get("at", 0)
+        newest = max((os.path.getmtime(os.path.join(REPO, f))
+                      for f in changed if os.path.exists(os.path.join(REPO, f))), default=0)
+        # THE RULE'S MTIME IS NOT THE RULE'S CONTENT (reported by lamp-owner, verified in this
+        # source before it was sent, 2026-08-23). `at` is stamped per PATTERN, so ADDING A COMMAND
+        # under an existing pattern left `newest <= last` and this said "nothing changed that owes
+        # a check". The new gate did not run on the commit that introduced it — silently, and in
+        # the reassuring direction: you add a guard, verify goes green, you commit believing it
+        # ran. Its first real execution is some arbitrary later commit that happens to touch a
+        # gated file, which is where you find out the guard was wrong.
+        #
+        # The commands were ALREADY being recorded beside the timestamp (`rec[pattern]["cmds"]`,
+        # written on every green run) and never read. So the record already described the bytes
+        # it checked; only the decision was still reading the clock.
+        #
+        # This is line 166's observation one level up: that comment says a DIRECTORY's mtime does
+        # not change when a file inside it is edited. A RULE's mtime is not its content either.
+        was = rec.get(pattern, {}).get("cmds")
+        if was is not None and was != mapping[pattern]:
+            stale.append((pattern, changed, newest, last, "the rule itself changed since it last "
+                                                          "ran — a NEW or EDITED command owes a "
+                                                          "run even where no file moved"))
+        elif newest > last:
+            stale.append((pattern, changed, newest, last, ""))
+
+    if check_only:
+        if not stale:
+            print("verify: every file this commit carries has evidence newer than the "
+                  "change. ✓" if scoped else
+                  "verify: every changed file's evidence is newer than the change. ✓")
+            if (tail := unchecked_tail(mapping, exclusions, files)):
+                print(tail)
+            if (tail := outside_scope_tail(skipped)):
+                print(tail)
+            return 0
+        print("VERIFY REFUSED — you changed things whose checks have not run SINCE the change:\n")
+        for pattern, changed, newest, last, why in stale:
+            print(f"  {pattern}" + (f"   ({why})" if why else ""))
+            for f in changed[:4]:
+                print(f"      {f}")
+            print(f"      last verified: {'never' if not last else time.ctime(last)}")
+            for c in mapping[pattern]:
+                print(f"      owes: {c}")
+        print("\nRun:  ./.game_loop/bin/verify")
+        print("\nA green check from BEFORE your change is evidence about code that no longer exists.")
+        return 1
+
+    # ALREADY-FRESH IS NOT JUST-RAN, and this path used to spell them the same way. When `hits` is
+    # non-empty but nothing is STALE, the loop below executes zero times and the old code fell
+    # straight through to "all owed checks passed ✓" — a sentence an agent reads as "the checks ran
+    # and were green", after running nothing at all. `--check` has always distinguished this state
+    # ("every changed file's evidence is newer than the change"); the RUN path did not, so the two
+    # halves of one tool disagreed about whether the distinction mattered.
+    #
+    # Found by asking what this verdict assumes rather than by being bitten: the sentence is read
+    # dozens of times in a working session, and "I ran them" and "somebody ran them earlier" are
+    # different claims about how much the tree has been checked SINCE it last changed.
+    if not stale:
+        print("verify: every file this commit carries already has evidence newer than the "
+              "change — nothing needed re-running. ✓" if scoped else
+              "verify: every changed file's evidence is already newer than the change — "
+              "nothing needed re-running. ✓")
+        if (tail := unchecked_tail(mapping, exclusions, files)):
+            print(tail)
+        if (tail := outside_scope_tail(skipped)):
+            print(tail)
+        return 0
+
+    # ONE RUN PER DISTINCT COMMAND. Every gate file in this repo owes `python3 test/run.py`, and
+    # this loop was per RULE — so a change touching four gate files ran that one command four
+    # times: same string, same cwd, against a tree that cannot change between the passes. One suite
+    # is six minutes, so the tool whose whole purpose is making a check cheap was charging
+    # twenty-four minutes for six minutes of evidence.
+    #
+    # Note which way it failed. The old loop broke out on the first failure, so the duplication was
+    # billed ONLY when every command passed — the all-green run was the slow one, and the cost was
+    # invisible to anyone whose checks were still red.
+    #
+    # The per-rule RECORD is what made this look structural, and it is separable. Run each distinct
+    # command once, then stamp every rule whose commands all passed. A rule is still stamped on
+    # evidence and only on evidence; the evidence is simply no longer re-gathered per rule.
+    order, ran = [], {}
+    for pattern, _, _, _, _ in stale:
+        for cmd in mapping[pattern]:
+            if cmd not in order:
+                order.append(cmd)
+
+    failed = False
+    for cmd in order:
+        owed_by = [p for p, _, _, _, _ in stale if cmd in mapping[p]]
+        print(f"\n=== {cmd}")
+        print(f"    owed by: {owed_by[0]}" if len(owed_by) == 1 else
+              f"    owed by {len(owed_by)} rules, RUN ONCE: " + ", ".join(owed_by))
+        r = subprocess.run(cmd, shell=True, cwd=REPO)
+        ran[cmd] = r.returncode
+        if r.returncode != 0:
+            print(f"FAILED: {cmd}")
+            failed = True
+            break                       # fail fast, exactly as before
+
+    # STOPPING EARLY MUST LEAVE THE UNRUN RULES UNSTAMPED. `ran` holds only what actually
+    # executed, so a rule whose command never ran cannot satisfy this and stays stale — the next
+    # run gathers its evidence instead of inheriting a stamp nobody earned. A rule that owes no
+    # commands is stamped, which is what the old for/else did too.
+    for pattern, _, _, _, _ in stale:
+        if all(ran.get(c) == 0 for c in mapping[pattern]):
+            rec.setdefault(pattern, {})["at"] = time.time()
+            rec[pattern]["cmds"] = mapping[pattern]
+
+    with open(REC_F, "w") as f:
+        json.dump(rec, f, indent=2)
+        f.write("\n")
+    print("\nverify: FAILED" if failed else "\nverify: all owed checks passed ✓")
+    if not failed and (tail := unchecked_tail(mapping, exclusions, files)):
+        print(tail)
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
