@@ -35,11 +35,12 @@ class AccentButton extends StatelessWidget {
         label: label,
         onTap: active ? onTap : null,
         excludeSemantics: true,
-        child: AnimatedOpacity(
+        // Disabled is drawn in palette colors, not by fading the orange: a
+        // translucent accent over purple reads as muddy brown (seen on device).
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          opacity: active ? 1 : .4,
           child: Material(
-            color: accent,
+            color: active ? accent : primaryDark,
             borderRadius: Corners.card,
             child: InkWell(
               borderRadius: Corners.card,
@@ -49,7 +50,9 @@ class AccentButton extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: FittedBox(child: CardNext(label)),
+                    child: FittedBox(
+                      child: CardNext(label, color: active ? null : inactive),
+                    ),
                   ),
                 ),
               ),

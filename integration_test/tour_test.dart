@@ -3,10 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:rubric/design_system/design_system.dart';
 import 'package:rubric/main.dart' as app;
 
 /// Walks the whole app on a real device from a fresh install, screenshotting
 /// every major screen. Run with `tool/tour.sh <device-id>`.
+///
+/// Each leg is independent: a leg that cannot find its way records why and
+/// the tour carries on, so one broken screen does not hide the rest. Any leg
+/// failure — or any framework exception — fails the run at the end.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -30,17 +35,29 @@ void main() {
     );
   }
 
-  Future<void> tapText(WidgetTester tester, String text) async {
-    final f = find.text(text);
-    if (f.evaluate().isEmpty) {
-      await tester.scrollUntilVisible(
-        f,
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-    }
-    await tester.tap(f.first);
+  Future<void> tap(WidgetTester tester, Finder finder) async {
+    expect(finder, findsAny, reason: 'nothing to tap: $finder');
+    await tester.ensureVisible(finder.first);
+    await settle(tester, 200);
+    await tester.tap(finder.first);
     await settle(tester);
+  }
+
+  Future<void> back(WidgetTester tester) =>
+      tap(tester, find.byType(BackChevron));
+
+  Future<void> tab(WidgetTester tester, String label) => tap(
+    tester,
+    find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
+  );
+
+  final failures = <String>[];
+  Future<void> leg(String name, Future<void> Function() body) async {
+    try {
+      await body();
+    } on Object catch (e) {
+      failures.add('$name: $e');
+    }
   }
 
   testWidgets('tour', (tester) async {
@@ -49,58 +66,76 @@ void main() {
     await settle(tester, 3500);
     await shot(tester, 'welcome');
 
-    // Page through onboarding to the last page.
-    for (
-      var i = 0;
-      i < 4 && find.text('Explore with sample data').evaluate().isEmpty;
-      i++
-    ) {
-      if (find.text('Next').evaluate().isEmpty) break;
-      await tester.tap(find.text('Next').last);
-      await settle(tester);
-      await shot(tester, 'welcome_page_${i + 2}');
-    }
-    await tapText(tester, 'Explore with sample data');
-    await settle(tester, 2500);
-    await shot(tester, 'home');
-
-    await tester.tap(find.text('Classes').last);
-    await shot(tester, 'classes');
-    await tester.tap(
-      find.byType(Card).evaluate().isNotEmpty
-          ? find.byType(Card).first
-          : find.textContaining('English').first,
-    );
-    await shot(tester, 'course');
-
-    // Open the first assignment in the course.
-    final assignment = find.textContaining('graded');
-    if (assignment.evaluate().isNotEmpty) {
-      await tester.tap(assignment.first);
-      await shot(tester, 'assignment');
-      final start = find.textContaining('grading');
-      if (start.evaluate().isNotEmpty) {
-        await tester.tap(start.last);
-        await shot(tester, 'grading');
-        await tester.pageBack();
-        await settle(tester);
+    await leg('onboarding', () async {
+      for (var i = 0; i < 2; i++) {
+        await tap(tester, find.text('Next'));
       }
-      await tester.pageBack();
-      await settle(tester);
-    }
-    final gradebook = find.byTooltip('Gradebook');
-    if (gradebook.evaluate().isNotEmpty) {
-      await tester.tap(gradebook.first);
-      await shot(tester, 'gradebook');
-      await tester.pageBack();
-      await settle(tester);
-    }
+      await shot(tester, 'welcome_last');
+      await tap(tester, find.text('Explore with sample data'));
+      await settle(tester, 3000);
+      await shot(tester, 'home');
+    });
 
-    await tester.tap(find.text('Rubrics').last);
-    await shot(tester, 'rubrics');
-    await tester.tap(find.text('Settings').last);
-    await shot(tester, 'settings');
-    await tester.tap(find.text('Home').last);
-    await shot(tester, 'home_again');
+    await leg('classes', () async {
+      await tab(tester, 'Classes');
+      await shot(tester, 'classes');
+      await tap(tester, find.text('English 10'));
+      await shot(tester, 'course');
+      await tap(tester, find.text('Students'));
+      await shot(tester, 'course_students');
+      await tap(tester, find.text('Assignments'));
+    });
+
+    await leg('assignment + grading', () async {
+      await tap(tester, find.textContaining('Book Talk'));
+      await shot(tester, 'assignment');
+      final cta = find.byKey(const Key('assignments.gradeCta'));
+      await tap(tester, cta);
+      await shot(tester, 'grading');
+      await settle(tester);
+      await back(tester);
+      await back(tester);
+    });
+
+    await leg('gradebook', () async {
+      // Start from a known place rather than trusting the previous leg's backs.
+      await tab(tester, 'Classes');
+      if (find.byTooltip('Gradebook').evaluate().isEmpty) {
+        await tap(tester, find.text('English 10'));
+      }
+      await tap(tester, find.byTooltip('Gradebook'));
+      await shot(tester, 'gradebook');
+      await back(tester);
+      await back(tester);
+    });
+
+    await leg('rubrics', () async {
+      await tab(tester, 'Rubrics');
+      await shot(tester, 'rubrics');
+      await tap(tester, find.text('Oral Presentation'));
+      await shot(tester, 'rubric_detail');
+      await back(tester);
+      await tap(tester, find.text('Start from a template'));
+      await shot(tester, 'templates');
+      await back(tester);
+    });
+
+    await leg('builder', () async {
+      await tap(tester, find.text('New Rubric'));
+      await shot(tester, 'builder_objectives');
+    });
+
+    await leg('settings', () async {
+      // The builder is full-screen; leave it the way a person would.
+      if (find.byType(BackChevron).evaluate().isNotEmpty) {
+        await back(tester);
+        final discard = find.text('Discard');
+        if (discard.evaluate().isNotEmpty) await tap(tester, discard);
+      }
+      await tab(tester, 'Settings');
+      await shot(tester, 'settings');
+    });
+
+    expect(failures, isEmpty, reason: failures.join('\n'));
   });
 }

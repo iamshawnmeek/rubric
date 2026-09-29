@@ -652,7 +652,7 @@
   "gradebookSearchHint": "Find a student",
   "gradebookExportCsv": "Export gradebook as CSV",
   "gradebookStudentColumn": "Student",
-  "gradebookAverageColumn": "Average",
+  "gradebookAverageColumn": "Avg",
   "gradebookClassMean": "Class mean",
   "gradebookNoDueDate": "No due date",
   "gradebookDue": "Due {date}",

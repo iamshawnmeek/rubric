@@ -139,10 +139,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
               child: FadeTransition(
                 opacity: _logo,
                 child: const Center(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: RubricLogo(),
-                  ),
+                  child: FittedBox(fit: BoxFit.scaleDown, child: RubricLogo()),
                 ),
               ),
             ),
