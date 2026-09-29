@@ -33,5 +33,211 @@
   "rubricStateTitleTwo": "Group 2",
   "assignGroupsHeadline": "Assign Groups",
   "assignGroupsDragMessage": "Drag objective here",
-  "assignGroupsDragTarget": "Add New Group"
+  "assignGroupsDragTarget": "Add New Group",
+  "rubricsLibraryTitle": "Rubrics",
+  "rubricsNewRubric": "New Rubric",
+  "rubricsSearchHint": "Search by title or subject",
+  "rubricsClearSearch": "Clear search",
+  "rubricsFilterAll": "All",
+  "rubricsStartFromTemplate": "Start from a template",
+  "rubricsTemplateCount": "{count, plural, =1{1 ready-made rubric} other{{count} ready-made rubrics}}",
+  "@rubricsTemplateCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsEmptyTitle": "Build it once. Grade with it all year.",
+  "rubricsEmptyMessage": "Set your objectives, group and weight them, pick a grading scale — then grade a whole class against it in minutes.",
+  "rubricsBrowseTemplates": "Browse templates",
+  "rubricsNoMatchesTitle": "No rubrics match",
+  "rubricsNoMatchesMessage": "Try a different word or subject.",
+  "rubricsClearFilters": "Clear filters",
+  "rubricsArchivedSection": "Archived ({count})",
+  "@rubricsArchivedSection": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsShowArchived": "Show archived rubrics",
+  "rubricsObjectiveCount": "{count, plural, =0{No objectives} =1{1 objective} other{{count} objectives}}",
+  "@rubricsObjectiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsModeSimple": "Simple",
+  "rubricsModeDetailed": "Detailed",
+  "rubricsDraft": "Draft — not ready to grade yet",
+  "rubricsMoreActions": "More actions for {title}",
+  "@rubricsMoreActions": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsActionEdit": "Edit",
+  "rubricsActionDuplicate": "Duplicate",
+  "rubricsActionSaveAsTemplate": "Save as template",
+  "rubricsActionArchive": "Archive",
+  "rubricsActionUnarchive": "Unarchive",
+  "rubricsActionDelete": "Delete",
+  "rubricsActionPrint": "Print or share PDF",
+  "rubricsCopyTitle": "{title} (copy)",
+  "@rubricsCopyTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsDuplicated": "Made a copy of “{title}”.",
+  "@rubricsDuplicated": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsOpen": "Open",
+  "rubricsSavedAsTemplate": "“{title}” saved to your templates.",
+  "@rubricsSavedAsTemplate": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsView": "View",
+  "rubricsArchived": "“{title}” archived.",
+  "@rubricsArchived": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsUnarchived": "“{title}” is back in your library.",
+  "@rubricsUnarchived": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsUndo": "Undo",
+  "rubricsDeleteTitle": "Delete this rubric?",
+  "rubricsDeleteMessage": "“{title}” will be permanently removed from your library.",
+  "@rubricsDeleteMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsDeleteUsedMessage": "“{title}” is used in {count, plural, =1{1 assignment} other{{count} assignments}}. Each assignment keeps its own copy of the rubric, so no grades will change.",
+  "@rubricsDeleteUsedMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsDeleteConfirm": "Delete",
+  "rubricsDeleted": "“{title}” deleted.",
+  "@rubricsDeleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsUntitled": "Untitled rubric",
+  "rubricsNotFoundTitle": "Rubric not found",
+  "rubricsNotFoundMessage": "It may have been deleted.",
+  "rubricsBackToLibrary": "Back to rubrics",
+  "rubricsUseInAssignment": "Use in Assignment",
+  "rubricsUseInAssignmentHint": "Open a class and add an assignment to grade with this rubric.",
+  "rubricsUseTemplate": "Use This Template",
+  "rubricsTemplateAdded": "“{title}” added to your library.",
+  "@rubricsTemplateAdded": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsStatGroups": "Groups",
+  "rubricsStatObjectives": "Objectives",
+  "rubricsStatMode": "Scoring",
+  "rubricsUsedIn": "{count, plural, =0{Not used in any assignments yet} =1{Used in 1 assignment} other{Used in {count} assignments}}",
+  "@rubricsUsedIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsDraftTitle": "Finish this rubric before grading with it",
+  "rubricsIssueNoTitle": "Give it a title.",
+  "rubricsIssueNoGroups": "Add at least one group.",
+  "rubricsIssueEmptyGroup": "Every group needs at least one objective.",
+  "rubricsIssueWeights": "Group weights must add up to 100%.",
+  "rubricsIssueNoLevels": "Add performance levels.",
+  "rubricsIssueDuplicateLevelPoints": "Two levels are worth the same points.",
+  "rubricsWeightsSection": "Groups & weights",
+  "rubricsWeightsSemantics": "Weights: {summary}",
+  "@rubricsWeightsSemantics": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsWeightPercent": "{weight}%",
+  "@rubricsWeightPercent": {
+    "placeholders": {
+      "weight": {
+        "type": "int"
+      }
+    }
+  },
+  "rubricsLevelsSection": "Performance levels",
+  "rubricsLevelPoints": "{points} pts",
+  "@rubricsLevelPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsDescriptorsSection": "What each level looks like",
+  "rubricsDescriptorObjective": "Objective",
+  "rubricsDescriptorMissing": "Not described",
+  "rubricsScaleSection": "Grading scale",
+  "rubricsScaleRange": "{min}% to {max}%",
+  "@rubricsScaleRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "rubricsTemplatesTitle": "Templates",
+  "rubricsTemplatesSubtitle": "Proven rubrics, ready to make your own.",
+  "rubricsTemplatesSearchHint": "Search templates",
+  "rubricsYourTemplates": "Your templates",
+  "rubricsTemplatesNoMatches": "No templates match"
 }
