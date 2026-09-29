@@ -33,5 +33,298 @@
   "rubricStateTitleTwo": "Group 2",
   "assignGroupsHeadline": "Assign Groups",
   "assignGroupsDragMessage": "Drag objective here",
-  "assignGroupsDragTarget": "Add New Group"
+  "assignGroupsDragTarget": "Add New Group",
+  "gradebookTitle": "Gradebook",
+  "gradebookTabGrid": "Grid",
+  "gradebookTabAnalytics": "Analytics",
+  "gradebookSortName": "Name",
+  "gradebookSortAverage": "Average",
+  "gradebookSortSemantics": "Sort by {field}, {direction}",
+  "@gradebookSortSemantics": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "direction": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookSortAscending": "ascending",
+  "gradebookSortDescending": "descending",
+  "gradebookShowPercent": "Percent",
+  "gradebookShowLetters": "Letters",
+  "gradebookSearchHint": "Find a student",
+  "gradebookExportCsv": "Export gradebook as CSV",
+  "gradebookStudentColumn": "Student",
+  "gradebookAverageColumn": "Average",
+  "gradebookClassMean": "Class mean",
+  "gradebookNoDueDate": "No due date",
+  "gradebookDue": "Due {date}",
+  "@gradebookDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookCourseMissing": "This class no longer exists.",
+  "gradebookNoStudentsTitle": "No students yet",
+  "gradebookNoStudentsMessage": "Add students to this class to start its gradebook.",
+  "gradebookNoAssignmentsTitle": "No assignments yet",
+  "gradebookNoAssignmentsMessage": "Create an assignment and its grades will appear here.",
+  "gradebookNoMatches": "No students match “{query}”.",
+  "@gradebookNoMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookStatusGraded": "Graded",
+  "gradebookStatusInProgress": "Grading in progress",
+  "gradebookStatusMissing": "Missing",
+  "gradebookStatusExcused": "Excused",
+  "gradebookStatusNotGraded": "Not graded",
+  "gradebookExcusedShort": "EX",
+  "gradebookCellSemantics": "{student}, {assignment}: {grade}. {status}. Opens grading.",
+  "@gradebookCellSemantics": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "assignment": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookGradeWithLetter": "{percent}, {letter}",
+  "@gradebookGradeWithLetter": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookStudentSemantics": "{student}, average {grade}. Opens profile.",
+  "@gradebookStudentSemantics": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookAssignmentSemantics": "{assignment}, class mean {grade}. Opens assignment.",
+  "@gradebookAssignmentSemantics": {
+    "placeholders": {
+      "assignment": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookLegend": "Legend",
+  "gradebookAnalyticsEmptyTitle": "Nothing graded yet",
+  "gradebookAnalyticsEmptyMessage": "Class analytics appear once some work is graded.",
+  "gradebookClassAverage": "Class average",
+  "gradebookGradesEntered": "Grades entered",
+  "gradebookMissingTotal": "Missing work",
+  "gradebookDistributionTitle": "Score distribution",
+  "gradebookDistributionAll": "Course averages",
+  "gradebookLettersTitle": "Letter grades",
+  "gradebookLetterCount": "{count, plural, =0{none} =1{1 student} other{{count} students}}",
+  "@gradebookLetterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookTrendTitle": "Class average over time",
+  "gradebookMasteryTitle": "Objective mastery",
+  "gradebookMasteryOverall": "Overall",
+  "gradebookMasteryEmpty": "No objectives graded yet.",
+  "gradebookMasteryCellSemantics": "{objective}, {assignment}: {grade}",
+  "@gradebookMasteryCellSemantics": {
+    "placeholders": {
+      "objective": {
+        "type": "String"
+      },
+      "assignment": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookAttentionTitle": "Needs attention",
+  "gradebookAttentionNone": "Everyone is on track: nobody has 2 or more missing assignments or a falling average.",
+  "gradebookAttentionMissing": "{count, plural, =1{1 missing} other{{count} missing}}",
+  "@gradebookAttentionMissing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookAttentionDrop": "Average down {points} pts",
+  "@gradebookAttentionDrop": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookHistogramBucket": "{low} to {high}%: {count}",
+  "@gradebookHistogramBucket": {
+    "placeholders": {
+      "low": {
+        "type": "int"
+      },
+      "high": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookChartSemantics": "{title}. {values}",
+  "@gradebookChartSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "values": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookChartPoint": "{label} {grade}",
+  "@gradebookChartPoint": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "gradebookTierAtLeast": "{min}+",
+  "@gradebookTierAtLeast": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookTierRange": "{min} to {max}",
+  "@gradebookTierRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "gradebookTierBelow": "Below {max}",
+  "@gradebookTierBelow": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "studentNotFound": "This student is no longer in the class.",
+  "studentNumber": "Student #{number}",
+  "@studentNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "studentAverage": "Average",
+  "studentLetter": "Letter",
+  "studentMissing": "Missing",
+  "studentGraded": "Graded",
+  "studentGradedOf": "{graded} of {total}",
+  "@studentGradedOf": {
+    "placeholders": {
+      "graded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "studentNotes": "Notes",
+  "studentNotesEmpty": "Add a note",
+  "studentTrendTitle": "Grades over time",
+  "studentTrendYou": "This student",
+  "studentTrendClass": "Class mean",
+  "studentStrengthsTitle": "Strengths",
+  "studentWeaknessesTitle": "Room to grow",
+  "studentObjectiveCompare": "{student} · class {classMean}",
+  "@studentObjectiveCompare": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "classMean": {
+        "type": "String"
+      }
+    }
+  },
+  "studentAbove": "{points} above class",
+  "@studentAbove": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "studentBelow": "{points} below class",
+  "@studentBelow": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "studentLevel": "Level with class",
+  "studentObjectivesEmpty": "Strengths and weaknesses appear once this student has graded work.",
+  "studentHistoryTitle": "Grade history",
+  "studentHistoryEmpty": "No assignments in this class yet.",
+  "studentEdit": "Edit student",
+  "studentFirstName": "First name",
+  "studentLastName": "Last name",
+  "studentNumberHint": "Student number",
+  "studentEmailHint": "Email",
+  "studentNotesHint": "Notes about this student",
+  "studentSave": "Save",
+  "studentSaved": "Student saved",
+  "studentUndo": "Undo",
+  "studentFirstNameRequired": "A first name is required.",
+  "studentExportReport": "Export a report",
+  "studentExportNothing": "Nothing graded to export yet."
 }
