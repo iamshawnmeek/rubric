@@ -47,3 +47,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+# llm_chat identity for this project
+.llm_chat/

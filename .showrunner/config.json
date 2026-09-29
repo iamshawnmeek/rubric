@@ -1,0 +1,75 @@
+{
+  "checks": [
+    {
+      "cmd": "echo 'configure me: your test command'",
+      "name": "tests"
+    }
+  ],
+  "collision": {
+    "always_serialize": [
+      "test/**",
+      "tests/**"
+    ],
+    "extra_globs": []
+  },
+  "default_lane": "serialized",
+  "graph": {
+    "backend": "auto",
+    "br_db": null,
+    "db": ".showrunner/graph.db"
+  },
+  "harness": {
+    "_note": "The per-agent harness is auto-detected. showrunner ASKS it which files are rules and whether a worktree matches its parent \u2014 it keeps no list of its own. Track the harness dir in git (simplest: it then crosses into every worktree by itself), or set \"installer\" to the path of its install script so each worktree is provisioned with the PARENT's rules. Never let a worktree get freshly-seeded rules: an installer seeds user-owned files only when absent, so a blank verify.yaml means a commit gate that owes nothing and reports success.",
+    "installer": null,
+    "provision": "auto",
+    "require": true
+  },
+  "inject": [
+    {
+      "mode": "symlink",
+      "optional": true,
+      "path": ".env"
+    }
+  ],
+  "lanes": [
+    {
+      "lane": "serialized",
+      "match": {
+        "labels": [
+          "device",
+          "deploy"
+        ],
+        "title": "deploy|device|on-device"
+      },
+      "name": "device-work",
+      "resource": "device"
+    },
+    {
+      "lane": "headless",
+      "match": {
+        "labels": [
+          "backend",
+          "test",
+          "docs",
+          "analysis"
+        ]
+      },
+      "name": "pure-logic"
+    }
+  ],
+  "lock_root": null,
+  "project_name": "rubric",
+  "resources": [
+    {
+      "match": [
+        "\\bdeploy\\b",
+        "\\bflutter(-tizen)? run\\b"
+      ],
+      "name": "device",
+      "note": "the physical device / deploy target \u2014 one consumer at a time"
+    }
+  ],
+  "scratch_root": ".showrunner/scratch",
+  "shared_state": [],
+  "worktree_root": ".worktrees"
+}

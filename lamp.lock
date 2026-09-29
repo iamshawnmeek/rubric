@@ -1,0 +1,26 @@
+{
+  "lockfileVersion": 1,
+  "geanies": {
+    "game_loop": {
+      "wish": 179,
+      "sha": "c30a7a54b8b746eeaf390b11a565bb0193407f6d",
+      "boundAt": "2026-09-29T16:46:35.417468",
+      "installedSha": "c30a7a54b8b746eeaf390b11a565bb0193407f6d",
+      "origin": "git@github.com:SupposedlySam/game_loop.git"
+    },
+    "llm_chat": {
+      "wish": 48,
+      "sha": "e1e411f6ea753ff79064334daca61d9748fe770c",
+      "boundAt": "2026-09-29T16:46:25.557410",
+      "installedSha": "e1e411f6ea753ff79064334daca61d9748fe770c",
+      "origin": "git@github.com:SupposedlySam/llm_chat.git"
+    },
+    "showrunner": {
+      "wish": 161,
+      "sha": "1daffe74a79981a5aa53df0e7f246daa93bda588",
+      "boundAt": "2026-09-29T16:46:30.566456",
+      "installedSha": "1daffe74a79981a5aa53df0e7f246daa93bda588",
+      "origin": "https://github.com/SupposedlySam/showrunner.git"
+    }
+  }
+}
