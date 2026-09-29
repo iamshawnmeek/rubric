@@ -34,11 +34,19 @@ Future<void> _boot(
   await tester.pumpAndSettle();
 }
 
+/// Unmounts the app and lets drift's stream-teardown timers (Timer.run on
+/// cancel) fire inside the test, which otherwise fails on a pending timer.
+Future<void> _unmount(WidgetTester tester) async {
+  await tester.pumpWidget(const SizedBox());
+  await tester.pump(const Duration(seconds: 1));
+}
+
 void main() {
   testWidgets('a first launch lands on the welcome flow', (tester) async {
     await _boot(tester, {});
     expect(find.byType(WelcomePage), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
+    await _unmount(tester);
   });
 
   testWidgets('an onboarded launch lands on Home with navigation', (
@@ -47,6 +55,7 @@ void main() {
     await _boot(tester, {'settings.v1': '{"onboardingComplete":true}'});
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(NavigationBar), findsOneWidget);
+    await _unmount(tester);
   });
 
   testWidgets('tablets get a navigation rail instead', (tester) async {
@@ -55,5 +64,6 @@ void main() {
     }, size: const Size(1024, 768));
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
+    await _unmount(tester);
   });
 }
