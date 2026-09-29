@@ -389,5 +389,244 @@
   "rubricsTemplatesSubtitle": "Proven rubrics, ready to make your own.",
   "rubricsTemplatesSearchHint": "Search templates",
   "rubricsYourTemplates": "Your templates",
-  "rubricsTemplatesNoMatches": "No templates match"
+  "rubricsTemplatesNoMatches": "No templates match",
+  "assignmentsNewTitle": "New assignment",
+  "assignmentsTitleLabel": "Title",
+  "assignmentsTitleHint": "Assignment title",
+  "assignmentsDescriptionLabel": "Description",
+  "assignmentsDescriptionHint": "Optional instructions or notes",
+  "assignmentsDueLabel": "Due date",
+  "assignmentsNoDueDate": "No due date",
+  "assignmentsClearDueDate": "Clear due date",
+  "assignmentsPointsLabel": "Points",
+  "assignmentsPointsHelp": "Points possible is what 100% is worth when you export grades.",
+  "assignmentsRubricLabel": "Rubric",
+  "assignmentsChooseRubric": "Choose a rubric",
+  "assignmentsChangeRubric": "Change",
+  "assignmentsSnapshotNote": "A copy of this rubric is saved with the assignment, so later edits in your library won't change it.",
+  "assignmentsCreate": "Create assignment",
+  "assignmentsCourseMissing": "This class no longer exists.",
+  "assignmentsPickerTitle": "Choose a rubric",
+  "assignmentsPickerLibrary": "Library",
+  "assignmentsPickerTemplates": "Templates",
+  "assignmentsPickerSearch": "Search rubrics",
+  "assignmentsPickerEmpty": "Your library is empty. Create a rubric or start from a template.",
+  "assignmentsPickerNoTemplates": "No templates available.",
+  "assignmentsPickerNoMatches": "No rubrics match “{query}”.",
+  "@assignmentsPickerNoMatches": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsPickerCreate": "Create a new rubric",
+  "assignmentsUntitledRubric": "Untitled rubric",
+  "assignmentsRubricSummary": "{objectives, plural, =1{1 objective} other{{objectives} objectives}} · {groups, plural, =1{1 group} other{{groups} groups}}",
+  "@assignmentsRubricSummary": {
+    "placeholders": {
+      "objectives": {
+        "type": "int"
+      },
+      "groups": {
+        "type": "int"
+      }
+    }
+  },
+  "assignmentsRubricNotReady": "Not ready: {problems}",
+  "@assignmentsRubricNotReady": {
+    "placeholders": {
+      "problems": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsFix": "Fix",
+  "assignmentsFixRubric": "Fix {rubric}",
+  "@assignmentsFixRubric": {
+    "placeholders": {
+      "rubric": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsIssueNoTitle": "needs a title",
+  "assignmentsIssueNoGroups": "needs a group",
+  "assignmentsIssueEmptyGroup": "a group has no objectives",
+  "assignmentsIssueWeights": "weights don't add up to 100%",
+  "assignmentsIssueNoLevels": "needs performance levels",
+  "assignmentsIssueDuplicateLevels": "two levels are worth the same points",
+  "assignmentsNotFoundTitle": "Assignment",
+  "assignmentsNotFound": "This assignment was deleted.",
+  "assignmentsDueOn": "Due {date}",
+  "@assignmentsDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsPoints": "{points} pts",
+  "@assignmentsPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMenu": "Assignment options",
+  "assignmentsStartGrading": "Start grading",
+  "assignmentsContinueGrading": "Continue grading",
+  "assignmentsClosedBanner": "This assignment is closed.",
+  "assignmentsProgressHint": "Progress",
+  "assignmentsGradedProgress": "{graded} of {total} graded",
+  "@assignmentsGradedProgress": {
+    "placeholders": {
+      "graded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assignmentsStatsTitle": "Class results",
+  "assignmentsStatsEmpty": "Class results appear once someone has a grade.",
+  "assignmentsStatMean": "Mean",
+  "assignmentsStatMedian": "Median",
+  "assignmentsStatHigh": "High",
+  "assignmentsStatLow": "Low",
+  "assignmentsLetterDistribution": "Letter grades",
+  "assignmentsWeakestObjective": "Weakest objective",
+  "assignmentsStudentsSection": "Students",
+  "assignmentsSearchStudents": "Search students",
+  "assignmentsFilterAll": "All",
+  "assignmentsFilterUngraded": "To grade",
+  "assignmentsSortLabel": "Sort",
+  "assignmentsSortName": "Name",
+  "assignmentsSortStatus": "Status",
+  "assignmentsSortGrade": "Grade",
+  "assignmentsStatusNotStarted": "Not started",
+  "assignmentsStatusInProgress": "In progress",
+  "assignmentsStatusComplete": "Complete",
+  "assignmentsStatusMissing": "Missing",
+  "assignmentsStatusExcused": "Excused",
+  "assignmentsGradeValue": "{percent} · {letter}",
+  "@assignmentsGradeValue": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsNoStudents": "No students in this class yet",
+  "assignmentsNoStudentsMessage": "Add students to the class and they'll appear here, ready to grade.",
+  "assignmentsAddStudents": "Add students",
+  "assignmentsNoMatchingStudents": "No students match",
+  "assignmentsStudentActions": "Actions for {name}",
+  "@assignmentsStudentActions": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkMissing": "Mark missing",
+  "assignmentsExcuse": "Excuse",
+  "assignmentsClearMissing": "Clear missing",
+  "assignmentsClearExcused": "Clear excused",
+  "assignmentsReset": "Reset grading",
+  "assignmentsResetTitle": "Reset {name}?",
+  "@assignmentsResetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsResetMessage": "This clears every score and comment for this student on this assignment.",
+  "assignmentsResetConfirm": "Reset",
+  "assignmentsResetDone": "{name} reset",
+  "@assignmentsResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkedMissing": "{name} marked missing",
+  "@assignmentsMarkedMissing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkedExcused": "{name} excused",
+  "@assignmentsMarkedExcused": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsMarkCleared": "Mark cleared for {name}",
+  "@assignmentsMarkCleared": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsUndo": "Undo",
+  "assignmentsEditDetails": "Edit details",
+  "assignmentsSave": "Save",
+  "assignmentsUpdateRubric": "Update rubric from library",
+  "assignmentsUpdateRubricTitle": "Update rubric?",
+  "assignmentsUpdateRubricMessage": "This replaces the rubric on this assignment with the current “{rubric}” from your library. Scores on objectives that still exist are kept; scores on removed objectives are discarded.",
+  "@assignmentsUpdateRubricMessage": {
+    "placeholders": {
+      "rubric": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsUpdateRubricConfirm": "Update",
+  "assignmentsUpdateRubricDone": "Rubric updated",
+  "assignmentsUpdateRubricGone": "The rubric this assignment came from is no longer in your library.",
+  "assignmentsUpdateRubricNotReady": "“{rubric}” isn't ready to grade with yet.",
+  "@assignmentsUpdateRubricNotReady": {
+    "placeholders": {
+      "rubric": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsClose": "Close assignment",
+  "assignmentsReopen": "Reopen",
+  "assignmentsClosedDone": "Assignment closed",
+  "assignmentsReopenedDone": "Assignment reopened",
+  "assignmentsExportCsv": "Export scores (CSV)",
+  "assignmentsExportPdf": "Export all reports (PDF)",
+  "assignmentsDelete": "Delete assignment",
+  "assignmentsDeleteTitle": "Delete “{title}”?",
+  "@assignmentsDeleteTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "assignmentsDeleteMessage": "{count, plural, =0{This assignment will be deleted.} =1{This assignment and 1 student's grade will be deleted.} other{This assignment and {count} students' grades will be deleted.}} This can't be undone.",
+  "@assignmentsDeleteMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assignmentsDeleteConfirm": "Delete"
 }
