@@ -117,6 +117,7 @@ class BackChevron extends StatelessWidget {
     return Semantics(
       button: true,
       label: MaterialLocalizations.of(context).backButtonTooltip,
+      onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,

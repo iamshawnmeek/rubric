@@ -114,35 +114,29 @@ class _CourseCard extends ConsumerWidget {
     void open() => context.push(Routes.course(course.id));
     void actions() => showCourseActions(context, ref, course);
 
-    // RubricCard hides its InkWell from semantics; restore the actions here
-    // (this Semantics merges into the card's node).
-    return Semantics(
+    return RubricCard(
       key: ValueKey(course.id),
-      onTap: open,
-      onLongPress: actions,
       customSemanticsActions: {
         CustomSemanticsAction(label: l10n.classesActionsFor(course.name)):
             actions,
       },
-      child: RubricCard(
-        cardHintText: hint,
-        cardTitleText: course.name,
-        titleMaxLines: 2,
-        color: course.archived ? primaryDark : primaryCard,
-        onTap: open,
-        onLongPress: actions,
-        trailing: IconButton(
-          tooltip: l10n.classesActionsFor(course.name),
-          constraints: const BoxConstraints.tightFor(
-            width: Sizes.minTap,
-            height: Sizes.minTap,
-          ),
-          onPressed: actions,
-          icon: const FaIcon(
-            FontAwesomeIcons.ellipsisVertical,
-            color: primaryLighter,
-            size: 20,
-          ),
+      cardHintText: hint,
+      cardTitleText: course.name,
+      titleMaxLines: 2,
+      color: course.archived ? primaryDark : primaryCard,
+      onTap: open,
+      onLongPress: actions,
+      trailing: IconButton(
+        tooltip: l10n.classesActionsFor(course.name),
+        constraints: const BoxConstraints.tightFor(
+          width: Sizes.minTap,
+          height: Sizes.minTap,
+        ),
+        onPressed: actions,
+        icon: const FaIcon(
+          FontAwesomeIcons.ellipsisVertical,
+          color: primaryLighter,
+          size: 20,
         ),
       ),
     );

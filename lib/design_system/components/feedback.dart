@@ -141,6 +141,7 @@ class RubricChip extends StatelessWidget {
       button: onTap != null,
       selected: selected,
       label: label,
+      onTap: onTap,
       excludeSemantics: true,
       child: Material(
         color: selected ? accent : primaryDark,

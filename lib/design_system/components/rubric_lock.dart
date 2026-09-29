@@ -14,6 +14,7 @@ class RubricLock extends StatelessWidget {
       button: true,
       toggled: isActive,
       label: isActive ? 'Unlock weight' : 'Lock weight',
+      onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(
         // allows padding to be hit as well as icon

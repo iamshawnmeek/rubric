@@ -17,6 +17,7 @@ class CreateCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: label ?? 'Add',
+      onTap: onPressed,
       excludeSemantics: true,
       child: Opacity(
         opacity: .5,

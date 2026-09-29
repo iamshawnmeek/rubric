@@ -25,6 +25,7 @@ class DashedBox extends StatelessWidget {
     return Semantics(
       button: onTap != null,
       label: label,
+      onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(
         onTap: onTap,

@@ -33,6 +33,7 @@ class AccentButton extends StatelessWidget {
         button: true,
         enabled: active,
         label: label,
+        onTap: active ? onTap : null,
         excludeSemantics: true,
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 200),

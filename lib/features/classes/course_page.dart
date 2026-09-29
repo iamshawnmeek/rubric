@@ -200,27 +200,25 @@ class _AssignmentCard extends StatelessWidget {
     void open() =>
         context.push(Routes.assignment(assignment.courseId, assignment.id));
 
-    // RubricCard hides its InkWell and footer from semantics; this merges
-    // into the card's node to restore the tap and announce the progress.
-    return Semantics(
+    return RubricCard(
+      semanticValue: progressText,
+      cardHintText: hint,
+      cardTitleText: assignment.title,
+      titleMaxLines: 2,
       onTap: open,
-      value: progressText,
-      child: RubricCard(
-        cardHintText: hint,
-        cardTitleText: assignment.title,
-        titleMaxLines: 2,
-        onTap: open,
-        footer: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            RubricProgressBar(
-              value: progress.total == 0 ? 0 : progress.graded / progress.total,
-              height: 6,
-            ),
-            const SizedBox(height: 6),
-            Text(progressText, style: RubricTextStyles.caption),
-          ],
-        ),
+      footer: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RubricProgressBar(
+            value: progress.total == 0 ? 0 : progress.graded / progress.total,
+            height: 6,
+          ),
+          const SizedBox(height: 6),
+          // Announced once, as the card's value.
+          ExcludeSemantics(
+            child: Text(progressText, style: RubricTextStyles.caption),
+          ),
+        ],
       ),
     );
   }

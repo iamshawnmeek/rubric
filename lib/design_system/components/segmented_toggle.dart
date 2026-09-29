@@ -27,6 +27,7 @@ class SegmentedToggle<T> extends StatelessWidget {
               button: true,
               selected: entry.key == selected,
               label: entry.value,
+              onTap: () => onChanged(entry.key),
               excludeSemantics: true,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
