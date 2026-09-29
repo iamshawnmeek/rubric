@@ -1432,5 +1432,322 @@
         "type": "int"
       }
     }
-  }
+  },
+  "classesTitle": "Classes",
+  "classesActive": "Active",
+  "classesArchived": "Archived",
+  "classesNewClass": "New Class",
+  "classesEditClass": "Edit Class",
+  "classesCreate": "Create Class",
+  "classesSave": "Save",
+  "classesEmptyTitle": "No classes yet",
+  "classesEmptyMessage": "Add a class, then its students, and you're ready to grade.",
+  "classesArchivedEmptyTitle": "Nothing archived",
+  "classesArchivedEmptyMessage": "Archive a class at the end of a term to tidy it away. Its students and grades are kept.",
+  "classesStudentCount": "{count, plural, =0{No students} =1{1 student} other{{count} students}}",
+  "@classesStudentCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesNameLabel": "Class name",
+  "classesNameHint": "e.g. Biology",
+  "classesNameRequired": "A class needs a name.",
+  "classesSectionLabel": "Section",
+  "classesSectionHint": "e.g. Period 3",
+  "classesTermLabel": "Term",
+  "classesTermHint": "e.g. Fall 2026",
+  "classesActionsFor": "Actions for {name}",
+  "@classesActionsFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesMoreActions": "More actions",
+  "classesEdit": "Edit",
+  "classesArchive": "Archive",
+  "classesRestore": "Restore",
+  "classesDelete": "Delete",
+  "classesUndo": "Undo",
+  "classesArchivedSnack": "{name} archived",
+  "@classesArchivedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesRestoredSnack": "{name} restored",
+  "@classesRestoredSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeletedSnack": "{name} deleted",
+  "@classesDeletedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteTitle": "Delete {name}?",
+  "@classesDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteStudents": "{count, plural, =1{1 student} other{{count} students}}",
+  "@classesDeleteStudents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesDeleteAssignments": "{count, plural, =1{1 assignment} other{{count} assignments}}",
+  "@classesDeleteAssignments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesDeleteMessage": "Deleting this class also permanently deletes its {students}, its {assignments} and every grade in them. This can't be undone.",
+  "@classesDeleteMessage": {
+    "placeholders": {
+      "students": {
+        "type": "String"
+      },
+      "assignments": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteArchiveInstead": "To keep the grades, archive the class instead.",
+  "classesDeleteTypeToConfirm": "This class has grades. Type {name} to confirm.",
+  "@classesDeleteTypeToConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesDeleteConfirm": "Delete Class",
+  "classesCourseNotFound": "This class no longer exists.",
+  "classesBackToClasses": "Back to Classes",
+  "classesGradebook": "Gradebook",
+  "classesAssignmentsTab": "Assignments",
+  "classesStudentsTab": "Students",
+  "classesNewAssignment": "New Assignment",
+  "classesAssignmentsEmptyTitle": "No assignments yet",
+  "classesAssignmentsEmptyMessage": "Create an assignment from one of your rubrics to start grading.",
+  "classesDue": "Due {date}",
+  "@classesDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "classesNoDueDate": "No due date",
+  "classesClosed": "Closed",
+  "classesGradedProgress": "{graded} of {total} graded",
+  "@classesGradedProgress": {
+    "placeholders": {
+      "graded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "classesAddStudent": "Add Student",
+  "classesEditStudent": "Edit Student",
+  "classesPasteNames": "Paste Names",
+  "classesImportRoster": "Import Roster",
+  "classesSearchStudents": "Search students",
+  "classesNoSearchResults": "No students match “{query}”",
+  "@classesNoSearchResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentsEmptyTitle": "No students yet",
+  "classesStudentsEmptyMessage": "Add students one at a time, paste a list of names, or import a CSV from your school system.",
+  "classesShowArchivedStudents": "{count, plural, =1{Show 1 archived student} other{Show {count} archived students}}",
+  "@classesShowArchivedStudents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesHideArchivedStudents": "Hide archived students",
+  "classesArchivedTag": "Archived",
+  "classesFirstName": "First name",
+  "classesFirstNameHint": "Required",
+  "classesLastName": "Last name",
+  "classesStudentNumber": "Student #",
+  "classesEmail": "Email",
+  "classesOptional": "Optional",
+  "classesStudentNumberTag": "#{number}",
+  "@classesStudentNumberTag": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentDuplicate": "Someone with this name or number is already in this class.",
+  "classesStudentAdded": "{name} added",
+  "@classesStudentAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentSaved": "{name} saved",
+  "@classesStudentSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentArchivedSnack": "{name} archived",
+  "@classesStudentArchivedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentRestoredSnack": "{name} restored",
+  "@classesStudentRestoredSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentRemove": "Remove from Class",
+  "classesStudentRemoveTitle": "Remove {name}?",
+  "@classesStudentRemoveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesStudentRemoveMessage": "Their grades in this class are permanently deleted too. Archive them instead to keep their grades.",
+  "classesStudentRemoveConfirm": "Remove",
+  "classesStudentRemovedSnack": "{name} removed",
+  "@classesStudentRemovedSnack": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "classesPasteHint": "One name per line\nLovelace, Ada\nGrace Hopper",
+  "classesPasteSummary": "{count, plural, =0{Paste or type names above} =1{1 student will be added} other{{count} students will be added}}",
+  "@classesPasteSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesPasteSkipped": "{count, plural, =1{1 name is already in the class and will be skipped} other{{count} names are already in the class and will be skipped}}",
+  "@classesPasteSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesPasteAdd": "{count, plural, =0{Add Students} =1{Add 1 Student} other{Add {count} Students}}",
+  "@classesPasteAdd": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesStudentsAdded": "{count, plural, =1{1 student added} other{{count} students added}}",
+  "@classesStudentsAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportTitle": "Import Roster",
+  "classesImportIntro": "Export a roster from your school system as CSV. We'll find the name, number and email columns for you.",
+  "classesImportChooseFile": "Choose a CSV file",
+  "classesImportOrPaste": "Or paste CSV",
+  "classesImportPasteHint": "First Name,Last Name,Student ID\nAda,Lovelace,1001",
+  "classesImportPreview": "Preview",
+  "classesImportReadError": "Couldn't read that file. Is it a CSV or text file?",
+  "classesImportEmpty": "That CSV has no rows.",
+  "classesImportHasHeader": "First row is column names",
+  "classesImportColumnsSection": "Columns",
+  "classesImportColumn": "Column {number}",
+  "@classesImportColumn": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportColumnSample": "e.g. {sample}",
+  "@classesImportColumnSample": {
+    "placeholders": {
+      "sample": {
+        "type": "String"
+      }
+    }
+  },
+  "classesImportColumnHolds": "Column holds…",
+  "classesImportFieldIgnore": "Don't import",
+  "classesImportFieldFullName": "Full name",
+  "classesImportNeedName": "Choose which column holds the student names.",
+  "classesImportRowsSection": "Students",
+  "classesImportSelectedSummary": "{selected} of {total} selected",
+  "@classesImportSelectedSummary": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportSelectAll": "Select all",
+  "classesImportIssueMissingName": "No name, can't import",
+  "classesImportIssueOnRoster": "Already in this class",
+  "classesImportIssueDuplicate": "Repeats an earlier row",
+  "classesImportButton": "{count, plural, =0{Import} =1{Import 1 Student} other{Import {count} Students}}",
+  "@classesImportButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "classesImportStartOver": "Start over"
 }
