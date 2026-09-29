@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Runs this project's Flutter. Prefers the repo-local SDK clone in .sdk/flutter
+# (an APFS copy-on-write clone of the fvm-pinned version) so that a long-lived
+# `flutter run` from another project sharing the fvm SDK cannot hold our
+# startup lock. Falls back to fvm.
+set -euo pipefail
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+common="$(git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+for sdk in "$root/.sdk/flutter" "${common%/.git}/.sdk/flutter"; do
+  if [[ -x "$sdk/bin/flutter" ]]; then exec "$sdk/bin/flutter" "$@"; fi
+done
+exec fvm flutter "$@"

@@ -1,0 +1,2 @@
+lib/l10n/arb/*.arb merge=arbunion
+*.g.dart linguist-generated=true
