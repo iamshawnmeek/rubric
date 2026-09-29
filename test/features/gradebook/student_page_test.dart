@@ -4,8 +4,10 @@ import 'package:rubric/app/routes.dart';
 import 'package:rubric/data/course_repository.dart';
 import 'package:rubric/design_system/design_system.dart';
 import 'package:rubric/features/classes/student_page.dart';
+import 'package:rubric/features/export/export_platform.dart';
 
 import '../../helpers/app_harness.dart';
+import '../../helpers/export_fakes.dart';
 import 'gradebook_seed.dart';
 
 Future<void> scrollTo(WidgetTester tester, Finder finder) async {
@@ -23,10 +25,14 @@ Finder onCard(String title, String text) => find.descendant(
 );
 
 void main() {
+  late FakeExportPlatform platform;
+  setUp(() => platform = FakeExportPlatform());
+
   Future<TestApp> pump(WidgetTester tester, String studentId) => pumpPage(
     tester,
     StudentPage(courseId: courseId, studentId: studentId),
     seed: seedClass,
+    overrides: [exportPlatformProvider.overrideWithValue(platform)],
   );
 
   testWidgets('profile shows details, overall grade and grade history', (
@@ -124,8 +130,16 @@ void main() {
     expect(sheetCard, findsOneWidget);
     await tester.tap(sheetCard);
     await tester.pumpAndSettle();
-    // The export leaf's stub answers with a snack; reaching it proves wiring.
-    expect(find.text('Export is coming soon.'), findsOneWidget);
+    // The export sheet offers print/share; sharing produces a real PDF for
+    // this student. PDF layout yields on 1ms timers, so advance the clock.
+    await tester.tap(find.text('Share PDF'));
+    for (var i = 0; i < 500 && platform.sharedPdfs.isEmpty; i++) {
+      await tester.pump(const Duration(milliseconds: 5));
+    }
+    await tester.pumpAndSettle();
+    final pdf = platform.sharedPdfs.single;
+    expect(String.fromCharCodes(pdf.bytes.take(4)), '%PDF');
+    expect(pdf.filename, contains('ada-lovelace'));
   });
 
   testWidgets('a student with nothing graded cannot export', (tester) async {

@@ -1,13 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart' hide Evaluation;
 import 'package:rubric/app/routes.dart';
 import 'package:rubric/domain/evaluation.dart';
+import 'package:rubric/features/export/export_platform.dart';
 import 'package:rubric/features/gradebook/gradebook_page.dart';
 
 import '../../helpers/app_harness.dart';
+import '../../helpers/export_fakes.dart';
 import 'gradebook_seed.dart';
 
 void main() {
+  late FakeExportPlatform platform;
+  setUp(() => platform = FakeExportPlatform());
+
   Future<TestApp> pump(
     WidgetTester tester, {
     bool withAssignments = true,
@@ -17,6 +24,7 @@ void main() {
     tester,
     const GradebookPage(courseId: courseId),
     size: size,
+    overrides: [exportPlatformProvider.overrideWithValue(platform)],
     seed: (db) => seedClass(
       db,
       withAssignments: withAssignments,
@@ -140,9 +148,15 @@ void main() {
   testWidgets('export hands the course to the CSV exporter', (tester) async {
     await pump(tester);
     await tester.tap(find.byTooltip('Export gradebook as CSV'));
-    await tester.pump();
-    // The export leaf's stub answers with a snack; reaching it proves wiring.
-    expect(find.text('Export is coming soon.'), findsOneWidget);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    final file = platform.shared.single;
+    expect(file.mimeType, 'text/csv');
+    expect(
+      utf8.decode(file.bytes.skip(3).toList()),
+      contains('Lovelace,Ada'),
+      reason: 'the CSV is built from THIS course',
+    );
   });
 
   testWidgets('a class with no assignments says so', (tester) async {
