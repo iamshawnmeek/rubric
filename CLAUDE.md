@@ -14,7 +14,7 @@ repo-local SDK clone in `.sdk/flutter`, because another project's long-lived
 tool/setup.sh                       # once per clone: arb merge driver + pub get
 tool/check.sh                       # the CI gate: analyze --fatal-infos + all tests
 tool/flutter test test/features/x   # one area
-.sdk/flutter/bin/dart run build_runner build   # after changing lib/data/database.dart
+tool/dart run build_runner build   # after changing lib/data/database.dart
 ```
 
 `tool/check.sh` must be green before every commit. Infos are fatal.

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# The Dart that ships inside this checkout's private Flutter SDK (see tool/flutter).
+set -euo pipefail
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+[[ -x "$root/.sdk/flutter/bin/dart" ]] || "$root/tool/flutter" --version > /dev/null
+exec "$root/.sdk/flutter/bin/dart" "$@"

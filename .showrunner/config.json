@@ -1,14 +1,15 @@
 {
   "checks": [
     {
-      "cmd": "echo 'configure me: your test command'",
-      "name": "tests"
+      "name": "check",
+      "cmd": "tool/check.sh"
     }
   ],
   "collision": {
     "always_serialize": [
-      "test/**",
-      "tests/**"
+      "lib/data/database.dart",
+      "lib/app/router.dart",
+      "pubspec.yaml"
     ],
     "extra_globs": []
   },
@@ -24,13 +25,7 @@
     "provision": "auto",
     "require": true
   },
-  "inject": [
-    {
-      "mode": "symlink",
-      "optional": true,
-      "path": ".env"
-    }
-  ],
+  "inject": [],
   "lanes": [
     {
       "lane": "serialized",
@@ -48,13 +43,15 @@
       "lane": "headless",
       "match": {
         "labels": [
+          "feature",
           "backend",
           "test",
           "docs",
           "analysis"
         ]
       },
-      "name": "pure-logic"
+      "name": "feature-work",
+      "model": "opus"
     }
   ],
   "lock_root": null,

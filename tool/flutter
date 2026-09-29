@@ -1,12 +1,28 @@
 #!/usr/bin/env bash
-# Runs this project's Flutter. Prefers the repo-local SDK clone in .sdk/flutter
-# (an APFS copy-on-write clone of the fvm-pinned version) so that a long-lived
-# `flutter run` from another project sharing the fvm SDK cannot hold our
-# startup lock. Falls back to fvm.
+# Runs this project's Flutter from a PRIVATE SDK copy.
+#
+# Why: the Flutter tool holds bin/cache/lockfile for as long as some commands
+# run (a `flutter run` holds it for its whole session). The fvm-pinned SDK in
+# ~/fvm/versions is shared with every other project on this machine, and one
+# long-lived `flutter run` there blocked every command here for minutes with
+# "Waiting for another flutter command to release the startup lock".
+#
+# So each checkout — the main one and every showrunner worktree — gets its own
+# APFS copy-on-write clone in .sdk/flutter (gitignored). Cloning takes a few
+# seconds and costs almost no disk; the source is the main checkout's clone if
+# present, else the fvm install named in .fvmrc.
 set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-common="$(git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
-for sdk in "$root/.sdk/flutter" "${common%/.git}/.sdk/flutter"; do
-  if [[ -x "$sdk/bin/flutter" ]]; then exec "$sdk/bin/flutter" "$@"; fi
-done
-exec fvm flutter "$@"
+sdk="$root/.sdk/flutter"
+if [[ ! -x "$sdk/bin/flutter" ]]; then
+  common="$(git -C "$root" rev-parse --path-format=absolute --git-common-dir)"
+  main="${common%/.git}"
+  version="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["flutter"])' "$main/.fvmrc")"
+  src="$main/.sdk/flutter"
+  [[ -x "$src/bin/flutter" ]] || src="$HOME/fvm/versions/$version"
+  echo "tool/flutter: cloning SDK $version into $sdk (copy-on-write)" >&2
+  mkdir -p "$root/.sdk"
+  cp -cR "$src" "$sdk"
+  rm -f "$sdk/bin/cache/lockfile"
+fi
+exec "$sdk/bin/flutter" "$@"
