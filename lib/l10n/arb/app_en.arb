@@ -33,5 +33,307 @@
   "rubricStateTitleTwo": "Group 2",
   "assignGroupsHeadline": "Assign Groups",
   "assignGroupsDragMessage": "Drag objective here",
-  "assignGroupsDragTarget": "Add New Group"
+  "assignGroupsDragTarget": "Add New Group",
+  "builderTitle": "Build Rubric",
+  "builderStepObjectivesTitle": "Grading Objectives",
+  "builderStepWeightsTitle": "Assign Weights",
+  "builderStepReviewTitle": "Review & Save",
+  "builderStepProgress": "Step {current} of {total}",
+  "@builderStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "builderLoadFailed": "Couldn't open this rubric.",
+  "builderMissingTitle": "Rubric not found",
+  "builderMissingMessage": "It may have been deleted on another screen.",
+  "builderMissingAction": "Back to Rubrics",
+  "builderDiscardTitle": "Discard changes?",
+  "builderDiscardMessage": "Your edits to this rubric haven't been saved.",
+  "builderDiscardConfirm": "Discard",
+  "builderKeepEditing": "Keep editing",
+  "builderSaved": "Rubric saved",
+  "builderSaveFailed": "Couldn't save the rubric. Please try again.",
+  "builderSaveLabel": "Save Rubric",
+  "builderSaveChangesLabel": "Save Changes",
+  "builderObjectivesEmptyTitle": "What will you grade?",
+  "builderObjectivesEmptyMessage": "Add each skill or quality you'll look for, like grammar, use of evidence or creativity.",
+  "builderObjectiveHint": "Objective {number}",
+  "@builderObjectiveHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "builderObjectiveInGroup": "In {group}",
+  "@builderObjectiveInGroup": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderAddObjective": "Add an Objective",
+  "builderEditObjective": "Edit Objective",
+  "builderObjectiveTitleHint": "example: Grammar, usage and mechanics",
+  "builderObjectiveTitleLabel": "Objective title",
+  "builderObjectiveDescriptionHint": "Add a note for you or your students (optional)",
+  "builderObjectiveAdd": "Add objective",
+  "builderObjectiveSave": "Save objective",
+  "builderObjectiveDeleted": "Deleted “{title}”",
+  "@builderObjectiveDeleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "builderUndo": "Undo",
+  "builderDelete": "Delete",
+  "builderEdit": "Edit",
+  "builderRemove": "Remove",
+  "builderMoveUp": "Move up",
+  "builderMoveDown": "Move down",
+  "builderReorderHandle": "Drag to reorder {title}",
+  "@builderReorderHandle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "builderGroupsIntro": "Drag each objective into a group, or tap it to pick one. You will weight the groups next.",
+  "builderGroupEverything": "Put everything in one group",
+  "builderGroupDefaultTitle": "Group {number}",
+  "@builderGroupDefaultTitle": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "builderGroupTitleHint": "Group name",
+  "builderAddToGroup": "Add to {group}",
+  "@builderAddToGroup": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderRemoveGroup": "Remove group {group}",
+  "@builderRemoveGroup": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderUntitledGroup": "Untitled group",
+  "builderUngroupedCount": "{count, plural, =1{1 objective to group} other{{count} objectives to group}}",
+  "@builderUngroupedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "builderMoveTo": "Move “{title}” to",
+  "@builderMoveTo": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "builderMoveToNewGroup": "A new group",
+  "builderMoveToTray": "Not grouped yet",
+  "builderGroupsEmptyTitle": "No objectives yet",
+  "builderGroupsEmptyMessage": "Add the objectives you will grade, then group them here.",
+  "builderGroupsEmptyAction": "Add objectives",
+  "builderWeightsIntro": "Drag the handles to change how much each group counts. Tap a percentage to type it, or lock a group to hold it while you drag.",
+  "builderWeightsSingle": "With one group, it counts for the whole grade.",
+  "builderEvenSplit": "Even split",
+  "builderPercent": "{value}%",
+  "@builderPercent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "builderWeightSemantics": "{group}, {value} percent",
+  "@builderWeightSemantics": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "builderBoundarySemantics": "Weight between {above} and {below}",
+  "@builderBoundarySemantics": {
+    "placeholders": {
+      "above": {
+        "type": "String"
+      },
+      "below": {
+        "type": "String"
+      }
+    }
+  },
+  "builderSetWeightTitle": "Weight for {group}",
+  "@builderSetWeightTitle": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      }
+    }
+  },
+  "builderSetWeightHint": "Percent",
+  "builderSetWeightHelp": "1 to 99. Unlocked groups adjust so the total stays 100%.",
+  "builderSetWeightAction": "Set Weight",
+  "builderWeightsEmptyTitle": "No groups yet",
+  "builderWeightsEmptyMessage": "Group your objectives first, then decide how much each group counts.",
+  "builderWeightsEmptyAction": "Assign groups",
+  "builderModeSimpleMessage": "Score each objective as a percentage from 0 to 100.",
+  "builderModeDetailedMessage": "Place each objective on a ladder of performance levels, each worth points.",
+  "builderLetterGrades": "Letter grades",
+  "builderPresetStandard": "Standard",
+  "builderPresetPlusMinus": "Plus / minus",
+  "builderPresetPassFail": "Pass / fail",
+  "builderGradeNameHint": "Grade",
+  "builderGradeNameLabel": "Grade name",
+  "builderGradeMinLabel": "{grade} starts at",
+  "@builderGradeMinLabel": {
+    "placeholders": {
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "builderGradeMaxLabel": "{grade} goes up to {value}",
+  "@builderGradeMaxLabel": {
+    "placeholders": {
+      "grade": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "builderAddGrade": "Add a grade",
+  "builderRemoveGrade": "Remove grade {grade}",
+  "@builderRemoveGrade": {
+    "placeholders": {
+      "grade": {
+        "type": "String"
+      }
+    }
+  },
+  "builderLevels": "Performance levels",
+  "builderLevelsIntro": "Best first. Each objective is scored by the level it reaches.",
+  "builderLevelLabelHint": "Level name",
+  "builderLevelPointsLabel": "Points for {level}",
+  "@builderLevelPointsLabel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderPointsSuffix": "pts",
+  "builderLevelWithPoints": "{level} · {points} pts",
+  "@builderLevelWithPoints": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "builderLevelActions": "Options for {level}",
+  "@builderLevelActions": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderAddLevel": "Add a level",
+  "builderNewLevelLabel": "New level",
+  "builderDescriptors": "Descriptors",
+  "builderDescriptorsIntro": "Describe what each level looks like for each objective. Optional, but it makes grading faster and fairer.",
+  "builderDescriptorHint": "What does {level} look like?",
+  "@builderDescriptorHint": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderDescriptorLabel": "{objective}, {level}",
+  "@builderDescriptorLabel": {
+    "placeholders": {
+      "objective": {
+        "type": "String"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "builderTitleHint": "Rubric title (required)",
+  "builderTitleLabel": "Rubric title",
+  "builderSubjectHint": "Subject (optional)",
+  "builderDescriptionHint": "Description (optional)",
+  "builderFixesTitle": "Before you save",
+  "builderFix": "Fix",
+  "builderIssueNoObjectives": "Add at least one objective.",
+  "builderIssueUngrouped": "{count, plural, =1{1 objective is not in a group yet.} other{{count} objectives are not in a group yet.}}",
+  "@builderIssueUngrouped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "builderIssueNoGroups": "Put your objectives into at least one group.",
+  "builderIssueEmptyGroup": "Remove or fill the empty group.",
+  "builderIssueUntitledGroup": "Every group needs a name.",
+  "builderIssueWeights": "Group weights add up to {total}%, not 100%.",
+  "@builderIssueWeights": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "builderIssueNoLevels": "Add at least one performance level.",
+  "builderIssueDuplicatePoints": "Two performance levels are worth the same points.",
+  "builderIssueNoTitle": "Give your rubric a title.",
+  "builderPreviewTitle": "Preview",
+  "builderUntitledRubric": "Untitled rubric",
+  "builderPreviewRange": "{min} to {max}",
+  "@builderPreviewRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  }
 }
