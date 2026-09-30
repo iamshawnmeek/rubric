@@ -59,3 +59,6 @@ lib/l10n/gen/
 
 # showrunner integrate writes local-only proof files
 .showrunner/merged-proof-*.txt
+
+# Contribution clones of upstream repos (e.g. zonai), worked on in branches
+.contrib/

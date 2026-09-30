@@ -9,5 +9,6 @@ tool/flutter test
 
 # Local packages
 for pkg in packages/*/; do
+  [ -f "$pkg/pubspec.yaml" ] || continue
   (cd "$pkg" && ../../tool/dart pub get > /dev/null && ../../tool/dart analyze --fatal-infos && ../../tool/dart test)
 done
