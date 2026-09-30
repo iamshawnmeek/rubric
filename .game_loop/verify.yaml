@@ -57,3 +57,27 @@
 # it. Being unchecked NEVER blocks: this file ships empty, so "unlisted ⇒ refused" would refuse
 # your first commit with the fix sitting behind the gate. Want the strict version? Opt in with a
 # catch-all rule:  "*": ["<your test command>"].
+
+# Mirrors .github/workflows/ci.yaml: whole-tree analyze with infos fatal + the
+# full test suite (tool/check.sh). CI additionally checks formatting.
+"lib/**":
+  - "tool/check.sh"
+"test/**":
+  - "tool/check.sh"
+"integration_test/**":
+  - "tool/check.sh"
+"pubspec.yaml":
+  - "tool/check.sh"
+"lib/l10n/arb/*.arb":
+  - "tool/check.sh"
+
+"unchecked-ok":
+  - "*.md"
+  - "docs/**"
+  - "assets/**"
+  - "android/**"
+  - "ios/**"
+  - ".showrunner/**"
+  - ".game_loop/**"
+  - ".github/**"
+  - "tool/**"
