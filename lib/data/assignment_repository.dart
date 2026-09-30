@@ -2,14 +2,40 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:rubric/data/database.dart';
+import 'package:rubric/data/sync_writer.dart';
 import 'package:rubric/domain/assignment.dart';
 import 'package:rubric/domain/evaluation.dart';
 import 'package:rubric/domain/rubric.dart';
 
 class AssignmentRepository {
-  new(this._db);
+  /// [writer] defaults to local-only writes; the app passes its sync
+  /// service so writes are also queued for the server.
+  new(this._db, [SyncWriter? writer]) : _writer = writer ?? LocalWriter(_db);
 
   final AppDatabase _db;
+  final SyncWriter _writer;
+
+  static Map<String, Object?> assignmentToWire(Assignment a) => {
+    'id': a.id,
+    'course_id': a.courseId,
+    'title': a.title,
+    'description': a.description,
+    'rubric_document': jsonEncode(a.rubric.toJson()),
+    'source_rubric_id': a.sourceRubricId,
+    'due_on': a.dueDate?.millisecondsSinceEpoch,
+    'points_possible': a.pointsPossible,
+    'closed': a.closed,
+    'created_on': a.createdAt.millisecondsSinceEpoch,
+  };
+
+  static Map<String, Object?> evaluationToWire(Evaluation e) => {
+    'id': e.id,
+    'assignment_id': e.assignmentId,
+    'student_id': e.studentId,
+    'status': e.status.name,
+    'document': jsonEncode(e.toJson()),
+    'updated_on': e.updatedAt.millisecondsSinceEpoch,
+  };
 
   static Assignment _assignment(AssignmentRow r) => Assignment(
     id: r.id,
@@ -28,16 +54,6 @@ class AssignmentRepository {
 
   static Evaluation _evaluation(EvaluationRow r) =>
       Evaluation.fromJson(jsonDecode(r.document) as Map<String, dynamic>);
-
-  static EvaluationsCompanion _evaluationRow(Evaluation e) =>
-      EvaluationsCompanion.insert(
-        id: e.id,
-        assignmentId: e.assignmentId,
-        studentId: e.studentId,
-        status: e.status.name,
-        document: jsonEncode(e.toJson()),
-        updatedAt: e.updatedAt,
-      );
 
   /// Assignments for a course, soonest due first, undated last.
   Stream<List<Assignment>> watchForCourse(String courseId) {
@@ -72,25 +88,19 @@ class AssignmentRepository {
     return r == null ? null : _assignment(r);
   }
 
-  Future<void> save(Assignment a) => _db
-      .into(_db.assignments)
-      .insertOnConflictUpdate(
-        AssignmentsCompanion.insert(
-          id: a.id,
-          courseId: a.courseId,
-          title: a.title,
-          description: Value(a.description),
-          rubricDocument: jsonEncode(a.rubric.toJson()),
-          sourceRubricId: Value(a.sourceRubricId),
-          dueDate: Value(a.dueDate),
-          pointsPossible: Value(a.pointsPossible),
-          closed: Value(a.closed),
-          createdAt: a.createdAt,
-        ),
-      );
+  Future<void> save(Assignment a) =>
+      _writer.upsert('assignments', assignmentToWire(a));
 
-  Future<void> delete(String id) =>
-      (_db.delete(_db.assignments)..where((a) => a.id.equals(id))).go();
+  /// Deletes the assignment and its evaluations (each as its own tombstone).
+  Future<void> delete(String id) async {
+    final evaluations = await (_db.select(
+      _db.evaluations,
+    )..where((e) => e.assignmentId.equals(id))).get();
+    for (final e in evaluations) {
+      await _writer.delete('evaluations', e.id);
+    }
+    await _writer.delete('assignments', id);
+  }
 
   Stream<List<Evaluation>> watchEvaluations(String assignmentId) =>
       (_db.select(_db.evaluations)
@@ -151,20 +161,20 @@ class AssignmentRepository {
     return r == null ? null : _evaluation(r);
   }
 
-  /// Upserts on (assignment, student); the stored id is kept if one exists.
-  Future<void> saveEvaluation(Evaluation e) => _db
-      .into(_db.evaluations)
-      .insert(
-        _evaluationRow(e),
-        onConflict: DoUpdate.withExcluded(
-          (old, excluded) => EvaluationsCompanion.custom(
-            status: excluded.status,
-            document: excluded.document,
-            updatedAt: excluded.updatedAt,
-          ),
-          target: [_db.evaluations.assignmentId, _db.evaluations.studentId],
-        ),
-      );
+  /// Upserts the paper for (assignment, student). If a row for that pair is
+  /// already stored under another id (data from before ids were
+  /// deterministic), that id is kept so the pair never has two rows.
+  Future<void> saveEvaluation(Evaluation e) async {
+    final existing = await getEvaluation(e.assignmentId, e.studentId);
+    final wire = evaluationToWire(e);
+    if (existing != null && existing.id != e.id) {
+      final doc = e.toJson()..['id'] = existing.id;
+      wire
+        ..['id'] = existing.id
+        ..['document'] = jsonEncode(doc);
+    }
+    await _writer.upsert('evaluations', wire);
+  }
 
   Future<void> saveEvaluations(Iterable<Evaluation> list) =>
       _db.transaction(() async {
@@ -173,6 +183,5 @@ class AssignmentRepository {
         }
       });
 
-  Future<void> deleteEvaluation(String id) =>
-      (_db.delete(_db.evaluations)..where((e) => e.id.equals(id))).go();
+  Future<void> deleteEvaluation(String id) => _writer.delete('evaluations', id);
 }

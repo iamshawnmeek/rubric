@@ -1,11 +1,22 @@
 import 'package:drift/drift.dart';
 import 'package:rubric/data/database.dart';
+import 'package:rubric/data/sync_writer.dart';
 import 'package:rubric/domain/evaluation.dart';
 
 class CommentRepository {
-  new(this._db);
+  /// [writer] defaults to local-only writes; the app passes its sync
+  /// service so writes are also queued for the server.
+  new(this._db, [SyncWriter? writer]) : _writer = writer ?? LocalWriter(_db);
 
   final AppDatabase _db;
+  final SyncWriter _writer;
+
+  static Map<String, Object?> toWire(CommentSnippet s) => {
+    'id': s.id,
+    'body': s.text,
+    'category': s.category,
+    'use_count': s.useCount,
+  };
 
   static CommentSnippet _snippet(CommentSnippetRow r) => CommentSnippet(
     id: r.id,
@@ -27,23 +38,18 @@ class CommentRepository {
   Future<List<CommentSnippet>> all() async =>
       (await _db.select(_db.commentSnippets).get()).map(_snippet).toList();
 
-  Future<void> save(CommentSnippet s) => _db
-      .into(_db.commentSnippets)
-      .insertOnConflictUpdate(
-        CommentSnippetsCompanion.insert(
-          id: s.id,
-          body: s.text,
-          category: Value(s.category),
-          useCount: Value(s.useCount),
-        ),
-      );
+  Future<void> save(CommentSnippet s) =>
+      _writer.upsert('comment_snippets', toWire(s));
 
-  Future<void> delete(String id) =>
-      (_db.delete(_db.commentSnippets)..where((c) => c.id.equals(id))).go();
+  Future<void> delete(String id) => _writer.delete('comment_snippets', id);
 
-  Future<void> recordUse(String id) => _db.customUpdate(
-    'UPDATE comment_snippets SET use_count = use_count + 1 WHERE id = ?',
-    variables: [Variable.withString(id)],
-    updates: {_db.commentSnippets},
-  );
+  /// Bumps the use count (through sync, so ordering follows the teacher
+  /// across devices).
+  Future<void> recordUse(String id) async {
+    final row = await (_db.select(
+      _db.commentSnippets,
+    )..where((c) => c.id.equals(id))).getSingleOrNull();
+    if (row == null) return;
+    await save(_snippet(row).copyWith(useCount: row.useCount + 1));
+  }
 }

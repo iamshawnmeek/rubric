@@ -5,10 +5,12 @@ import 'package:rubric/data/comment_repository.dart';
 import 'package:rubric/data/course_repository.dart';
 import 'package:rubric/data/database.dart';
 import 'package:rubric/data/rubric_repository.dart';
+import 'package:rubric/data/sync_writer.dart';
 import 'package:rubric/domain/assignment.dart';
 import 'package:rubric/domain/classroom.dart';
 import 'package:rubric/domain/evaluation.dart';
 import 'package:rubric/domain/rubric.dart';
+import 'package:rubric/sync/sync_service.dart';
 
 /// Overridden in main() and in tests (with an in-memory database).
 final databaseProvider = Provider<AppDatabase>((ref) {
@@ -17,17 +19,48 @@ final databaseProvider = Provider<AppDatabase>((ref) {
   return db;
 });
 
+/// Where every repository write goes. Local-only by default (tests, and before
+/// sync is set up); main() overrides it with the app's [SyncService].
+final syncWriterProvider = Provider<SyncWriter>(
+  (ref) => LocalWriter(ref.watch(databaseProvider)),
+);
+
+/// The app's sync service, or null where sync is not set up (tests).
+final syncServiceProvider = Provider<SyncService?>((ref) => null);
+
+/// Sign-in state and sync progress, for the UI.
+final syncStateProvider = StreamProvider<SyncState>((ref) {
+  final sync = ref.watch(syncServiceProvider);
+  if (sync == null) return Stream.value(SyncState.signedOut);
+  return (() async* {
+    yield sync.state;
+    yield* sync.states;
+  })();
+});
+
 final Provider<RubricRepository> rubricRepositoryProvider = Provider(
-  (ref) => RubricRepository(ref.watch(databaseProvider)),
+  (ref) => RubricRepository(
+    ref.watch(databaseProvider),
+    ref.watch(syncWriterProvider),
+  ),
 );
 final Provider<CourseRepository> courseRepositoryProvider = Provider(
-  (ref) => CourseRepository(ref.watch(databaseProvider)),
+  (ref) => CourseRepository(
+    ref.watch(databaseProvider),
+    ref.watch(syncWriterProvider),
+  ),
 );
 final Provider<AssignmentRepository> assignmentRepositoryProvider = Provider(
-  (ref) => AssignmentRepository(ref.watch(databaseProvider)),
+  (ref) => AssignmentRepository(
+    ref.watch(databaseProvider),
+    ref.watch(syncWriterProvider),
+  ),
 );
 final Provider<CommentRepository> commentRepositoryProvider = Provider(
-  (ref) => CommentRepository(ref.watch(databaseProvider)),
+  (ref) => CommentRepository(
+    ref.watch(databaseProvider),
+    ref.watch(syncWriterProvider),
+  ),
 );
 
 // ---- Shared read models. Features add their own next to their screens; these

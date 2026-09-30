@@ -82,17 +82,6 @@ class Evaluation {
     this.overrideReason = '',
   });
 
-  factory start({
-    required String assignmentId,
-    required String studentId,
-    DateTime? now,
-  }) => Evaluation(
-    id: newId(),
-    assignmentId: assignmentId,
-    studentId: studentId,
-    updatedAt: now ?? DateTime.now(),
-  );
-
   factory fromJson(Map<String, dynamic> json) => Evaluation(
     id: json['id'] as String,
     assignmentId: json['assignmentId'] as String,
@@ -112,6 +101,25 @@ class Evaluation {
     overrideReason: json['overrideReason'] as String? ?? '',
     updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt'] as int),
   );
+
+  /// A fresh paper for [studentId] on [assignmentId].
+  ///
+  /// The id is DERIVED from the pair, not random: two devices that each start
+  /// grading the same student offline create the same row, which sync merges,
+  /// instead of two rows for one paper that the server has no way to join.
+  factory start({
+    required String assignmentId,
+    required String studentId,
+    DateTime? now,
+  }) => Evaluation(
+    id: idFor(assignmentId, studentId),
+    assignmentId: assignmentId,
+    studentId: studentId,
+    updatedAt: now ?? DateTime.now(),
+  );
+
+  static String idFor(String assignmentId, String studentId) =>
+      '${assignmentId}_$studentId';
 
   final String id;
   final String assignmentId;

@@ -1,11 +1,35 @@
 import 'package:drift/drift.dart';
 import 'package:rubric/data/database.dart';
+import 'package:rubric/data/sync_writer.dart';
 import 'package:rubric/domain/classroom.dart';
 
 class CourseRepository {
-  new(this._db);
+  /// [writer] defaults to local-only writes; the app passes its sync
+  /// service so writes are also queued for the server.
+  new(this._db, [SyncWriter? writer]) : _writer = writer ?? LocalWriter(_db);
 
   final AppDatabase _db;
+  final SyncWriter _writer;
+
+  static Map<String, Object?> courseToWire(Course c) => {
+    'id': c.id,
+    'name': c.name,
+    'section': c.section,
+    'term': c.term,
+    'archived': c.archived,
+    'created_on': c.createdAt.millisecondsSinceEpoch,
+  };
+
+  static Map<String, Object?> studentToWire(Student s) => {
+    'id': s.id,
+    'course_id': s.courseId,
+    'first_name': s.firstName,
+    'last_name': s.lastName,
+    'student_number': s.studentNumber,
+    'email': s.email,
+    'notes': s.notes,
+    'archived': s.archived,
+  };
 
   static Course _course(CourseRow r) => Course(
     id: r.id,
@@ -25,17 +49,6 @@ class CourseRepository {
     email: r.email,
     notes: r.notes,
     archived: r.archived,
-  );
-
-  static StudentsCompanion _studentRow(Student s) => StudentsCompanion.insert(
-    id: s.id,
-    courseId: s.courseId,
-    firstName: s.firstName,
-    lastName: Value(s.lastName),
-    studentNumber: Value(s.studentNumber),
-    email: Value(s.email),
-    notes: Value(s.notes),
-    archived: Value(s.archived),
   );
 
   Stream<List<Course>> watchCourses({bool archived = false}) {
@@ -60,23 +73,35 @@ class CourseRepository {
   Future<List<Course>> allCourses() async =>
       (await _db.select(_db.courses).get()).map(_course).toList();
 
-  Future<void> saveCourse(Course course) => _db
-      .into(_db.courses)
-      .insertOnConflictUpdate(
-        CoursesCompanion.insert(
-          id: course.id,
-          name: course.name,
-          section: Value(course.section),
-          term: Value(course.term),
-          archived: Value(course.archived),
-          createdAt: course.createdAt,
-        ),
-      );
+  Future<void> saveCourse(Course course) =>
+      _writer.upsert('courses', courseToWire(course));
 
-  /// Deletes the course and — by cascade — its students, assignments and
-  /// evaluations.
-  Future<void> deleteCourse(String id) =>
-      (_db.delete(_db.courses)..where((c) => c.id.equals(id))).go();
+  /// Deletes the course with its students, assignments and evaluations.
+  ///
+  /// Children go first and explicitly — not by the local foreign-key
+  /// cascade — so every removed row reaches the server as its own tombstone
+  /// and other devices remove it too.
+  Future<void> deleteCourse(String id) async {
+    final assignments = await (_db.select(
+      _db.assignments,
+    )..where((a) => a.courseId.equals(id))).get();
+    for (final a in assignments) {
+      final evaluations = await (_db.select(
+        _db.evaluations,
+      )..where((e) => e.assignmentId.equals(a.id))).get();
+      for (final e in evaluations) {
+        await _writer.delete('evaluations', e.id);
+      }
+      await _writer.delete('assignments', a.id);
+    }
+    final students = await (_db.select(
+      _db.students,
+    )..where((s) => s.courseId.equals(id))).get();
+    for (final s in students) {
+      await deleteStudent(s.id);
+    }
+    await _writer.delete('courses', id);
+  }
 
   /// Active students, sorted by last then first name.
   Stream<List<Student>> watchStudents(
@@ -115,14 +140,24 @@ class CourseRepository {
           .map((r) => r == null ? null : _student(r));
 
   Future<void> saveStudent(Student student) =>
-      _db.into(_db.students).insertOnConflictUpdate(_studentRow(student));
+      _writer.upsert('students', studentToWire(student));
 
-  Future<void> saveStudents(Iterable<Student> students) => _db.batch(
-    (b) => b.insertAllOnConflictUpdate(_db.students, students.map(_studentRow)),
-  );
+  Future<void> saveStudents(Iterable<Student> students) async {
+    for (final s in students) {
+      await saveStudent(s);
+    }
+  }
 
-  Future<void> deleteStudent(String id) =>
-      (_db.delete(_db.students)..where((s) => s.id.equals(id))).go();
+  /// Deletes the student and their evaluations (each as its own tombstone).
+  Future<void> deleteStudent(String id) async {
+    final evaluations = await (_db.select(
+      _db.evaluations,
+    )..where((e) => e.studentId.equals(id))).get();
+    for (final e in evaluations) {
+      await _writer.delete('evaluations', e.id);
+    }
+    await _writer.delete('students', id);
+  }
 
   /// Active student count per course id.
   Stream<Map<String, int>> watchStudentCounts() {

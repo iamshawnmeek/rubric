@@ -193,6 +193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+  cron:
+    dependency: transitive
+    description:
+      name: cron
+      sha256: "2af3de2cabcc81346c00ff9db06296cdaf37ad17bd6f97fb63777a9ddefcacf3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.2"
   cross_file:
     dependency: transitive
     description:
@@ -416,6 +424,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.3"
+  flutter_secure_storage:
+    dependency: "direct main"
+    description:
+      name: flutter_secure_storage
+      sha256: d4e1fb6b2cb524868929e78dc0282fa000554b22060fb53789dc481c9fc95bb8
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.2.0"
+  flutter_secure_storage_darwin:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_darwin
+      sha256: a031ceac9b070e62ef183cd7f7d1a8798ebde402d5049f0fe6eb3a51bd797a21
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.3"
+  flutter_secure_storage_linux:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_linux
+      sha256: caa75bd78f017422912e3a904933113b2428eb79f981ac37acd2dd2a700458ea
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.3"
+  flutter_secure_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_platform_interface
+      sha256: "64951127f001f546891c86f414972bf49ef2c4c8a4c92c65f5790cc0c9100045"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
+  flutter_secure_storage_web:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_web
+      sha256: "073a62b3aeb866ab4ce795f960413948e51e5a42a9b0c8333b6daf5bb3208a1c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
+  flutter_secure_storage_windows:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_windows
+      sha256: "471951813a97006d899db4948acc654a4f28c440083ea08178935ce20b173ec1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.2"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -660,6 +716,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  msgpack_dart:
+    dependency: transitive
+    description:
+      name: msgpack_dart
+      sha256: c2d235ed01f364719b5296aecf43ac330f0d7bc865fa134d0d7910a40454dffb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   native_toolchain_c:
     dependency: transitive
     description:
@@ -860,6 +924,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
+  revali_client:
+    dependency: "direct main"
+    description:
+      name: revali_client
+      sha256: e3e782e51989f3b74820ebf4ff5c05be6367a9b183e6b39851c459c15db550bd
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  revali_core:
+    dependency: transitive
+    description:
+      name: revali_core
+      sha256: "9f922d6ca8c3c6d88194b7cdad1b939656edc622b6ef7927d035371bf67910b9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   riverpod:
     dependency: transitive
     description:
@@ -868,6 +948,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.3"
+  scoped_deps:
+    dependency: transitive
+    description:
+      name: scoped_deps
+      sha256: dc432cece55bb626bdf37cf82f0b9e5fd9c552ed78629a09ad38e7b5955081d3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   share_plus:
     dependency: "direct main"
     description:
@@ -1265,6 +1353,40 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.4"
+  zonai_client:
+    dependency: "direct main"
+    description:
+      name: zonai_client
+      sha256: dfcd37f464cd4ff2b503d0158f5c2bc29accf8bc6aec1f20bdac4f7dfe9fc612
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.4"
+  zonai_schema:
+    dependency: transitive
+    description:
+      name: zonai_schema
+      sha256: cec8a3c74543e716727e407c2cd61de3f5daf5c79fb2e2ed3deb5177e8b0db24
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
+  zonai_sync:
+    dependency: "direct main"
+    description:
+      path: "libs/zonai_sync"
+      ref: "feat/zonai-sync-drift"
+      resolved-ref: "96016d1a6591947f6955d18de94f61f2fa6f307f"
+      url: "https://github.com/mrgnhnt96/zonai.git"
+    source: git
+    version: "0.1.0-dev.1"
+  zonai_sync_drift:
+    dependency: "direct main"
+    description:
+      path: "libs/zonai_sync_drift"
+      ref: "feat/zonai-sync-drift"
+      resolved-ref: "96016d1a6591947f6955d18de94f61f2fa6f307f"
+      url: "https://github.com/mrgnhnt96/zonai.git"
+    source: git
+    version: "0.1.0-dev.1"
 sdks:
   dart: ">=3.13.0 <4.0.0"
   flutter: ">=3.47.0"
