@@ -3,9 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rubric/app/routes.dart';
+import 'package:rubric/data/providers.dart';
 import 'package:rubric/design_system/design_system.dart';
 import 'package:rubric/features/onboarding/first_objective_sheet.dart';
 import 'package:rubric/features/onboarding/onboarding_actions.dart';
+import 'package:rubric/features/settings/account_section.dart';
 import 'package:rubric/l10n/l10n.dart';
 
 /// First run: the big logo fades in on the dark background, a scrim settles
@@ -114,6 +116,14 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
     if (mounted) context.go(Routes.home);
   });
 
+  /// A teacher with an account already (a second device): sign in, and
+  /// their classes arrive by sync, so there is nothing to set up here.
+  Future<void> _signIn() async {
+    await showRubricSheet<void>(context: context, child: const AccountSheet());
+    if (!mounted) return;
+    if (ref.read(syncServiceProvider)?.state.signedIn ?? false) await _skip();
+  }
+
   Future<void> _skip() => _run(_Busy.skip, () async {
     await ref.completeOnboarding();
     if (mounted) context.go(Routes.home);
@@ -198,6 +208,10 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
                                       busy: _busy,
                                       onSample: _exploreSample,
                                       onSkip: _skip,
+                                      onSignIn:
+                                          ref.watch(syncServiceProvider) == null
+                                          ? null
+                                          : _signIn,
                                     )
                                   : const SizedBox(width: double.infinity),
                             ),
@@ -397,11 +411,19 @@ class _PagerButton extends StatelessWidget {
 
 /// On the last card: the ways past building a rubric right now.
 class _Alternatives extends StatelessWidget {
-  const new({required this.busy, required this.onSample, required this.onSkip});
+  const new({
+    required this.busy,
+    required this.onSample,
+    required this.onSkip,
+    this.onSignIn,
+  });
 
   final _Busy busy;
   final VoidCallback onSample;
   final VoidCallback onSkip;
+
+  /// Null when sync isn't set up (tests, or no server configured).
+  final VoidCallback? onSignIn;
 
   @override
   Widget build(BuildContext context) {
@@ -429,6 +451,12 @@ class _Alternatives extends StatelessWidget {
             onPressed: idle ? onSkip : null,
             child: Text(l.welcomeSkipForNow),
           ),
+          if (onSignIn != null)
+            TextButton(
+              key: const Key('welcome.signIn'),
+              onPressed: idle ? onSignIn : null,
+              child: Text(l.welcomeHaveAccount),
+            ),
         ],
       ),
     );

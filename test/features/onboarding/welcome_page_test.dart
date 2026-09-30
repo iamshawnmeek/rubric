@@ -14,10 +14,12 @@ import 'package:rubric/features/home/home_page.dart';
 import 'package:rubric/features/onboarding/onboarding_actions.dart';
 import 'package:rubric/features/onboarding/welcome_page.dart';
 import 'package:rubric/features/rubric_builder/rubric_builder_page.dart';
+import 'package:rubric/sync/sync_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/db.dart';
+import '../../helpers/fake_zonai.dart';
 import '../../helpers/fonts.dart';
 
 const _firstRun = AppSettings();
@@ -171,6 +173,52 @@ void main() {
     expect(app.read(settingsProvider).onboardingComplete, isTrue);
     final saved = await tester.runAsync(() => RubricRepository(app.db).all());
     expect(saved, isEmpty);
+  });
+
+  testWidgets('a teacher with an account signs in and skips setup', (
+    tester,
+  ) async {
+    final server = FakeZonai();
+    late SyncService sync;
+    await tester.runAsync(() async {
+      final db = testDatabase();
+      addTearDown(db.close);
+      sync = await SyncService.open(
+        db: db,
+        remote: server,
+        auth: FakeAuth(server),
+        session: MemorySession(),
+      );
+    });
+    final app = await pumpPage(
+      tester,
+      const WelcomePage(),
+      settings: _firstRun,
+      overrides: [syncServiceProvider.overrideWithValue(sync)],
+    );
+    await _toLastPage(tester);
+
+    await tester.tap(find.byKey(const Key('welcome.signIn')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('sync.email')),
+      'teacher@school.test',
+    );
+    await tester.enterText(find.byKey(const Key('sync.password')), 'password1');
+    await tester.tap(find.byKey(const Key('sync.submit')));
+    await _settleDb(tester);
+    await _settleDb(tester);
+
+    expect(sync.state.signedIn, isTrue);
+    expect(app.read(settingsProvider).onboardingComplete, isTrue);
+    await tester.runAsync(sync.dispose);
+  });
+
+  testWidgets('without sync set up, there is no sign-in offer', (tester) async {
+    await pumpPage(tester, const WelcomePage(), settings: _firstRun);
+    await _toLastPage(tester);
+    expect(find.text('Skip for now'), findsOneWidget, reason: 'control');
+    expect(find.byKey(const Key('welcome.signIn')), findsNothing);
   });
 
   testWidgets('explore with sample data loads it and completes onboarding', (
