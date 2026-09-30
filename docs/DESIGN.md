@@ -179,3 +179,9 @@ closed.
   first, so erasing one device never tombstones the account.
 - Verified by `tool/sync_e2e.sh`: an iOS simulator and an Android emulator on
   one account, against a local zonai 0.9.4.
+
+**On the next zonai release (2026-09-30).** Everything Rubric needs is on zonai main: #44, #48, #49, #62, #56, #45, plus #51 and #60 for later. Morgan cuts the release. Then:
+1. Pin zonai_sync and zonai_sync_drift to the release (tag or pub) instead of `feat/zonai-sync-drift`. Bump zonai_client to the version exporting `ServerException`, and drop Rubric's direct `revali_client` dependency if `SecureTokenStorage` no longer needs it.
+2. Move `server/` to the new zonai_schema and CLI. #45's count fix applies with no change. Add `viewScope` (owner_id = caller) to the owner-only row rules in `tool/gen/server_schema.py`: it restores plain-COUNT speed, and it turns an unscoped list into "your rows" instead of a 403.
+3. Optionally adopt `$.revision` (#51, #60) per table, together with `ZonaiSyncCapabilities(serverRevisionTables: …)`. Deploy the server first, as the zonai_sync README says.
+4. Re-run `tool/check.sh` and `tool/sync_e2e.sh` on the rubric-owner simulator and emulator.
