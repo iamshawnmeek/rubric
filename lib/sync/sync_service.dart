@@ -170,17 +170,63 @@ final class SyncService implements SyncWriter {
 
   Future<void> discardDeadLetter(int id) => _engine.discardDeadLetter(id);
 
-  /// Queues every local row for upload — after a bulk import (sample data, a
-  /// restored backup) that wrote the database directly.
-  Future<void> requeueAll() async {
-    if (_account == null) return;
-    for (final table in rubricSyncTables(_db, () => _account?.id)) {
-      for (final id in await table.ids()) {
+  /// Runs [op], a bulk change that writes the database directly (sample data,
+  /// a restored backup), and then queues what it changed for the server.
+  ///
+  /// Signed out, it just runs [op]. Signed in, every synced row is snapshotted
+  /// first and diffed afterwards:
+  /// - a row [op] added or edited is queued with only the fields that differ;
+  /// - a row [op] removed is put back and deleted through the engine, so the
+  ///   server gets a tombstone. Deleting it only locally would leave it alive
+  ///   on the server and on every other device — the drift store forgets a
+  ///   row once its data is gone, so the engine cannot tombstone it after
+  ///   the fact.
+  ///
+  /// A pull landing while [op] runs is diffed like [op]'s own changes and
+  /// pushed back unchanged — harmless, since it carries the pulled revision.
+  Future<T> bulk<T>(Future<T> Function() op) async {
+    if (_account == null) return await op();
+    final tables = rubricSyncTables(_db, () => _account?.id);
+    final before = <String, Map<String, Map<String, Object?>>>{
+      for (final table in tables)
+        table.name: {
+          for (final id in await table.ids()) id: ?await table.read(id),
+        },
+    };
+    final result = await op();
+    if (_account == null) return result;
+
+    // Parents first, so a child's foreign key holds when it is put back.
+    final gone = <DriftSyncTable, List<String>>{};
+    for (final table in tables) {
+      final now = (await table.ids()).toSet();
+      final removed = [
+        for (final id in before[table.name]!.keys)
+          if (!now.contains(id)) id,
+      ];
+      for (final id in removed) {
+        await table.write(before[table.name]![id]!);
+      }
+      gone[table] = removed;
+      for (final id in now) {
         final wire = await table.read(id);
         if (wire == null) continue;
-        await _engine.write(table.name, wire, changed: wire.keys.toSet());
+        final old = before[table.name]![id];
+        final changed = {
+          for (final e in wire.entries)
+            if (old == null || old[e.key] != e.value) e.key,
+        };
+        if (changed.isEmpty) continue;
+        await _engine.write(table.name, wire, changed: changed);
       }
     }
+    // Children first, the order a cascade deletes in.
+    for (final table in tables.reversed) {
+      for (final id in gone[table]!) {
+        await _engine.delete(table.name, id);
+      }
+    }
+    return result;
   }
 
   // ---- SyncWriter ----
@@ -202,6 +248,11 @@ final class SyncService implements SyncWriter {
     await _state.close();
   }
 }
+
+/// [SyncService.bulk] when sync is set up, else just [op] (tests, or before
+/// startup finishes).
+Future<T> bulkChange<T>(SyncService? sync, Future<T> Function() op) =>
+    sync == null ? op() : sync.bulk(op);
 
 /// [AuthGateway] over zonai's password auth (`users` table).
 final class ZonaiAuthGateway implements AuthGateway {

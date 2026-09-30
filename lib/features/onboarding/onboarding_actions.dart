@@ -3,6 +3,7 @@ import 'package:rubric/app/settings.dart';
 import 'package:rubric/data/providers.dart';
 import 'package:rubric/data/sample_data.dart';
 import 'package:rubric/domain/rubric.dart';
+import 'package:rubric/sync/sync_service.dart';
 
 /// The draft the first-run builder opens on: an untitled rubric whose single
 /// group ([groupTitle], weight 100) holds the teacher's first [objective].
@@ -42,7 +43,10 @@ extension OnboardingActions on WidgetRef {
   /// Loads the demo classroom, then finishes onboarding (the router sends the
   /// teacher Home once the flag flips).
   Future<void> exploreSampleData() async {
-    await loadSampleData(read(databaseProvider));
+    await bulkChange(
+      read(syncServiceProvider),
+      () => loadSampleData(read(databaseProvider)),
+    );
     await completeOnboarding();
   }
 

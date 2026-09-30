@@ -7,12 +7,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:rubric/app/settings.dart';
 import 'package:rubric/data/backup_service.dart';
+import 'package:rubric/data/providers.dart';
 import 'package:rubric/design_system/design_system.dart';
 import 'package:rubric/features/export/backup_state.dart';
 import 'package:rubric/features/export/csv_builders.dart' show isoDate;
 import 'package:rubric/features/export/export_platform.dart';
 import 'package:rubric/features/export/restore_sheet.dart';
 import 'package:rubric/l10n/l10n.dart';
+import 'package:rubric/sync/sync_service.dart';
 
 /// Back up everything on the device to one JSON file, or restore from one.
 class BackupPage extends ConsumerStatefulWidget {
@@ -124,7 +126,10 @@ class _BackupPageState extends ConsumerState<BackupPage> {
       try {
         // Taken first so the restore can be undone exactly.
         final before = await service.snapshot(settings: settings.toJson());
-        await service.restore(doc, mode: mode);
+        await bulkChange(
+          ref.read(syncServiceProvider),
+          () => service.restore(doc, mode: mode),
+        );
         if (mode == RestoreMode.replace && doc.settings != null) {
           await _applySettings(doc.settings!);
         }
@@ -150,9 +155,12 @@ class _BackupPageState extends ConsumerState<BackupPage> {
   Future<void> _undo(BackupDocument before) => _run(_Busy.restoring, () async {
     final l10n = context.l10n;
     try {
-      await ref
-          .read(backupServiceProvider)
-          .restore(before, mode: RestoreMode.replace);
+      await bulkChange(
+        ref.read(syncServiceProvider),
+        () => ref
+            .read(backupServiceProvider)
+            .restore(before, mode: RestoreMode.replace),
+      );
       if (before.settings != null) await _applySettings(before.settings!);
       ref.invalidate(deviceContentsProvider);
       if (mounted) showRubricSnack(context, l10n.backupUndone);

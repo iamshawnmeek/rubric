@@ -12,12 +12,14 @@ import 'package:rubric/data/sample_data.dart';
 import 'package:rubric/design_system/design_system.dart';
 import 'package:rubric/domain/grading_scale.dart';
 import 'package:rubric/domain/rubric.dart';
+import 'package:rubric/features/settings/account_section.dart';
 import 'package:rubric/features/settings/app_info.dart';
 import 'package:rubric/features/settings/erase_all_data.dart';
 import 'package:rubric/features/settings/grading_scale_editor.dart';
 import 'package:rubric/features/settings/scale_draft.dart';
 import 'package:rubric/features/settings/settings_tiles.dart';
 import 'package:rubric/l10n/l10n.dart';
+import 'package:rubric/sync/sync_service.dart';
 
 /// The Settings tab: profile, grading defaults, feedback, data and app.
 class SettingsPage extends ConsumerStatefulWidget {
@@ -66,7 +68,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final l = context.l10n;
     setState(() => _loadingSample = true);
     try {
-      await loadSampleData(ref.read(databaseProvider));
+      await bulkChange(
+        ref.read(syncServiceProvider),
+        () => loadSampleData(ref.read(databaseProvider)),
+      );
       if (mounted) showRubricSnack(context, l.settingsSampleLoaded);
     } on Object {
       if (mounted) showRubricSnack(context, l.settingsSampleFailed);
@@ -77,10 +82,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   Future<void> _eraseAll() async {
     final l = context.l10n;
+    final sync = ref.read(syncServiceProvider);
+    final signedIn = sync?.state.signedIn ?? false;
     final sure = await confirm(
       context,
       title: l.settingsEraseConfirmTitle,
-      message: l.settingsEraseConfirmMessage,
+      message: signedIn
+          ? '${l.settingsEraseConfirmMessage}\n\n${l.settingsEraseSignedInNote}'
+          : l.settingsEraseConfirmMessage,
       confirmLabel: l.settingsEraseConfirmAction,
     );
     if (!sure || !mounted) return;
@@ -94,6 +103,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
     setState(() => _erasing = true);
     try {
+      // Signing out first: erasing only this device must not send a
+      // tombstone for everything to the account and every other device.
+      if (signedIn) await sync!.signOut();
       await eraseAllData(ref.read(databaseProvider));
     } on Object {
       if (mounted) {
@@ -129,6 +141,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       children: [
         SettingsColumn(
           children: [
+            if (ref.watch(syncServiceProvider) != null) const AccountSection(),
             SettingsSection(
               label: l.settingsSectionProfile,
               children: [

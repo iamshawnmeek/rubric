@@ -23,6 +23,9 @@ class RubricTextField extends StatefulWidget {
     this.controller,
     this.focusNode,
     this.semanticLabel,
+    this.obscureText = false,
+    this.autofillHints,
+    this.autocorrect = true,
     super.key,
   });
 
@@ -43,6 +46,9 @@ class RubricTextField extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final String? semanticLabel;
+  final bool obscureText;
+  final Iterable<String>? autofillHints;
+  final bool autocorrect;
 
   @override
   State<RubricTextField> createState() => _RubricTextFieldState();
@@ -85,6 +91,10 @@ class _RubricTextFieldState extends State<RubricTextField> {
         textInputAction: widget.textInputAction,
         inputFormatters: widget.inputFormatters,
         textCapitalization: widget.textCapitalization,
+        obscureText: widget.obscureText,
+        autofillHints: widget.autofillHints,
+        autocorrect: widget.autocorrect,
+        enableSuggestions: !widget.obscureText,
         cursorColor: accent,
         style: base.copyWith(color: white),
         decoration: InputDecoration.collapsed(

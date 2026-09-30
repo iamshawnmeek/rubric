@@ -12,7 +12,9 @@ import 'package:rubric/domain/classroom.dart';
 import 'package:rubric/domain/rubric.dart';
 import 'package:rubric/features/home/home_dashboard.dart';
 import 'package:rubric/features/home/home_providers.dart';
+import 'package:rubric/features/sync/sync_status_view.dart';
 import 'package:rubric/l10n/l10n.dart';
+import 'package:rubric/sync/sync_service.dart';
 
 /// Tab 1: what needs grading, what is due next, and a way into everything.
 class HomePage extends ConsumerStatefulWidget {
@@ -32,7 +34,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     final l = context.l10n;
     setState(() => _loadingSample = true);
     try {
-      await loadSampleData(ref.read(databaseProvider));
+      await bulkChange(
+        ref.read(syncServiceProvider),
+        () => loadSampleData(ref.read(databaseProvider)),
+      );
       if (mounted) showRubricSnack(context, l.homeSampleDataLoaded);
     } on Object {
       if (mounted) showRubricSnack(context, l.homeSampleDataError);
@@ -53,6 +58,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ? l.homeGreeting(period)
           : l.homeGreetingNamed(period, name.trim()),
       showBack: false,
+      actions: const [SyncIndicator()],
       children: [
         _Readable(
           child: AsyncView(

@@ -1374,7 +1374,7 @@ packages:
     description:
       path: "libs/zonai_sync"
       ref: "feat/zonai-sync-drift"
-      resolved-ref: "96016d1a6591947f6955d18de94f61f2fa6f307f"
+      resolved-ref: "5819aaedad2277efed0516d1e43df98b61790dfb"
       url: "https://github.com/mrgnhnt96/zonai.git"
     source: git
     version: "0.1.0-dev.1"
@@ -1383,7 +1383,7 @@ packages:
     description:
       path: "libs/zonai_sync_drift"
       ref: "feat/zonai-sync-drift"
-      resolved-ref: "96016d1a6591947f6955d18de94f61f2fa6f307f"
+      resolved-ref: "5819aaedad2277efed0516d1e43df98b61790dfb"
       url: "https://github.com/mrgnhnt96/zonai.git"
     source: git
     version: "0.1.0-dev.1"

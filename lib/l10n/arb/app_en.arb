@@ -101,6 +101,7 @@
   "settingsEraseTitle": "Erase all data",
   "settingsEraseConfirmTitle": "Erase all data?",
   "settingsEraseConfirmMessage": "This deletes every class, student, rubric, assignment, grade and saved comment on this device, and resets your settings.",
+  "settingsEraseSignedInNote": "You’ll also be signed out. Your account keeps its synced copy, and it comes back when you sign in.",
   "settingsEraseConfirmAction": "Continue",
   "settingsEraseFinalTitle": "This can’t be undone",
   "settingsEraseFinalMessage": "Rubric keeps no copy anywhere else. If you might want this data later, make a backup first.",
@@ -2194,6 +2195,84 @@
     "description": "Next to a group heading on a student report",
     "placeholders": {
       "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "syncSectionTitle": "Account & sync",
+  "syncSignedOutHint": "Back up and use Rubric on all your devices",
+  "syncSignInTitle": "Sign in",
+  "syncSheetTitle": "Your account",
+  "syncReauthTitle": "Sign in again",
+  "syncSheetExplainer": "Your classes, rubrics and grades stay on this device and also sync to your account, so your phone and tablet always match. Everything keeps working offline.",
+  "syncModeSignIn": "Sign in",
+  "syncModeCreate": "Create account",
+  "syncEmailLabel": "Email",
+  "syncPasswordLabel": "Password",
+  "syncPasswordHelp": "At least 8 characters",
+  "syncSignInAction": "Sign in",
+  "syncCreateAction": "Create account",
+  "syncFormInvalid": "Enter your email and a password of at least 8 characters.",
+  "syncSignInFailed": "Couldn’t sign in. Check your email and password, and your connection.",
+  "syncCreateFailed": "Couldn’t create the account. It may already exist — try signing in.",
+  "syncSignedInSnack": "Signed in. Syncing your data.",
+  "syncStatusSynced": "Synced",
+  "syncStatusSyncing": "Syncing…",
+  "syncStatusPending": "{count, plural, =1{1 change waiting to sync} other{{count} changes waiting to sync}}",
+  "@syncStatusPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusOffline": "{count, plural, =0{Offline — changes will sync later} =1{Offline — 1 change will sync later} other{Offline — {count} changes will sync later}}",
+  "@syncStatusOffline": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusNeedsAuth": "Signed out on the server — tap to sign in again",
+  "syncStatusAttention": "{count, plural, =1{1 change needs your attention} other{{count} changes need your attention}}",
+  "@syncStatusAttention": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusTapHint": "Tap to sync now",
+  "syncDeadLetterTitle": "A change couldn’t be saved",
+  "syncDeadLetterHint": "The server refused it",
+  "syncDeadLetterDialogTitle": "Change not saved",
+  "syncDeadLetterDialogMessage": "The server refused a change from this device: {reason}\n\nTry again, or discard it and keep what’s on the server.",
+  "@syncDeadLetterDialogMessage": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "syncDeadLetterRetry": "Try again",
+  "syncDeadLetterDiscard": "Discard",
+  "syncSignOutHint": "Removes your data from this device",
+  "syncSignOutTitle": "Sign out",
+  "syncSignOutConfirmTitle": "Sign out?",
+  "syncSignOutConfirmMessage": "Your data stays in your account and comes back when you sign in. It will be removed from this device.",
+  "syncSignOutConfirmUnsynced": "{count, plural, =1{1 change hasn’t synced yet and will be lost.} other{{count} changes haven’t synced yet and will be lost.}} Your synced data stays in your account and comes back when you sign in.",
+  "@syncSignOutConfirmUnsynced": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncHomeBadge": "Sync status: {status}",
+  "@syncHomeBadge": {
+    "placeholders": {
+      "status": {
         "type": "String"
       }
     }
