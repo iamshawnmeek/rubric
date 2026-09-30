@@ -162,3 +162,20 @@ gravity_brew and future zonai apps benefit as well. What D10 got right still hol
 drift stays the source of truth, and ordering never compares client and server
 clocks. Firebase stays documented in D10 as the fallback if zonai's gaps can't be
 closed.
+
+**How Rubric uses it (2026-09-29):**
+- Every repository write goes through `SyncService`, Rubric's `SyncWriter`. It
+  writes locally while signed out, and through `zonai_sync`'s engine while
+  signed in. `lib/sync/sync_tables.dart` maps drift rows to the server's wire
+  format, one adapter per table.
+- Children declare `references`, so a stuck parent row holds only its own
+  children. Deletes cascade explicitly as tombstones, children first.
+  Evaluation ids are deterministic per (assignment, student), so two devices
+  grading the same paper converge on one row.
+- Bulk changes that write drift directly (sample data, backup restore and its
+  undo) run inside `SyncService.bulk`, which diffs a snapshot. Without it,
+  directly deleted rows would stay alive on the server.
+- Signing out removes the account's data from the device. Erase-all signs out
+  first, so erasing one device never tombstones the account.
+- Verified by `tool/sync_e2e.sh`: an iOS simulator and an Android emulator on
+  one account, against a local zonai 0.9.4.
