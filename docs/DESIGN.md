@@ -86,7 +86,7 @@ No new color exists anywhere in the app.
 - `equatable` 3.x couldn't resolve alongside the rest, and records plus explicit `==`
   suffice.
 
-## D10: The backend is Firebase + firefuel, synced from drift, behind a backend-neutral interface (2026-09-29)
+## D10: The backend is Firebase + firefuel, synced from drift, behind a backend-neutral interface (2026-09-29): RETRACTED, see D11
 
 We researched both options in depth. That covered the zonai v0.9.4 source and docs,
 the Firebase docs and the firefuel repo, and how zonai is actually used in
@@ -143,3 +143,22 @@ version.
   above until they're fixed.
 - Running both backends in production from day one: twice the operational load
   before we have a single user.
+
+## D11: The backend is zonai, with sync built into zonai as a standard capability (2026-09-29)
+
+This supersedes D10. D10 put Firebase first because zonai v0.9.4 had verified
+authorization and privacy gaps and no sync support. The human chose to fix that at
+the source instead: "get zonai working the way we want it to". We have write access
+to zonai, and it now has its own owner agent. Every gap D10 listed becomes one of two
+things:
+
+- a core fix or feature, owned by zonai-owner: scoped queries that close the count
+  leak, sequence and revision columns, update preconditions, a changes feed, batch
+  writes, per-user rate limits, and the auth fixes;
+- a standard sync package set, `zonai_sync_schema`, `zonai_sync` and
+  `zonai_sync_gen` (see `docs/zonai_sync/DESIGN.md`).
+
+gravity_brew and future zonai apps benefit as well. What D10 got right still holds:
+drift stays the source of truth, and ordering never compares client and server
+clocks. Firebase stays documented in D10 as the fallback if zonai's gaps can't be
+closed.
