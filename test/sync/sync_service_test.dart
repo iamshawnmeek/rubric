@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rubric/data/course_repository.dart';
 import 'package:rubric/data/database.dart';
@@ -230,6 +232,33 @@ void main() {
       expect(await phone.courseNames(), ['Biology']);
     },
   );
+
+  test('signing out mid-sync leaves nothing of the account behind', () async {
+    final phone = await device();
+    await phone.signIn();
+    await phone.courses.saveCourse(Course.create(name: 'Biology'));
+    await phone.settle();
+
+    // Sign out while a pass is on the wire, and keep asking for syncs, as
+    // the resume nudge and the periodic timer would.
+    var signingOut = Future<void>.value();
+    server.whileInFlight = (call) async {
+      if (!call.startsWith('pull')) return;
+      server.whileInFlight = null;
+      signingOut = phone.sync.signOut();
+      for (var i = 0; i < 5; i++) {
+        unawaited(phone.sync.nudge());
+        await pumpEventQueue(times: 2);
+      }
+    };
+    await phone.sync.syncNow();
+    await signingOut;
+    await phone.settle();
+
+    expect(phone.sync.state.signedIn, isFalse);
+    expect(await phone.courseNames(), isEmpty);
+    expect(rows('courses'), hasLength(1), reason: 'kept on the server');
+  });
 
   test('a saved session is restored at launch', () async {
     final session = MemorySession();

@@ -151,13 +151,18 @@ final class SyncService implements SyncWriter {
   /// Signs out and removes this account's data from the device. It stays on
   /// the server and comes back at the next sign-in.
   Future<void> signOut() async {
+    // The account goes first. While it is still set, a pass starting during
+    // the engine's clear would see the signed-out store, re-adopt it for this
+    // account and pull its data straight back onto the device. Unset, every
+    // pass (and every check inside a running one) sees "signed out".
+    _account = null;
+    _publish();
     try {
       await _auth.signOut();
     } on Object {
       // Offline or already expired: the local sign-out must still happen.
     }
     await _engine.signOut();
-    _account = null;
     await _session.write(null);
     _publish();
   }
