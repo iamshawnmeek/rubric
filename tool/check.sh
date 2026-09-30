@@ -6,3 +6,8 @@ cd "$(dirname "$0")/.."
 tool/flutter pub get > /dev/null
 tool/flutter analyze --fatal-infos
 tool/flutter test
+
+# Local packages
+for pkg in packages/*/; do
+  (cd "$pkg" && ../../tool/dart pub get > /dev/null && ../../tool/dart analyze --fatal-infos && ../../tool/dart test)
+done

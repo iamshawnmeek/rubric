@@ -1,0 +1,14 @@
+name: zonai_sync
+description: Offline-first sync for zonai apps — local drift/SQLite is the source of truth; a transactional outbox, scoped cursor pulls and revision-based conflicts keep it in step with a zonai server.
+version: 0.1.0-dev
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  meta: ^1.19.0
+
+dev_dependencies:
+  test: any
+  very_good_analysis: ^11.0.0
