@@ -1,0 +1,5 @@
+# The server resolves its own packages (zonai_schema); it does not inherit the
+# Flutter app's very_good_analysis config.
+analyzer:
+  exclude:
+    - .zonai/**

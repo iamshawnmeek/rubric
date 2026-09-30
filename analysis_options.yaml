@@ -9,6 +9,9 @@ analyzer:
     - ios/**
     - "**/*.g.dart"
     - lib/l10n/gen/**
+    # A separate Dart package (zonai backend) with its own dependencies.
+    - server/**
+    - .contrib/**
   errors:
     # Generated drift/l10n code and widget-heavy UI make these noisy without catching defects.
     document_ignores: ignore

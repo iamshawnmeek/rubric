@@ -1,0 +1,5 @@
+.zonai/data/
+.zonai/executables/
+.zonai/lib/
+.zonai/gen/
+.dart_tool/
