@@ -85,3 +85,61 @@ No new color exists anywhere in the app.
 - `import_sorter` was replaced by the `directives_ordering` lint.
 - `equatable` 3.x couldn't resolve alongside the rest, and records plus explicit `==`
   suffice.
+
+## D10: The backend is Firebase + firefuel, synced from drift, behind a backend-neutral interface (2026-09-29)
+
+We researched both options in depth. That covered the zonai v0.9.4 source and docs,
+the Firebase docs and the firefuel repo, and how zonai is actually used in
+gravity_brew, wholesale-command-station and llm_chat.
+
+**Common ground.** Neither backend does offline sync the way Rubric needs it:
+
+- zonai has no offline support at all.
+- Firestore's cache is not an offline-first database. It has no local indexes, a
+  transaction fails while offline, and a listener that reconnects after 30 minutes
+  or more is billed as a new query.
+
+So drift stays the source of truth, and Rubric owns a sync engine behind a
+`SyncBackend` interface: an outbox, pushes, and cursor-based pulls with tombstones
+for deletes. gravity_brew's engine is the proven pattern to follow. Schema v2 adds
+`updatedAt`, `deletedAt` and a revision to every table. Evaluations get a
+deterministic id, `{assignmentId}_{studentId}`, because neither backend enforces
+our unique key across devices.
+
+**Why Firebase first.** Rubric stores minors' grades. On zonai v0.9.4 we verified
+these gaps:
+
+- The count endpoints skip row rules, so any teacher can count other teachers'
+  rows under any filter.
+- No query is scoped by the caller's JWT on the server.
+- The unique index on auth email is never created.
+- Owners can edit their own `is_verified`.
+- There is no encryption at rest, no backups, and no way to delete an account.
+- Rate limits are keyed by IP, so a whole school behind one NAT shares one budget.
+- zonai_client streams swallow errors and never reconnect.
+- The project is five months old with a single maintainer.
+
+Firebase gives us, today: encryption at rest, daily and weekly backups plus 7-day
+point-in-time recovery, SOC and ISO attestations, mature SDKs, rules we can test
+in the emulator, and Google sign-in, which fits schools that use Google
+Classroom. At 50k teachers, drift-plus-sync reads cost about $2.5k/month.
+firefuel 0.5.0 resolves against our exact toolchain.
+
+**Why zonai stays in the plan.** Firebase Auth runs only in US data centers, so a
+district that requires in-country identity data can't use it. zonai self-hosted per
+district is the answer for that case, and it maps onto our schema almost
+one-to-one. The `SyncBackend` seam keeps that door open: adding zonai later means
+writing one adapter, not rewriting the app. We have write access to zonai, and
+the contributions it needs (a JWT-scoped query filter that closes the count leak,
+a server sequence column, per-user rate limits, the auth fixes, backup,
+encryption at rest) are costed in the research notes. The security fixes are
+worth making anyway, because other projects on this machine run on the same
+version.
+
+**Rejected:**
+- Replacing drift with Firestore's cache: poor offline query performance, it
+  loses our relational guarantees, and it costs more per read.
+- zonai-only now: student data would sit behind the verified authorization gaps
+  above until they're fixed.
+- Running both backends in production from day one: twice the operational load
+  before we have a single user.
