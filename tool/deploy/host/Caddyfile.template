@@ -1,0 +1,14 @@
+# Rendered by provision.sh: __DOMAIN__ becomes the server's public name, for
+# example 203-0-113-7.sslip.io (free DNS that maps a name to that IP, so
+# Let's Encrypt can issue a real certificate without buying a domain).
+# Caddy obtains and renews the certificate itself.
+__DOMAIN__ {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8792
+	log {
+		output file /var/log/caddy/rubric.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+	}
+}

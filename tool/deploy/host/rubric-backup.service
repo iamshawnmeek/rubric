@@ -1,0 +1,17 @@
+# One online backup of Rubric's database (tool/deploy/backup.sh).
+# Run daily by rubric-backup.timer; `systemctl start rubric-backup` runs one now.
+[Unit]
+Description=Rubric database backup
+
+[Service]
+Type=oneshot
+User=rubric
+Group=rubric
+ExecStart=/opt/rubric/ops/backup.sh /opt/rubric/.zonai/data /var/backups/rubric 14
+NoNewPrivileges=true
+ProtectSystem=strict
+# Reading a live WAL database writes its -shm index, so the data directory
+# must be writable here too, not only the backup directory.
+ReadWritePaths=/var/backups/rubric /opt/rubric/.zonai/data
+ProtectHome=true
+PrivateTmp=true

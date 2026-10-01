@@ -15,3 +15,6 @@ done
 
 # The zonai backend
 (cd server && ../tool/dart pub get > /dev/null && ../tool/dart analyze --fatal-infos)
+
+# Server operations scripts (backup and restore), against a real SQLite database
+tool/deploy/test_backup_restore.sh

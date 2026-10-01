@@ -1,0 +1,36 @@
+# Rubric's zonai server. Installed by tool/deploy/host/provision.sh.
+# It listens on localhost only; Caddy terminates HTTPS in front of it.
+[Unit]
+Description=Rubric server (zonai)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rubric
+Group=rubric
+WorkingDirectory=/opt/rubric
+# JWT_SECRET and PASSWORD_SECRET, root-only (0600). The bundle carries no
+# secrets and refuses to start without these.
+EnvironmentFile=/etc/rubric/secrets.env
+ExecStart=/opt/rubric/zonai serve --release --host 127.0.0.1 --port 8792
+Restart=on-failure
+RestartSec=5
+# zonai shuts down gracefully on SIGTERM; give in-flight requests time.
+TimeoutStopSec=30
+
+# Hardening: the server only ever needs to write its own data directory.
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/rubric/.zonai/data
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

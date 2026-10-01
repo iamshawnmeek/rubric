@@ -3,3 +3,5 @@
 .zonai/lib/
 .zonai/gen/
 .dart_tool/
+build/
+.env.prod
