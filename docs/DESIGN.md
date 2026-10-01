@@ -180,8 +180,12 @@ closed.
 - Verified by `tool/sync_e2e.sh`: an iOS simulator and an Android emulator on
   one account, against a local zonai 0.9.4.
 
-**On the next zonai release (2026-09-30).** Everything Rubric needs is on zonai main: #44, #48, #49, #62, #56, #45, plus #51 and #60 for later. Morgan cuts the release. Then:
+**On the next zonai release (2026-09-30). Done 2026-09-30 on v0.10.0: steps 1, 2 and 4. Step 3 ($.revision) is deferred; see below.** Everything Rubric needs is on zonai main: #44, #48, #49, #62, #56, #45, plus #51 and #60 for later. Morgan cuts the release. Then:
 1. Pin zonai_sync and zonai_sync_drift to the release (tag or pub) instead of `feat/zonai-sync-drift`. Bump zonai_client to the version exporting `ServerException`, and drop Rubric's direct `revali_client` dependency if `SecureTokenStorage` no longer needs it.
 2. Move `server/` to the new zonai_schema and CLI. #45's count fix applies with no change. Add `viewScope` (owner_id = caller) to the owner-only row rules in `tool/gen/server_schema.py`: it restores plain-COUNT speed, and it turns an unscoped list into "your rows" instead of a 403.
 3. Optionally adopt `$.revision` (#51, #60) per table, together with `ZonaiSyncCapabilities(serverRevisionTables: …)`. Deploy the server first, as the zonai_sync README says.
 4. Re-run `tool/check.sh` and `tool/sync_e2e.sh` on the rubric-owner simulator and emulator.
+
+**$.revision deferred (2026-09-30).** The client-maintained `rev` is correct as long as every write goes through zonai_sync, and in Rubric every write does. `$.revision` only adds protection against writes that bypass sync, such as the zonai dashboard. Adopting it means changing each table's `rev` column and listing the table in `serverRevisionTables`, with the server deployed first. That is worth doing before anything other than the app writes Rubric's data, but it isn't needed for multi-device sync.
+
+**Verified on v0.10.0 (2026-09-30).** tool/check.sh passes (514 tests). The two-device run passed between the rubric-owner simulator and a second rubric-owner simulator, `rubric-owner iPhone 17 Pro (B)`. Both hold identical data: 3 classes, 47 students, 94 evaluations, 0 pending, 0 dead. The Android leg passed on 0.9.4; on v0.10.0 day, Flutter's machine-wide device scan hung before reaching the emulator, so that leg ran on the second simulator. Run dev servers with `zonai serve --release` until zonai #67 (the watcher-burst fix) is released.

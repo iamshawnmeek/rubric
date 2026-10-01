@@ -34,19 +34,19 @@ dependencies:
   share_plus: ^13.3.0
   shared_preferences: ^2.5.5
   uuid: ^4.6.0
-  zonai_client: ^0.2.4
-  # Offline sync, from the zonai branches under review
-  # (mrgnhnt96/zonai feat/zonai-sync-client, feat/zonai-sync-drift).
-  # Move to hosted versions once published.
+  zonai_client: ^0.3.0
+  # Offline sync. Released with zonai v0.10.0 but not yet on pub.dev
+  # (publish_to: none), so pinned to the release tag. Move to hosted
+  # versions once published.
   zonai_sync:
     git:
       url: https://github.com/mrgnhnt96/zonai.git
-      ref: feat/zonai-sync-drift
+      ref: v0.10.0
       path: libs/zonai_sync
   zonai_sync_drift:
     git:
       url: https://github.com/mrgnhnt96/zonai.git
-      ref: feat/zonai-sync-drift
+      ref: v0.10.0
       path: libs/zonai_sync_drift
 
 dev_dependencies:
@@ -88,6 +88,6 @@ dependency_overrides:
   zonai_sync:
     git:
       url: https://github.com/mrgnhnt96/zonai.git
-      ref: feat/zonai-sync-drift
+      ref: v0.10.0
       path: libs/zonai_sync
 

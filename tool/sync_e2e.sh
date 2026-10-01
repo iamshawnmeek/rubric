@@ -36,7 +36,7 @@ leg() { # device role
     --target integration_test/sync_two_device_test.dart -d "$1" \
     --dart-define=ROLE="$2" --dart-define=EMAIL="$email" \
     --dart-define=NONCE="$nonce" >"$out/$2.log" 2>&1 || true
-  grep -E "SYNC_E2E|timed out|Expected:|Actual:" "$out/$2.log" || true
+  grep -E "SYNC_E2E|timed out|Expected:|Actual:|nothing to tap" "$out/$2.log" || true
   grep -q "All tests passed" "$out/$2.log" ||
     { echo "$2 leg FAILED (log: $out/$2.log)"; exit 1; }
   if [ -d build/screens ]; then cp build/screens/*.png "$out/" 2>/dev/null || true; fi

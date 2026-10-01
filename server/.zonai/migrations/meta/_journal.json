@@ -8,6 +8,13 @@
       "when": 1790735824033,
       "tag": "0000_init",
       "snapshotId": "80f397a5-cd3b-4981-9204-1a279cd9a1be"
+    },
+    {
+      "idx": 1,
+      "version": "1",
+      "when": 1790807834118,
+      "tag": "0001_zonai_0_10_0",
+      "snapshotId": "30eafe14-f5aa-4ccf-9cbe-3d95f36f47a8"
     }
   ]
 }

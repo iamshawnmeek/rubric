@@ -13,6 +13,14 @@ final class CourseRowRules extends RowRules<CourseTable, Course> {
   bool _owns(Jwt? jwt, Course row) =>
       jwt != null && jwt.userId.value == row.ownerId;
 
+  /// Reads are narrowed to the caller's rows (zonai #45): an unscoped list
+  /// returns "your rows" instead of a 403, and counts take the plain-COUNT
+  /// path while still counting only what the caller may see. canView still
+  /// runs on every row in scope.
+  @override
+  Future<Where?> viewScope(Jwt? jwt) async =>
+      jwt == null ? null : Eq('owner_id', jwt.userId.value);
+
   @override
   Future<bool> canView(Jwt? jwt, Course row) async => _owns(jwt, row);
 

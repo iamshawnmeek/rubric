@@ -1357,24 +1357,24 @@ packages:
     dependency: "direct main"
     description:
       name: zonai_client
-      sha256: dfcd37f464cd4ff2b503d0158f5c2bc29accf8bc6aec1f20bdac4f7dfe9fc612
+      sha256: "0478024fe4fdc69673e47d0d1d9ffbf849374da8ad611266816fd1cf49d2d0f0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4"
+    version: "0.3.0"
   zonai_schema:
     dependency: transitive
     description:
       name: zonai_schema
-      sha256: cec8a3c74543e716727e407c2cd61de3f5daf5c79fb2e2ed3deb5177e8b0db24
+      sha256: bbc318b7fe1a6c5c5a3dd9787cf21e741433e01ba39115d109869ac8f49d9e96
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.6.0"
   zonai_sync:
     dependency: "direct main"
     description:
       path: "libs/zonai_sync"
-      ref: "feat/zonai-sync-drift"
-      resolved-ref: "4fbad85e0643a040ec2d93f5c2db5c2f00ad5efb"
+      ref: "v0.10.0"
+      resolved-ref: e682849a1176b7e8c6d68859d285d2770ad52178
       url: "https://github.com/mrgnhnt96/zonai.git"
     source: git
     version: "0.1.0-dev.1"
@@ -1382,8 +1382,8 @@ packages:
     dependency: "direct main"
     description:
       path: "libs/zonai_sync_drift"
-      ref: "feat/zonai-sync-drift"
-      resolved-ref: "4fbad85e0643a040ec2d93f5c2db5c2f00ad5efb"
+      ref: "v0.10.0"
+      resolved-ref: e682849a1176b7e8c6d68859d285d2770ad52178
       url: "https://github.com/mrgnhnt96/zonai.git"
     source: git
     version: "0.1.0-dev.1"

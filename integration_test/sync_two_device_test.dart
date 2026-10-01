@@ -64,7 +64,14 @@ void main() {
   }) async {
     final deadline = DateTime.now().add(timeout);
     while (!await done()) {
-      if (DateTime.now().isAfter(deadline)) fail('timed out waiting: $what');
+      if (DateTime.now().isAfter(deadline)) {
+        final s = container(tester).read(syncServiceProvider)!.state.status;
+        fail(
+          'timed out waiting: $what (phase ${s.phase.name}, pending '
+          '${s.pending}, lastError ${s.lastError}, dead '
+          '${[for (final d in s.deadLetters) '${d.table}/${d.rowId}: ${d.lastError}']})',
+        );
+      }
       await settle(tester, 500);
     }
   }
@@ -104,6 +111,16 @@ void main() {
     );
     unawaited(app.main());
     await settle(tester, 3500);
+    final sync = container(tester).read(syncServiceProvider)!;
+    // ignore: avoid_print — the script shows it when a leg fails.
+    print('SYNC_E2E_START signedIn=${sync.state.account?.email}');
+    // Writer and reader play a device nobody is signed in on. The iOS
+    // keychain survives uninstalling the app, so a previous run's session
+    // comes back with the reinstall; sign it out first.
+    if (role != 'checker' && sync.state.signedIn) {
+      await sync.signOut();
+      await settle(tester, 1000);
+    }
   }
 
   Future<void> signInFromSettings(
