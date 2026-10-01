@@ -46,7 +46,7 @@ void main() {
       tester,
       const HomePage(),
       overrides: [clock],
-      seed: (db) => loadSampleData(db, now: _now),
+      seed: (db) => loadSampleData(db, now: _now, namespace: 'demo'),
     );
 
     // Stats: 2 classes, 48 students.
@@ -75,8 +75,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(app.visited, [
       Routes.assignment(
-        'sample-course-english10',
-        'sample-assignment-book-talk',
+        'sample-demo-course-english10',
+        'sample-demo-assignment-book-talk',
       ),
     ]);
   });
@@ -88,7 +88,7 @@ void main() {
       tester,
       const HomePage(),
       overrides: [clock],
-      seed: (db) => loadSampleData(db, now: _now),
+      seed: (db) => loadSampleData(db, now: _now, namespace: 'demo'),
     );
     await tester.ensureVisible(find.text('New assignment'));
     await tester.pumpAndSettle();
@@ -98,7 +98,7 @@ void main() {
 
     await tester.tap(find.text('Biology'));
     await tester.pumpAndSettle();
-    expect(app.visited, [Routes.newAssignment('sample-course-biology')]);
+    expect(app.visited, [Routes.newAssignment('sample-demo-course-biology')]);
   });
 
   testWidgets('a class with nothing to grade reads as caught up', (
@@ -156,7 +156,7 @@ void main() {
       const HomePage(),
       overrides: [clock],
       size: const Size(1366, 1024),
-      seed: (db) => loadSampleData(db, now: _now),
+      seed: (db) => loadSampleData(db, now: _now, namespace: 'demo'),
     );
     final card = tester.getSize(
       find

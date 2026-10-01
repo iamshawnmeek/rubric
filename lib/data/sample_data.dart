@@ -14,17 +14,55 @@ import 'package:rubric/domain/rubric.dart';
 /// re-running the loader finds what it already wrote.
 const sampleIdPrefix = 'sample-';
 
+/// Row ids are global on the sync server, across every account, so the demo
+/// can't use the same ids for everyone: the second teacher to load it could
+/// never upload it (their creates collide with rows they can't see). Each
+/// device picks a random namespace the first time, and later loads reuse the
+/// one already there, including one pulled from the teacher's other device.
+final _namespacePattern = RegExp(
+  '^$sampleIdPrefix([a-z0-9]+)-(rubric|course|comment)-',
+);
+
+Future<String?> _existingNamespace(AppDatabase db) async {
+  final rows = await db
+      .customSelect(
+        "SELECT id FROM rubrics WHERE id LIKE 'sample-%' "
+        "UNION ALL SELECT id FROM courses WHERE id LIKE 'sample-%' "
+        "UNION ALL SELECT id FROM comment_snippets WHERE id LIKE 'sample-%'",
+      )
+      .get();
+  for (final row in rows) {
+    final match = _namespacePattern.firstMatch(row.read<String>('id'));
+    if (match != null) return match.group(1);
+  }
+  return null;
+}
+
+String _newNamespace() {
+  final random = Random.secure();
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  return [for (var i = 0; i < 10; i++) alphabet[random.nextInt(36)]].join();
+}
+
 /// Loads a realistic demo classroom (courses, students, rubrics, assignments,
 /// graded work, comment bank). Idempotent: calling it twice adds nothing new.
 ///
-/// Every id is fixed and the random numbers come from a seeded [Random], so
-/// the same demo appears on every device; only due dates and grading times
-/// move with [now] (default: today), so the demo always looks current.
+/// Ids are fixed within a namespace (see [_namespacePattern]) and the random
+/// numbers come from a seeded [Random], so the same demo appears every time;
+/// only due dates and grading times move with [now] (default: today), so the
+/// demo always looks current. [namespace] is for tests.
 ///
 /// An entity that already exists is left alone — a teacher who edited or
 /// graded sample work does not have it reset by loading the demo again.
-Future<void> loadSampleData(AppDatabase db, {DateTime? now}) async {
+Future<void> loadSampleData(
+  AppDatabase db, {
+  DateTime? now,
+  String? namespace,
+}) async {
   final today = now ?? DateTime.now();
+  final ns = namespace ?? await _existingNamespace(db) ?? _newNamespace();
+  String scoped(String fixedId) =>
+      fixedId.replaceFirst(sampleIdPrefix, '$sampleIdPrefix$ns-');
   final rubrics = RubricRepository(db);
   final courses = CourseRepository(db);
   final assignments = AssignmentRepository(db);
@@ -32,7 +70,9 @@ Future<void> loadSampleData(AppDatabase db, {DateTime? now}) async {
   final random = Random(20260929);
 
   await db.transaction(() async {
-    final library = _rubrics(today);
+    final library = [
+      for (final r in _rubrics(today)) r.copyWith(id: scoped(r.id)),
+    ];
     for (final rubric in library) {
       if (await rubrics.get(rubric.id) == null) {
         await rubrics.save(rubric, now: rubric.updatedAt);
@@ -42,7 +82,7 @@ Future<void> loadSampleData(AppDatabase db, {DateTime? now}) async {
     final names = _studentNames(random);
     for (final (courseIndex, plan) in _courses.indexed) {
       final course = Course(
-        id: '${sampleIdPrefix}course-${plan.key}',
+        id: scoped('${sampleIdPrefix}course-${plan.key}'),
         name: plan.name,
         section: plan.section,
         term: 'Fall 2026',
@@ -55,7 +95,7 @@ Future<void> loadSampleData(AppDatabase db, {DateTime? now}) async {
       final roster = [
         for (var i = 0; i < _studentsPerCourse; i++)
           Student(
-            id: '${sampleIdPrefix}student-${plan.key}-${i + 1}',
+            id: scoped('${sampleIdPrefix}student-${plan.key}-${i + 1}'),
             courseId: course.id,
             firstName: names[courseIndex * _studentsPerCourse + i].$1,
             lastName: names[courseIndex * _studentsPerCourse + i].$2,
@@ -79,9 +119,9 @@ Future<void> loadSampleData(AppDatabase db, {DateTime? now}) async {
       final ability = [for (final _ in roster) 58 + random.nextInt(40)];
 
       for (final work in plan.assignments) {
-        final rubric = library.firstWhere((r) => r.id == work.rubricId);
+        final rubric = library.firstWhere((r) => r.id == scoped(work.rubricId));
         final assignment = Assignment(
-          id: '${sampleIdPrefix}assignment-${work.key}',
+          id: scoped('${sampleIdPrefix}assignment-${work.key}'),
           courseId: course.id,
           title: work.title,
           description: work.description,
@@ -119,7 +159,7 @@ Future<void> loadSampleData(AppDatabase db, {DateTime? now}) async {
 
     final existingSnippets = {for (final s in await comments.all()) s.id};
     for (final (i, (category, text)) in _snippets.indexed) {
-      final id = '${sampleIdPrefix}comment-${i + 1}';
+      final id = scoped('${sampleIdPrefix}comment-${i + 1}');
       if (existingSnippets.contains(id)) continue;
       await comments.save(
         CommentSnippet(

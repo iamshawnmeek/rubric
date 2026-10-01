@@ -127,19 +127,58 @@ void main() {
     expect((await repo.get(essay.id))!.title, 'My Essay Rubric');
   });
 
-  test('is deterministic across devices', () async {
+  test(
+    'is deterministic within one namespace (one teacher, two devices)',
+    () async {
+      final other = testDatabase();
+      addTearDown(other.close);
+      await loadSampleData(db, now: _now, namespace: 'demo');
+      await loadSampleData(other, now: _now, namespace: 'demo');
+
+      Future<List<String>> roster(AppDatabase d) async =>
+          (await CourseRepository(
+              d,
+            ).allStudents()).map((s) => '${s.id}=${s.displayName}').toList()
+            ..sort();
+      expect(await roster(other), await roster(db));
+      expect(
+        await AssignmentRepository(other).allEvaluations(),
+        unorderedEquals(await AssignmentRepository(db).allEvaluations()),
+      );
+    },
+  );
+
+  test("two teachers' demos share no row ids", () async {
+    // Ids are global on the sync server: with shared ids, the second teacher
+    // to sync the demo got "exists" for every row and could never upload it.
     final other = testDatabase();
     addTearDown(other.close);
     await loadSampleData(db, now: _now);
     await loadSampleData(other, now: _now);
 
-    Future<List<String>> roster(AppDatabase d) async => (await CourseRepository(
-      d,
-    ).allStudents()).map((s) => '${s.id}=${s.displayName}').toList()..sort();
-    expect(await roster(other), await roster(db));
-    expect(
-      await AssignmentRepository(other).allEvaluations(),
-      unorderedEquals(await AssignmentRepository(db).allEvaluations()),
-    );
+    Future<Set<String>> ids(AppDatabase d) async => {
+      for (final t in [
+        'rubrics',
+        'courses',
+        'students',
+        'assignments',
+        'evaluations',
+        'comment_snippets',
+      ])
+        for (final row in await d.customSelect('SELECT id FROM $t').get())
+          row.read<String>('id'),
+    };
+    final mine = await ids(db);
+    final theirs = await ids(other);
+    expect(mine, hasLength(greaterThan(150)), reason: 'the demo loaded');
+    expect(theirs, hasLength(mine.length));
+    expect(mine.intersection(theirs), isEmpty);
+  });
+
+  test('loading again reuses the namespace already on the device', () async {
+    await loadSampleData(db, now: _now, namespace: 'pulled');
+    final before = (await CourseRepository(db).allCourses()).length;
+    await loadSampleData(db, now: _now); // no namespace given: finds 'pulled'
+    expect((await CourseRepository(db).allCourses()).length, before);
   });
 }
