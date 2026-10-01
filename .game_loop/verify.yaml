@@ -70,6 +70,13 @@
   - "tool/check.sh"
 "lib/l10n/arb/*.arb":
   - "tool/check.sh"
+"pubspec.lock":
+  - "tool/check.sh"
+# tool/check.sh runs `dart analyze --fatal-infos` over server/. It does NOT
+# compile workers or apply migrations: that needs the zonai CLI, which CI does
+# not have. The end-to-end proof for server changes is tool/sync_e2e.sh.
+"server/**":
+  - "tool/check.sh"
 
 "unchecked-ok":
   - "*.md"
