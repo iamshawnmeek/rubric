@@ -17,7 +17,18 @@ Rubric's backend is a single zonai server with a SQLite database on local disk
   wipe their disk (Firebase Hosting, Cloud Functions, Cloud Run's free tier)
   can't run it.
 - **$0.** The host is Oracle Cloud's *Always Free* Ampere A1 (ARM) VM with a
-  persistent boot volume. Caddy gets a real Let's Encrypt certificate for
+  persistent boot volume (200 GB of block storage and 10 TB a month of
+  outbound transfer are free). Measured footprint: the server and its four
+  workers use about 75 MB of memory together.
+- **Why not Google Cloud?** It was checked on 2026-10-01. The Always Free
+  `e2-micro` (1 GB, `us-west1`/`us-central1`/`us-east1`, 30 GB disk) would fit
+  in memory. But Google bills every in-use external IPv4 at $0.005/hour
+  (about $3.65 a month) with no free-tier exemption on its pricing page, and
+  free egress is only 1 GB a month. Firebase can't run the server at all
+  (Hosting is static; Functions, App Hosting and Cloud Run scale to zero and
+  lose the disk). The tooling here is host-agnostic (`x64` builds work
+  too), so moving to an `e2-micro` is one command if it's ever worth $3.65 a
+  month. Caddy gets a real Let's Encrypt certificate for
   `<ip-with-dashes>.sslip.io`, a free DNS name that resolves to the IP, so no
   domain purchase is needed. A real domain can replace it later through the
   `domain` argument alone.
@@ -31,14 +42,22 @@ are never charged).
 
 1. Create an Oracle Cloud account. Pick a home region with Ampere A1
    capacity.
-2. Create a Compute instance: image **Ubuntu 24.04**, shape
-   **VM.Standard.A1.Flex** (1 OCPU and 6 GB is plenty; Always Free allows up
-   to 4 and 24), your SSH public key, and a public IPv4.
-3. In the instance's VCN **security list**, add ingress rules for TCP **80**
+2. **Upgrade the account to Pay As You Go.** It stays $0: Oracle doesn't
+   charge for Always Free resources after the upgrade. Without it, Oracle
+   reclaims Always Free VMs that look idle (CPU, network and memory all
+   under 20% at the 95th percentile over 7 days). Rubric's server uses about
+   75 MB and almost no CPU, so it would be reclaimed. Set a budget alert at
+   $1 to catch any mistake early.
+3. Create a Compute instance: image **Ubuntu 24.04**, shape
+   **VM.Standard.A1.Flex** (1 OCPU and 6 GB is plenty; Always Free covers
+   2 OCPUs and 12 GB), and your SSH public key. Give it a **reserved** public
+   IPv4 (free, up to 2). A reserved IP outlives the instance, so the
+   `sslip.io` name, and the app's `RUBRIC_SERVER`, survive rebuilding the host.
+4. In the instance's VCN **security list**, add ingress rules for TCP **80**
    and **443** from `0.0.0.0/0`. Caddy needs 80 for the certificate challenge.
    `provision.sh` opens the host's own iptables. The cloud firewall is a
    separate layer and can only be changed in the console.
-4. Note the public IP, for example `203.0.113.7`. The domain is then
+5. Note the public IP, for example `203.0.113.7`. The domain is then
    `203-0-113-7.sslip.io`.
 
 ## Deploying (every release)
