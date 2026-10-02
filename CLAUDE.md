@@ -93,6 +93,8 @@ What this means in practice:
 
 ## Devices
 
+Start and stop the Android emulator only with `tool/emulator.sh start|stop`, which uses hardware GPU rendering. Never use `-gpu swiftshader*`. Shut devices down when a run finishes; idle emulators cost the shared machine.
+
 This project's agent only uses devices named `rubric-owner*` (iOS simulator
 `rubric-owner iPhone 17 Pro`, Android AVD `rubric_owner_pixel`). Never touch the
 physical SM-G892U or `emulator-5554` — they belong to other agents.
