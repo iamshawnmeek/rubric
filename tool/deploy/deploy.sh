@@ -20,6 +20,14 @@ domain="${2:?usage: deploy.sh <ssh target> <domain> [arm64|x64]}"
 arch="${3:-arm64}"
 url="https://$domain"
 bundle="build/server-linux-$arch"
+# Host keys go to a repo-local file (gitignored), not ~/.ssh/known_hosts. A
+# new host is accepted on first contact, and a CHANGED key is still refused.
+# DEPLOY_SSH_KEY picks the identity (default: ssh's own choice).
+ssh_opts=(-o BatchMode=yes -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=.contrib/known_hosts)
+if [ -n "${DEPLOY_SSH_KEY:-}" ]; then ssh_opts+=(-i "$DEPLOY_SSH_KEY"); fi
+ssh() { command ssh "${ssh_opts[@]}" "$@"; }
+rsync() { command rsync -e "ssh ${ssh_opts[*]}" "$@"; }
+mkdir -p .contrib
 
 echo "== 1/5 build"
 tool/deploy/build.sh "$url" "$arch" "$bundle"

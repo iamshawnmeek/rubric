@@ -35,6 +35,40 @@ Rubric's backend is a single zonai server with a SQLite database on local disk
 - **Nothing here is Oracle-specific** except the firewall notes. Any Ubuntu
   host with SSH and sudo works (`x64` or `arm64`).
 
+## Production (since 2026-10-05)
+
+- **URL:** https://147-224-152-185.sslip.io (Let's Encrypt; Caddy renews it)
+- **Host:** Oracle Cloud, US Midwest (Chicago), `VM.Standard.A1.Flex`
+  (1 OCPU, 6 GB), Ubuntu 24.04 aarch64. Reserved public IP
+  `147.224.152.185`. Everything is in the `rubric` compartment.
+- **SSH:** `ubuntu@147.224.152.185`, key `~/.ssh/id_supposedlysam`
+- **Deploy:** `DEPLOY_SSH_KEY=~/.ssh/id_supposedlysam tool/deploy/deploy.sh ubuntu@147.224.152.185 147-224-152-185.sslip.io arm64`
+- **App:** release builds default to this URL (`productionServer` in
+  `lib/main.dart`); `--dart-define=RUBRIC_SERVER=...` overrides it. Debug
+  builds use the local server.
+
+## Infrastructure as code
+
+`tool/deploy/oci/provision_oci.sh` creates the whole Oracle side and is
+safe to re-run: every resource is found by name before it's created.
+It creates the compartment, the VCN, an internet gateway, the route,
+ingress for TCP 22/80/443, the subnet, the A1 instance (it retries every
+availability domain on "Out of host capacity", and checks by name after
+each attempt so it can never launch a duplicate), and the reserved IP.
+
+It uses the OCI CLI and an API key, both in `.contrib/oci/` (gitignored;
+the private key never leaves the dev machine). To set it up on another
+machine:
+1. Create a venv: `python3 -m venv .contrib/oci/venv && .contrib/oci/venv/bin/pip install oci-cli`.
+2. Generate a key pair with openssl into `.contrib/oci/`.
+3. In the console, add the public key under My profile → API keys.
+4. Write `.contrib/oci/config` from the preview it shows, setting
+   `key_file` to the private key.
+
+A new key takes a few minutes to reach every Oracle identity server. The
+script retries `NotAuthenticated` (and `NotAuthorizedOrNotFound`, for a
+just-created compartment) with backoff.
+
 ## One-time: the host (the human's part)
 
 Creating the cloud account needs a person and a card (Always Free resources
@@ -128,4 +162,6 @@ tool/flutter build appbundle --dart-define=RUBRIC_SERVER=https://203-0-113-7.ssl
 | Bundle serves with injected secrets, migrations apply | Real bundle on macOS, same layout: health 200, `smoke.dart` passes |
 | Cross-compiled linux-arm64 bundle | Builds; every binary is an aarch64 ELF; no dev secrets in `strings` |
 | Backup, rotation, restore, failure paths | `test_backup_restore.sh`, plus a round trip against the real bundle |
-| systemd units, Caddy, `provision.sh`, `deploy.sh` | **Not yet run on Linux.** They pass `bash -n`. Their first real proof is the first deploy, which gates on health plus the smoke test. `shellcheck` isn't installed on the dev machine. |
+| systemd units, Caddy, `provision.sh`, `deploy.sh` | First production deploy (2026-10-05): HTTPS with a Let's Encrypt cert, smoke test passed. The backup unit ran under its hardening and produced a verified snapshot; the timer is scheduled. Secrets file is root 0600. Server memory is 65 MB. |
+| Survives a reboot | `systemctl reboot`: healthy about 50 s later, all three units active, smoke test passed again, firewall rules persisted |
+| `provision_oci.sh` | Built the production infrastructure. A re-run found every existing resource and created only what was missing (the reserved IP). |

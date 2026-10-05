@@ -13,15 +13,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zonai_client/zonai_client.dart';
 import 'package:zonai_sync/zonai_sync.dart';
 
-/// The sync server. `--dart-define=RUBRIC_SERVER=https://...` in a build; in
-/// development the local zonai server (see server/README.md) — reached from
-/// the Android emulator through its host alias 10.0.2.2.
-Uri serverUrl() {
+/// Production: one Oracle Cloud Always Free host (docs/DEPLOY.md).
+const productionServer = 'https://147-224-152-185.sslip.io';
+
+/// The sync server. `--dart-define=RUBRIC_SERVER=https://...` always wins.
+/// Otherwise a release build talks to [productionServer] (a shipped app
+/// must never point at localhost), and a debug or profile build talks to
+/// the local zonai server (server/README.md), which the Android emulator
+/// reaches through its host alias 10.0.2.2.
+Uri serverUrl({
+  bool release = kReleaseMode,
+  TargetPlatform platform = TargetPlatform.iOS,
+}) {
   const configured = String.fromEnvironment('RUBRIC_SERVER');
   if (configured.isNotEmpty) return Uri.parse(configured);
-  final host = defaultTargetPlatform == TargetPlatform.android
-      ? '10.0.2.2'
-      : 'localhost';
+  if (release) return Uri.parse(productionServer);
+  final host = platform == TargetPlatform.android ? '10.0.2.2' : 'localhost';
   return Uri.parse('http://$host:8792');
 }
 
@@ -39,7 +46,7 @@ Future<void> main() async {
   final db = AppDatabase();
   const keychain = FlutterSecureStorage();
   final client = ZonaiClient(
-    baseUrl: serverUrl(),
+    baseUrl: serverUrl(platform: defaultTargetPlatform),
     storage: SecureTokenStorage(keychain),
   );
   final sync = await SyncService.open(
