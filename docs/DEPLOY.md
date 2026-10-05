@@ -37,12 +37,22 @@ Rubric's backend is a single zonai server with a SQLite database on local disk
 
 ## Production (since 2026-10-05)
 
-- **URL:** https://147-224-152-185.sslip.io (Let's Encrypt; Caddy renews it)
+- **URL:** https://api.yourrubric.com (Let's Encrypt; Caddy renews it). The
+  first name, https://147-224-152-185.sslip.io, is still served too, so
+  nothing that used it breaks.
+- **Domain:** `yourrubric.com`, registered at Cloudflare (at cost, auto-renew
+  on). DNS is on Cloudflare: `api` is an A record to the reserved IP,
+  **DNS only** (not proxied), so Caddy gets its own certificate. Managed by
+  `tool/deploy/dns.sh <name> <ip>`, an idempotent upsert, with an API token
+  limited to Zone > DNS > Edit for yourrubric.com, in
+  `.contrib/cloudflare/token` (gitignored, 0600, never printed).
 - **Host:** Oracle Cloud, US Midwest (Chicago), `VM.Standard.A1.Flex`
   (1 OCPU, 6 GB), Ubuntu 24.04 aarch64. Reserved public IP
   `147.224.152.185`. Everything is in the `rubric` compartment.
 - **SSH:** `ubuntu@147.224.152.185`, key `~/.ssh/id_supposedlysam`
-- **Deploy:** `DEPLOY_SSH_KEY=~/.ssh/id_supposedlysam tool/deploy/deploy.sh ubuntu@147.224.152.185 147-224-152-185.sslip.io arm64`
+- **Deploy:** `DEPLOY_SSH_KEY=~/.ssh/id_supposedlysam DEPLOY_EXTRA_DOMAINS=147-224-152-185.sslip.io tool/deploy/deploy.sh ubuntu@147.224.152.185 api.yourrubric.com arm64`
+  (the health check resolves through public DNS and pins it, so a stale
+  local DNS cache can't fail a good deploy)
 - **App:** release builds default to this URL (`productionServer` in
   `lib/main.dart`); `--dart-define=RUBRIC_SERVER=...` overrides it. Debug
   builds use the local server.

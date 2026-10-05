@@ -14,7 +14,7 @@ import 'package:zonai_client/zonai_client.dart';
 import 'package:zonai_sync/zonai_sync.dart';
 
 /// Production: one Oracle Cloud Always Free host (docs/DEPLOY.md).
-const productionServer = 'https://147-224-152-185.sslip.io';
+const productionServer = 'https://api.yourrubric.com';
 
 /// The sync server. `--dart-define=RUBRIC_SERVER=https://...` always wins.
 /// Otherwise a release build talks to [productionServer] (a shipped app

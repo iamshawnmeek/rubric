@@ -23,6 +23,8 @@ bundle="build/server-linux-$arch"
 # Host keys go to a repo-local file (gitignored), not ~/.ssh/known_hosts. A
 # new host is accepted on first contact, and a CHANGED key is still refused.
 # DEPLOY_SSH_KEY picks the identity (default: ssh's own choice).
+# DEPLOY_EXTRA_DOMAINS: more names Caddy also serves (space-separated), so an
+# old name keeps working after a move to a new primary domain.
 ssh_opts=(-o BatchMode=yes -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=.contrib/known_hosts)
 if [ -n "${DEPLOY_SSH_KEY:-}" ]; then ssh_opts+=(-i "$DEPLOY_SSH_KEY"); fi
 ssh() { command ssh "${ssh_opts[@]}" "$@"; }
@@ -34,7 +36,7 @@ tool/deploy/build.sh "$url" "$arch" "$bundle"
 
 echo "== 2/5 provision $target"
 rsync -a --delete tool/deploy/ "$target:/tmp/rubric-deploy/"
-ssh "$target" "sudo bash /tmp/rubric-deploy/host/provision.sh '$domain'"
+ssh "$target" "sudo bash /tmp/rubric-deploy/host/provision.sh $domain ${DEPLOY_EXTRA_DOMAINS:-}"
 
 echo "== 3/5 backup before deploy"
 ssh "$target" 'if sudo test -f /opt/rubric/.zonai/data/zonai.sqlite; then
@@ -50,11 +52,25 @@ ssh "$target" 'sudo chown -R rubric:rubric /opt/rubric/.zonai &&
   sudo chown root:root /opt/rubric/zonai && sudo systemctl start rubric.service'
 
 echo "== 5/5 verify $url"
+# Resolve through public DNS and pin it. This Mac's resolver can hold a
+# cached "no such name" for up to 30 minutes after a new record is created
+# (seen 2026-10-05), and that would fail a deploy that is actually fine.
+public_ip="$(dig +short A "$domain" @1.1.1.1 | tail -1)"
+[ -n "$public_ip" ] || { echo "deploy: $domain does not resolve in public DNS (tool/deploy/dns.sh)" >&2; exit 1; }
+local_ip="$(dscacheutil -q host -a name "$domain" 2>/dev/null | awk '/ip_address/{print $2; exit}' || true)"
+if [ "$local_ip" != "$public_ip" ]; then
+  echo "deploy: note: this machine resolves $domain to '${local_ip:-nothing}', public DNS says $public_ip (a stale local cache)"
+fi
+pin=(--resolve "$domain:443:$public_ip")
 for _ in $(seq 1 60); do
-  curl -fsS -o /dev/null "$url/health" && break
+  curl -fsS -o /dev/null "${pin[@]}" "$url/health" && break
   sleep 2
 done
-curl -fsS -o /dev/null "$url/health" ||
+curl -fsS -o /dev/null "${pin[@]}" "$url/health" ||
   { echo "deploy: $url/health never answered. See: ssh $target sudo journalctl -u rubric -n 100" >&2; exit 1; }
+if [ "$local_ip" != "$public_ip" ]; then
+  echo "deploy: skipping the smoke test from here until this machine's DNS cache catches up; run: tool/dart run tool/deploy/smoke.dart $url"
+  exit 0
+fi
 tool/dart run tool/deploy/smoke.dart "$url"
 echo "deploy: $url is live"

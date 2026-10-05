@@ -2,7 +2,10 @@
 # One-time (and safely re-runnable) setup of a fresh Ubuntu host for Rubric.
 # Run ON the host as root. tool/deploy/deploy.sh uploads and runs it for you:
 #
-#   provision.sh <domain>      e.g. provision.sh 203-0-113-7.sslip.io
+#   provision.sh <domain> [more domains...]
+#   e.g. provision.sh api.yourrubric.com 147-224-152-185.sslip.io
+#   The first is the primary name; Caddy serves, and gets a certificate for,
+#   every name given.
 #
 # It installs the runtime (libsqlite3, sqlite3 for backups, Caddy for HTTPS),
 # creates the `rubric` system user and its directories, generates the signing
@@ -10,7 +13,8 @@
 # docs/DEPLOY.md), installs the systemd units and the Caddy site, and opens
 # ports 80 and 443 in the host firewall.
 set -euo pipefail
-domain="${1:?usage: provision.sh <domain>}"
+domain="${1:?usage: provision.sh <domain> [more domains...]}"
+sites="$(printf '%s, ' "$@")"; sites="${sites%, }"
 here="$(cd "$(dirname "$0")" && pwd)"
 [ "$(id -u)" = 0 ] || { echo "provision: run as root" >&2; exit 1; }
 
@@ -44,7 +48,7 @@ chmod 0600 /etc/rubric/secrets.env
 install -m 0755 "$here/../backup.sh" "$here/../restore.sh" /opt/rubric/ops/
 install -m 0644 "$here/rubric.service" "$here/rubric-backup.service" \
   "$here/rubric-backup.timer" /etc/systemd/system/
-sed "s/__DOMAIN__/$domain/" "$here/Caddyfile.template" > /etc/caddy/Caddyfile
+sed "s/__DOMAIN__/$sites/" "$here/Caddyfile.template" > /etc/caddy/Caddyfile
 install -d -o caddy -g caddy /var/log/caddy
 
 # Oracle's Ubuntu images ship iptables rules that drop everything but SSH.
@@ -61,4 +65,4 @@ systemctl daemon-reload
 systemctl enable rubric.service rubric-backup.timer caddy.service
 systemctl restart caddy
 systemctl start rubric-backup.timer
-echo "provision: done for $domain"
+echo "provision: done for $sites"
