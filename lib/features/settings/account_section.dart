@@ -6,6 +6,7 @@ import 'package:rubric/design_system/design_system.dart';
 import 'package:rubric/features/settings/settings_tiles.dart';
 import 'package:rubric/features/sync/sync_status_view.dart';
 import 'package:rubric/l10n/l10n.dart';
+import 'package:rubric/sync/auth_failure.dart';
 import 'package:rubric/sync/sync_service.dart';
 import 'package:zonai_sync/zonai_sync.dart';
 
@@ -217,13 +218,18 @@ class _AccountSheetState extends ConsumerState<AccountSheet> {
         Navigator.of(context).pop();
         showRubricSnack(context, l.syncSignedInSnack);
       }
-    } on Object {
+    } on Object catch (error) {
       if (mounted) {
         setState(() {
           _busy = false;
-          _error = _mode == _Mode.create
-              ? l.syncCreateFailed
-              : l.syncSignInFailed;
+          _error = switch (classifyAuthFailure(error)) {
+            AuthFailure.offline => l.syncAuthOffline,
+            AuthFailure.rejected when _mode == _Mode.create =>
+              l.syncCreateFailed,
+            AuthFailure.rejected => l.syncSignInFailed,
+            AuthFailure.rateLimited => l.syncAuthRateLimited,
+            AuthFailure.unknown => l.syncAuthUnknown,
+          };
         });
       }
     }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rubric/data/providers.dart';
@@ -160,6 +162,23 @@ void main() {
     expect(find.text(l.syncDeleteAccountFailed), findsOneWidget);
     expect(sync.state.signedIn, isTrue);
     expect(find.byKey(const Key('sync.deleteAccount')), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('each sign-in failure says what actually went wrong', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+
+    auth.failNextWith = const SocketException('no route');
+    await signIn(tester);
+    expect(find.text(l.syncAuthOffline), findsOneWidget);
+    expect(find.text(l.syncSignInFailed), findsNothing);
+
+    auth.failNext = true;
+    await tapKey(tester, 'sync.submit');
+    expect(find.text(l.syncSignInFailed), findsOneWidget);
+    expect(find.text(l.syncAuthOffline), findsNothing);
     await dispose(tester);
   });
 }

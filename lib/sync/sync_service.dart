@@ -311,7 +311,11 @@ final class ZonaiAuthGateway implements AuthGateway {
     required String password,
   }) async => _account(
     await _client.auth.signUp(
-      body: SignUpAuthBody(table: accountTable, email: email, password: password),
+      body: SignUpAuthBody(
+        table: accountTable,
+        email: email,
+        password: password,
+      ),
     ),
     email,
   );
@@ -322,7 +326,11 @@ final class ZonaiAuthGateway implements AuthGateway {
     required String password,
   }) async => _account(
     await _client.auth.signIn(
-      body: SignInAuthBody(table: accountTable, email: email, password: password),
+      body: SignInAuthBody(
+        table: accountTable,
+        email: email,
+        password: password,
+      ),
     ),
     email,
   );

@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Sync talks to api.yourrubric.com. Flutter's template grants INTERNET
+         only in the debug and profile manifests (for hot reload), so without
+         this line a release build cannot reach the server at all; build 21
+         shipped that way. test/app/android_manifest_test.dart holds it here. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Rubric"
         android:name="${applicationName}"

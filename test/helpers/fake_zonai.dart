@@ -12,13 +12,22 @@ final class FakeAuth implements AuthGateway {
   final Map<String, String> accounts;
   bool failNext = false;
 
+  /// Thrown by the next sign-in or sign-up instead of [failNext]'s refusal.
+  Exception? failNextWith;
+
   Future<SyncAccount> _as(String email) async {
+    if (failNextWith case final error?) {
+      failNextWith = null;
+      throw error;
+    }
     if (failNext) {
       failNext = false;
       throw const SyncRemoteException(FailureKind.unauthorized);
     }
     final id = accounts[email];
-    if (id == null || deleted.contains(id)) throw const SyncRemoteException(FailureKind.unauthorized);
+    if (id == null || deleted.contains(id)) {
+      throw const SyncRemoteException(FailureKind.unauthorized);
+    }
     server.user = id;
     return SyncAccount(id: id, email: email);
   }
