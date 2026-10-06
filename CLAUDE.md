@@ -91,6 +91,14 @@ What this means in practice:
 - Still ask the human for anything outside this repo that is theirs: accounts,
   payment, signing up for services, and other repos' policies.
 
+## Repository
+
+`origin` is the fork **SupposedlySam/rubric** (admin, where Codemagic builds).
+Its push URL is set twice, so every `git push` also updates
+**iamshawnmeek/rubric** (the original, now `upstream`) and the two never
+drift. If upstream gains a commit of its own, fetch and merge it before
+pushing, or the push to it is rejected.
+
 ## Devices
 
 Start and stop the Android emulator only with `tool/emulator.sh start|stop`, which uses hardware GPU rendering. Never use `-gpu swiftshader*`. Shut devices down when a run finishes; idle emulators cost the shared machine.
