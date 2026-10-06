@@ -1,0 +1,37 @@
+# Rubric's public website: static files, served by the same Caddy as the API.
+# Rendered by tool/deploy/site.sh: __APEX__ becomes the bare domain.
+# www redirects to the bare domain, so there is one canonical address.
+www.__APEX__ {
+	redir https://__APEX__{uri} permanent
+}
+
+__APEX__ {
+	root * /var/www/rubric
+	encode zstd gzip
+	file_server
+
+	# Strict by default: everything the page uses is first-party, so nothing
+	# else is allowed to load. Inline style attributes (the CSS custom
+	# properties on a few elements) are the one exception, and they are
+	# limited to attributes.
+	header {
+		Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; style-src-attr 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+		-Server
+	}
+	# Pages always revalidate; assets are cached for a week.
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=604800"
+	@pages not path /assets/*
+	header @pages Cache-Control "no-cache"
+
+	log {
+		output file /var/log/caddy/website.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+	}
+}

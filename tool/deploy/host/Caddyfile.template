@@ -12,3 +12,8 @@ __DOMAIN__ {
 		}
 	}
 }
+
+# Other sites on this host (the public website: tool/deploy/site.sh). It lives
+# here, in the template, because provision.sh rewrites this file on every
+# deploy, and an import line added afterwards would be lost.
+import /etc/caddy/sites/*.caddy

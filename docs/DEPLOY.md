@@ -57,6 +57,36 @@ Rubric's backend is a single zonai server with a SQLite database on local disk
   `lib/main.dart`); `--dart-define=RUBRIC_SERVER=...` overrides it. Debug
   builds use the local server.
 
+## Public website
+
+https://yourrubric.com (`www.` redirects to it) is a static site in
+`website/`: hand-written HTML, CSS and one small script, with no framework,
+build step, cookies, analytics or third-party requests. The same Caddy
+serves it from `/var/www/rubric`, so it costs nothing extra.
+
+```bash
+DEPLOY_SSH_KEY=~/.ssh/id_supposedlysam tool/deploy/site.sh ubuntu@147.224.152.185 yourrubric.com
+```
+
+`site.sh` upserts the apex and `www` DNS records, replaces the files whole,
+installs the Caddy site (`host/website.caddy.template`: strict CSP, HSTS,
+nosniff, a week's cache on `/assets/`), reloads Caddy, then checks every
+page and asset through public DNS. It never touches the API server.
+
+- **Brand:** colours and card shapes come from `lib/design_system`. The
+  font stack asks for Avenir Next, which is built into Apple devices, and
+  falls back to self-hosted Figtree (OFL, license in
+  `website/assets/fonts/`). The app's Avenir TTFs are not served: their web
+  license is unknown.
+- **Motion:** slowly drifting background glows, a hero that rises in on load
+  (CSS only), sections that rise and fade in once on scroll, and a few
+  pixels of parallax on the hero device. All of it is off under
+  `prefers-reduced-motion`.
+- **Screenshots** are the real app: `tool/tour.sh` plus
+  `tool/site_screens.sh` (`integration_test/site_screens_test.dart`, which
+  opens the sample class's best-graded paper). Exported at 2× and
+  JPEG-compressed into `website/assets/img/`.
+
 ## Infrastructure as code
 
 `tool/deploy/oci/provision_oci.sh` creates the whole Oracle side and is

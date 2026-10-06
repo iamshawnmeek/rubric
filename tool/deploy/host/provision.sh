@@ -50,6 +50,7 @@ install -m 0644 "$here/rubric.service" "$here/rubric-backup.service" \
   "$here/rubric-backup.timer" /etc/systemd/system/
 sed "s/__DOMAIN__/$sites/" "$here/Caddyfile.template" > /etc/caddy/Caddyfile
 install -d -o caddy -g caddy /var/log/caddy
+install -d -m 0755 /etc/caddy/sites /var/www/rubric
 
 # Oracle's Ubuntu images ship iptables rules that drop everything but SSH.
 # The cloud's own security list must allow 80/443 too (docs/DEPLOY.md).
