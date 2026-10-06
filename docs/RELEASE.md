@@ -16,9 +16,8 @@ The `production-deploy` workflow (`codemagic.yaml`) then:
 2. takes the version name from the tag, and the build number from one above
    the highest of Google Play, App Store Connect and `pubspec.yaml`, so no
    store sees a duplicate;
-3. builds a signed Android App Bundle and publishes it to Play's
-   **internal** track (as a draft until the app's first public release; flip
-   `submit_as_draft` in `codemagic.yaml` after that);
+3. builds a signed Android App Bundle and releases it on Play's
+   **internal** testing track, where internal testers get it right away;
 4. signs iOS automatically (`app-store-connect fetch-signing-files --create`
    makes and reuses Rubric's own distribution certificate) and uploads the
    build to App Store Connect, where internal TestFlight testers get it

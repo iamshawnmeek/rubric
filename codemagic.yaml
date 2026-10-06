@@ -92,9 +92,10 @@ workflows:
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: internal
-        # The app has not been published yet, so Play only accepts draft
-        # releases. Switch to false after the first release goes out.
-        submit_as_draft: true
+        # Completed, not draft: internal testers get each tagged build
+        # straight away (Play accepted a completed internal release for this
+        # app on 2026-10-06). Production stays a manual promotion.
+        submit_as_draft: false
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
