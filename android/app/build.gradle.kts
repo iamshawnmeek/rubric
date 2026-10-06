@@ -1,3 +1,6 @@
+import java.io.File
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -15,7 +18,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.supposedlysam.rubric"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -29,11 +31,39 @@ android {
         versionName = flutter.versionName
     }
 
+    // The Play upload key. On Codemagic it comes from the environment
+    // (CM_KEYSTORE_PATH and friends, see codemagic.yaml); on a dev machine
+    // from .contrib/android/ (gitignored, docs/DEPLOY.md). Google Play App
+    // Signing holds the real app-signing key, so a lost upload key can be
+    // reset with Google.
+    val repoRoot = rootProject.projectDir.parentFile
+    val localKey = File(repoRoot, ".contrib/android/keystore.env")
+    val localProps = Properties().apply {
+        if (localKey.exists()) localKey.reader().use { load(it) }
+    }
+    val keystorePath = System.getenv("CM_KEYSTORE_PATH")
+        ?: File(repoRoot, ".contrib/android/upload-keystore.jks").takeIf { it.exists() }?.path
+    signingConfigs {
+        create("upload") {
+            if (keystorePath != null) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("CM_KEYSTORE_PASSWORD") ?: localProps.getProperty("STORE_PASSWORD")
+                keyAlias = System.getenv("CM_KEY_ALIAS") ?: localProps.getProperty("KEY_ALIAS")
+                keyPassword = System.getenv("CM_KEY_PASSWORD") ?: localProps.getProperty("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (keystorePath != null) {
+                signingConfigs.getByName("upload")
+            } else {
+                // No upload key here: `flutter run --release` still works on
+                // a dev machine, but this build can never go to Google Play.
+                logger.warn("Rubric: no upload key found; release is DEBUG-signed and Play will reject it.")
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }

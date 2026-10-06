@@ -1,0 +1,122 @@
+# Rubric's builds on Codemagic (app 6ac468dff0be487e13eb3bb4, repo
+# SupposedlySam/rubric). Laid out like Flyby's: pushing a version tag
+# (`*.*.*`, e.g. `2.0.1`) builds both stores in one run. See docs/RELEASE.md.
+#
+# Secrets live in Codemagic as secure variable groups, never in this file:
+#   android_signing    CM_KEYSTORE (base64), CM_KEYSTORE_PASSWORD,
+#                      CM_KEY_ALIAS, CM_KEY_PASSWORD
+#   app_store_connect  APP_STORE_CONNECT_ISSUER_ID, _KEY_IDENTIFIER,
+#                      _PRIVATE_KEY, CERTIFICATE_PRIVATE_KEY
+#   google_play        GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+
+definitions:
+  environment: &environment
+    flutter: 3.47.5
+    xcode: 26.6
+    cocoapods: default
+    java: 17
+
+workflows:
+  production-deploy:
+    name: Production Deploy
+    instance_type: mac_mini_m2
+    max_build_duration: 90
+    environment:
+      <<: *environment
+      groups:
+        - android_signing
+        - app_store_connect
+        - google_play
+      vars:
+        PACKAGE_NAME: com.supposedlysam.rubric
+        BUNDLE_ID: com.supposedlysam.rubric
+        APP_STORE_APP_ID: 6819497920
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: '*.*.*'
+          include: true
+      cancel_previous_builds: true
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Analyze (infos fatal, the whole tree, as tool/check.sh)
+        script: flutter analyze --fatal-infos
+      - name: Tests
+        script: flutter test
+      - name: Version from the tag, build number from the stores
+        # The version name is the tag. The build number is one above the
+        # highest either store already holds, and above pubspec's own (the
+        # first Play upload may have used it), so neither store can reject it
+        # as a duplicate. Codemagic's build counter starts at 1, which is why
+        # Flyby's $BUILD_NUMBER is not used here.
+        script: |
+          set -euo pipefail
+          VERSION="$(git describe --tags --abbrev=0)"
+          PLAY="$(google-play get-latest-build-number --package-name "$PACKAGE_NAME" 2>/dev/null || echo 0)"
+          APPLE="$(app-store-connect get-latest-build-number "$APP_STORE_APP_ID" 2>/dev/null || echo 0)"
+          PUBSPEC="$(grep -E '^version:' pubspec.yaml | sed -E 's/.*\+([0-9]+).*/\1/')"
+          BUILD="$(printf '%s\n' "${PLAY:-0}" "${APPLE:-0}" "${PUBSPEC:-0}" | sort -n | tail -1)"
+          BUILD=$((BUILD + 1))
+          echo "Release $VERSION ($BUILD): play=$PLAY apple=$APPLE pubspec=$PUBSPEC"
+          echo "VERSION=$VERSION" >> "$CM_ENV"
+          echo "BUILD=$BUILD" >> "$CM_ENV"
+      - name: Android upload key
+        script: |
+          echo "$CM_KEYSTORE" | base64 --decode > "$CM_BUILD_DIR/upload-keystore.jks"
+          echo "CM_KEYSTORE_PATH=$CM_BUILD_DIR/upload-keystore.jks" >> "$CM_ENV"
+      - name: Build Android App Bundle
+        script: flutter build appbundle --release --build-name="$VERSION" --build-number="$BUILD"
+      - name: iOS code signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Build iOS
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist \
+            --build-name="$VERSION" --build-number="$BUILD"
+    artifacts:
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - supposedlysam@gmail.com
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        # The app has not been published yet, so Play only accepts draft
+        # releases. Switch to false after the first release goes out.
+        submit_as_draft: true
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        # Uploaded builds reach internal TestFlight testers without review;
+        # App Store submission stays a deliberate, manual step (as Flyby).
+        submit_to_testflight: false
+        submit_to_app_store: false
+
+  test:
+    # Manual only. tool/check.sh gates every commit locally, and running
+    # this on every push would spend the free macOS minutes (shared with
+    # Flyby) that releases need.
+    name: Test
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      flutter: 3.47.5
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Analyze
+        script: flutter analyze --fatal-infos
+      - name: Tests
+        script: flutter test
