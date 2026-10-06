@@ -1,0 +1,5 @@
+# The store listing writes ~40 large images; it runs on demand only
+# (tool/store_screenshots.sh), never in tool/check.sh.
+tags:
+  store_screenshots:
+    skip: "Writes store images. Run tool/store_screenshots.sh."

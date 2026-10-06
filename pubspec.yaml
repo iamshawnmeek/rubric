@@ -50,6 +50,7 @@ dependencies:
       path: libs/zonai_sync_drift
 
 dev_dependencies:
+  app_deploy_screenshots: ^1.2.0
   build_runner: ^2.16.1
   drift_dev: ^2.35.0
   flutter_launcher_icons: ^0.14.4
