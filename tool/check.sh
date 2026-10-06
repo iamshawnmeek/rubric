@@ -13,8 +13,11 @@ for pkg in packages/*/; do
   (cd "$pkg" && ../../tool/dart pub get > /dev/null && ../../tool/dart analyze --fatal-infos && ../../tool/dart test)
 done
 
+# Account email templates match their generator
+tool/email/templates.py --check
+
 # The zonai backend
-(cd server && ../tool/dart pub get > /dev/null && ../tool/dart analyze --fatal-infos)
+(cd server && ../tool/dart pub get > /dev/null && ../tool/dart analyze --fatal-infos && ../tool/dart test)
 
 # Server operations scripts (backup and restore), against a real SQLite database
 tool/deploy/test_backup_restore.sh

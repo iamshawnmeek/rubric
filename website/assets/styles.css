@@ -268,9 +268,39 @@ section[id] { scroll-margin-top: 72px; }
 .doc ul { padding-left: 20px; display: grid; gap: 8px; }
 .doc a { color: var(--accent); }
 
+/* ---- account pages: the links in Rubric's emails ---- */
+.account { min-height: 70vh; display: grid; place-items: center; padding: clamp(40px, 8vw, 96px) var(--gutter); }
+.account__card {
+  width: 100%; max-width: 440px; padding: clamp(28px, 5vw, 40px); border-radius: var(--radius);
+  background: var(--primary-card); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .6);
+}
+.account__card h1 { font-size: clamp(26px, 4vw, 32px); margin-bottom: 12px; outline: none; }
+.account__card p { color: var(--primary-lighter); font-size: 16px; line-height: 1.55; }
+.account__card p + p, .account__card p + form, .account__card p + .button { margin-top: 20px; }
+.account__card strong { color: var(--white); }
+.account__card form { display: grid; gap: 16px; margin-top: 24px; }
+.account__error { color: var(--white); font-weight: 700; padding: 10px 12px; border-radius: 8px;
+  background: rgba(47, 3, 95, .55); border-left: 3px solid var(--accent); }
+.account__note { color: var(--white); }
+.field { display: grid; gap: 6px; font-size: 14px; font-weight: 700; color: var(--primary-lighter); }
+.field input {
+  font: inherit; font-size: 17px; font-weight: 600; color: var(--white); min-height: 48px; padding: 0 14px;
+  border-radius: 8px; border: 1px solid var(--primary-lightest); background: var(--primary-dark);
+}
+.field input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
+.button {
+  display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 0 24px;
+  font: inherit; font-size: 16px; font-weight: 800; color: var(--secondary); background: var(--accent);
+  border: 0; border-radius: var(--radius); cursor: pointer; transition: transform .3s var(--ease), filter .3s;
+}
+.account__card .button { width: 100%; margin-top: 24px; }
+.account__card form .button { margin-top: 8px; }
+.button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.button:disabled { cursor: progress; filter: saturate(.6); transform: none; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .aura__orb, .device, .enter { animation: none; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
-  .meter__fill, .bars span, .card { transition: none; }
+  .meter__fill, .bars span, .card, .button { transition: none; }
 }

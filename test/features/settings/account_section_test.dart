@@ -181,4 +181,83 @@ void main() {
     expect(find.text(l.syncAuthOffline), findsNothing);
     await dispose(tester);
   });
+
+  group('forgot password', () {
+    Future<void> openSheet(WidgetTester tester, {String email = ''}) async {
+      await tapKey(tester, 'sync.signIn');
+      if (email.isNotEmpty) {
+        await tester.enterText(find.byKey(const Key('sync.email')), email);
+      }
+    }
+
+    testWidgets('asks for the email first, and sends nothing', (tester) async {
+      await pumpSettings(tester);
+      await openSheet(tester);
+      await tapKey(tester, 'sync.forgot');
+
+      expect(find.text(l.syncForgotNeedsEmail), findsOneWidget);
+      expect(auth.resetsSent, isEmpty);
+      await dispose(tester);
+    });
+
+    testWidgets('sends the link and says where', (tester) async {
+      await pumpSettings(tester);
+      await openSheet(tester, email: 'teacher@school.test');
+      await tapKey(tester, 'sync.forgot');
+
+      expect(auth.resetsSent, ['teacher@school.test']);
+      expect(
+        find.text(l.syncForgotSent('teacher@school.test')),
+        findsOneWidget,
+      );
+      await dispose(tester);
+    });
+
+    testWidgets('offline, it says so', (tester) async {
+      await pumpSettings(tester);
+      auth.failNextSend = const SocketException('no route');
+      await openSheet(tester, email: 'teacher@school.test');
+      await tapKey(tester, 'sync.forgot');
+
+      expect(find.text(l.syncAuthOffline), findsOneWidget);
+      expect(find.text(l.syncForgotSent('teacher@school.test')), findsNothing);
+      await dispose(tester);
+    });
+
+    testWidgets('is not offered when creating an account', (tester) async {
+      await pumpSettings(tester);
+      await openSheet(tester);
+      await tester.tap(find.text(l.syncModeCreate));
+      await settle(tester);
+      expect(find.byKey(const Key('sync.forgot')), findsNothing);
+      await dispose(tester);
+    });
+  });
+
+  group('confirming the email', () {
+    testWidgets('an unconfirmed account is offered the link again', (
+      tester,
+    ) async {
+      await pumpSettings(tester);
+      await signIn(tester);
+
+      await tapKey(tester, 'sync.verify');
+      expect(auth.verificationsSent, ['teacher@school.test']);
+      expect(
+        find.text(l.syncVerifySent('teacher@school.test')),
+        findsOneWidget,
+      );
+      await dispose(tester);
+    });
+
+    testWidgets('a confirmed account is not', (tester) async {
+      await pumpSettings(tester);
+      auth.verifiedIds.add('u1');
+      await signIn(tester);
+
+      expect(find.byKey(const Key('sync.verify')), findsNothing);
+      expect(find.byKey(const Key('sync.signOut')), findsOneWidget);
+      await dispose(tester);
+    });
+  });
 }

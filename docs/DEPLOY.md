@@ -174,6 +174,60 @@ tool/flutter build appbundle --dart-define=RUBRIC_SERVER=https://203-0-113-7.ssl
   `PREVIOUS_PASSWORD_SECRETS` in the same file, set the new one, and run
   `sudo systemctl restart rubric`. Existing sessions and hashes keep working.
 
+## Email
+
+Rubric sends two emails: a link to confirm a new account's address, and a
+password-reset link. Both open pages on yourrubric.com
+(`website/verify-email.html`, `website/reset-password.html`), because zonai
+serves no pages and a teacher may read the email on a computer without the
+app. The pages post the token to `yourrubric.com/api/auth/confirm`, the one
+API path the website's Caddy forwards, so they stay same-origin.
+
+**Sending: Oracle Email Delivery**, Always Free (3,000 emails a month), in
+the `rubric` compartment:
+
+| Piece | Value |
+|---|---|
+| Email domain | `yourrubric.com`, DKIM selector `rubric-202610` |
+| Approved sender | `noreply@yourrubric.com` ("Rubric") |
+| SMTP | `smtp.email.us-chicago-1.oci.oraclecloud.com:587`, STARTTLS |
+| SMTP user | `rubric-smtp`, in group `rubric-email-senders`, whose only policy is `use approved-senders in compartment rubric`. Every capability but SMTP credentials is off (no console password, no API keys). |
+| DNS (`tool/deploy/dns.sh`) | SPF `v=spf1 include:rp.oracleemaildelivery.com ~all`; DKIM CNAME `rubric-202610._domainkey` → Oracle; DMARC `p=quarantine`. DKIM is aligned with yourrubric.com, which is what DMARC passes on. |
+
+**Secrets.** The SMTP credential lives in `.contrib/oci/smtp.env` on the dev
+machine and `/etc/rubric/smtp.env` (root, 0600) on the host, which
+`deploy.sh` writes from the former on every deploy. It never enters the
+bundle: zonai compiles config values into the binary, so
+`server/lib/src/email/email_env.dart` reads `SMTP_*` from the environment
+when the server starts instead. A release server without them refuses to
+start. Verified: a scan of the built bundle finds neither the SMTP username
+nor the password, and does find the compiled-in sender address.
+
+**Rotating the SMTP credential:** create a new one for `rubric-smtp`
+(`oci iam smtp-credential create`; a user may hold two), write it to
+`.contrib/oci/smtp.env`, deploy, then delete the old one. New credentials
+take a few minutes before Oracle accepts them (535 until then).
+
+**Templates** are generated: edit `tool/email/templates.py` and run it.
+`tool/check.sh` fails if `server/lib/src/email_templates/` differs from what
+it generates.
+
+**Testing.** `tool/email/test_email_flow.sh` runs the whole thing locally,
+sending nothing real:
+- a development server whose mail goes to a local catcher
+  (`tool/email/smtp_sink.py`);
+- the website served the way Caddy serves it, with production's CSP
+  (`tool/email/site_server.py`);
+- the emails' links followed through the real pages in headless Chrome
+  (`tool/email/page_flow.mjs`).
+
+It checks that a new account starts unverified, and that the verify link
+confirms it, though only when the button is pressed. It checks that the
+reset link sets a new password, works once, and that the old password stops
+working. It checks that an address with no account gets no mail, and that a
+teacher can read their own verified flag but not anyone else's. Run it after
+changing anything in this path. It needs Chrome and node 22+.
+
 ## Backups and restore
 
 - **Daily** at 03:30 UTC, plus one before every deploy: `backup.sh` takes an

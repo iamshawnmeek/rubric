@@ -35,6 +35,20 @@ echo "== 1/5 build"
 tool/deploy/build.sh "$url" "$arch" "$bundle"
 
 echo "== 2/5 provision $target"
+# Mail settings first: the new unit requires /etc/rubric/smtp.env, and a
+# release server refuses to start without them. The file is copied over ssh
+# into a root-only file and never printed. Without a local copy, the host's
+# existing one is kept; with neither, stop here rather than at the swap.
+smtp_env=.contrib/oci/smtp.env
+if [ -f "$smtp_env" ]; then
+  ssh "$target" 'sudo install -d -m 0755 /etc/rubric &&
+    sudo sh -c "umask 077 && cat > /etc/rubric/smtp.env.new" &&
+    sudo mv /etc/rubric/smtp.env.new /etc/rubric/smtp.env' < "$smtp_env"
+  echo "mail settings: copied from $smtp_env"
+elif ! ssh "$target" 'sudo test -s /etc/rubric/smtp.env'; then
+  echo "deploy: no mail settings in $smtp_env or on the host (docs/DEPLOY.md, \"Email\")" >&2
+  exit 1
+fi
 rsync -a --delete tool/deploy/ "$target:/tmp/rubric-deploy/"
 ssh "$target" "sudo bash /tmp/rubric-deploy/host/provision.sh $domain ${DEPLOY_EXTRA_DOMAINS:-}"
 

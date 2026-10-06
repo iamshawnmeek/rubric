@@ -66,4 +66,19 @@ check "https://$apex/privacy.html" 200
 check "https://$apex/assets/styles.css" 200
 check "https://$apex/assets/fonts/figtree-latin.woff2" 200
 check "https://www.$apex/" 301
+# The pages the account emails link to, and the one API path they call.
+check "https://$apex/reset-password" 200
+check "https://$apex/verify-email" 200
+check "https://$apex/assets/account.js" 200
+# A made-up token must reach zonai and be refused there (4xx). A 404 or 405
+# would mean Caddy served it as a file, and every emailed link would fail.
+confirm="$(curl -s -o /dev/null -w '%{http_code}' "${pin[@]}" -X POST \
+  -H 'Content-Type: application/json' \
+  --data '{"type":"confirmVerifyEmail","token":"c21va2U6c21va2VAcnVicmljLmludmFsaWQ="}' \
+  "https://$apex/api/auth/confirm")"
+case "$confirm" in
+  404|405|5*|000) echo "FAIL https://$apex/api/auth/confirm -> $confirm (want zonai's 4xx)" >&2; exit 1 ;;
+  4*) echo "ok   https://$apex/api/auth/confirm -> $confirm (refused by zonai)" ;;
+  *) echo "FAIL https://$apex/api/auth/confirm accepted a made-up token ($confirm)" >&2; exit 1 ;;
+esac
 echo "site: https://$apex is live"

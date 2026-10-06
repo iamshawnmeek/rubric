@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:rubric_server/src/email/email_env.dart';
 import 'package:zonai_schema/zonai_schema.dart';
 
 /// Set by a production build (`tool/deploy/build.sh` writes it into
@@ -10,7 +13,8 @@ const _release = bool.fromEnvironment('RUBRIC_RELEASE');
 /// from the host's root-only env file, see docs/DEPLOY.md). A runtime value
 /// always wins over a compiled one, and zonai refuses to start without
 /// valid secrets, so a release server missing its secrets fails closed
-/// instead of quietly signing tokens with a published dev secret.
+/// instead of quietly signing tokens with a published dev secret. The SMTP
+/// settings arrive the same way ([emailConfigFrom]).
 AppConfig main() {
   return AppConfig(
     appName: 'Rubric',
@@ -22,5 +26,6 @@ AppConfig main() {
       'RUBRIC_BASE_URL',
       defaultValue: 'http://localhost:8792',
     ),
+    email: emailConfigFrom(Platform.environment, release: _release),
   );
 }

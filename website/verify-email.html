@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The link carries a one-time token: never send it on as a referrer,
+       and keep the page out of search results. -->
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Confirm your email · Rubric</title>
+  <meta name="theme-color" content="#2F035F">
+  <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/site.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+</head>
+<body>
+  <div class="aura" aria-hidden="true">
+    <span class="aura__orb aura__orb--violet"></span>
+    <span class="aura__orb aura__orb--lilac"></span>
+  </div>
+  <header class="nav" data-nav>
+    <div class="nav__inner">
+      <a class="nav__brand" href="/" aria-label="Rubric home">
+        <img src="/assets/img/logo.svg" alt="Rubric" width="96" height="29" class="logo">
+      </a>
+    </div>
+  </header>
+
+  <main class="account">
+    <div class="account__card enter" data-flow="verify" aria-live="polite">
+      <noscript><p class="account__note">This page needs JavaScript to finish. Turn it on, then open the link from your email again.</p></noscript>
+      <section data-state="form" hidden>
+        <h1>Confirm your email</h1>
+        <p>One tap and your Rubric account is confirmed, so password resets can reach you.</p>
+        <button class="button" type="button" data-confirm>Confirm my email</button>
+      </section>
+      <section data-state="done" hidden>
+        <h1>Email confirmed</h1>
+        <p>Thanks. You can close this page and go back to Rubric.</p>
+      </section>
+      <section data-state="expired" hidden>
+        <h1>This link has expired</h1>
+        <p>Confirmation links work once and only for 24 hours. In the Rubric app, open <strong>Settings &rarr; Account &amp; sync</strong> and send a new one.</p>
+      </section>
+      <section data-state="missing" hidden>
+        <h1>This link is incomplete</h1>
+        <p>Open it straight from the email, or copy the whole link into your browser. If it still doesn&rsquo;t work, ask for a new email from the Rubric app.</p>
+      </section>
+      <section data-state="offline" hidden>
+        <h1>Couldn&rsquo;t reach Rubric</h1>
+        <p>Check your connection, then try again.</p>
+        <button class="button" type="button" data-retry>Try again</button>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <img src="/assets/img/logo.svg" alt="Rubric" class="logo logo--small" width="72" height="22">
+      <nav aria-label="Footer"><a href="/">Home</a> · <a href="/privacy.html">Privacy</a></nav>
+      <p>© <span data-year>2026</span> Rubric</p>
+    </div>
+  </footer>
+</body>
+</html>

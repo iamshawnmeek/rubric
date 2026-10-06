@@ -35,6 +35,10 @@ dependencies:
   shared_preferences: ^2.5.5
   uuid: ^4.6.0
   zonai_client: ^0.3.0
+  # Pinned with the server (server/pubspec.yaml): zonai_client exports only
+  # some request bodies, and the account emails need VerifyEmailAuthBody and
+  # SendResetPasswordAuthBody, which it does not.
+  zonai_schema: 0.6.0
   # Offline sync. Released with zonai v0.10.0 but not yet on pub.dev
   # (publish_to: none), so pinned to the release tag. Move to hosted
   # versions once published.

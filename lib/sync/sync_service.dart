@@ -7,21 +7,39 @@ import 'package:rubric/data/sync_writer.dart';
 import 'package:rubric/sync/account_tables.dart';
 import 'package:rubric/sync/sync_tables.dart';
 import 'package:zonai_client/zonai_client.dart';
+import 'package:zonai_schema/payloads.dart'
+    show SendResetPasswordAuthBody, VerifyEmailAuthBody;
 import 'package:zonai_sync/zonai_sync.dart';
 import 'package:zonai_sync_drift/zonai_sync_drift.dart';
 
 /// The signed-in teacher.
 @immutable
 final class SyncAccount {
-  const new({required this.id, required this.email});
+  const new({required this.id, required this.email, this.verified = false});
 
-  factory fromJson(Map<String, Object?> json) =>
-      SyncAccount(id: json['id']! as String, email: json['email']! as String);
+  /// Sessions saved before `verified` existed read back as unverified; the
+  /// next [SyncService.refreshVerification] corrects that.
+  factory fromJson(Map<String, Object?> json) => SyncAccount(
+    id: json['id']! as String,
+    email: json['email']! as String,
+    verified: json['verified'] == true,
+  );
 
   final String id;
   final String email;
 
-  Map<String, Object?> toJson() => {'id': id, 'email': email};
+  /// The teacher confirmed this address through the link Rubric emailed.
+  /// Until then a password reset may not reach them, so Settings asks.
+  final bool verified;
+
+  SyncAccount copyWith({bool? verified}) =>
+      SyncAccount(id: id, email: email, verified: verified ?? this.verified);
+
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'email': email,
+    'verified': verified,
+  };
 }
 
 /// Signs teachers in and out of the server. The real one talks to zonai; tests
@@ -33,6 +51,16 @@ abstract interface class AuthGateway {
 
   /// Permanently deletes account [id] and every row it owns on the server.
   Future<void> deleteAccount(String id);
+
+  /// Emails [email] a link to choose a new password. Works signed out. The
+  /// server answers the same whether or not the address has an account.
+  Future<void> sendPasswordReset(String email);
+
+  /// Emails the signed-in teacher a link that confirms [email].
+  Future<void> sendVerification(String email);
+
+  /// Whether account [id] has confirmed its address, read from the server.
+  Future<bool> isVerified(String id);
 }
 
 /// Where the session survives app restarts (the platform keychain in the app).
@@ -130,14 +158,57 @@ final class SyncService implements SyncWriter {
   }
 
   /// Call when the app returns to the foreground or connectivity returns.
-  Future<void> nudge() =>
-      _account == null ? Future.value() : _engine.requestSync();
+  Future<void> nudge() async {
+    if (_account == null) return;
+    // A teacher who just tapped the link in their email comes back to the
+    // app: notice, so Settings stops asking.
+    unawaited(refreshVerification().catchError((Object _) {}));
+    await _engine.requestSync();
+  }
 
   /// "Sync now".
   Future<void> syncNow() => _account == null ? Future.value() : _engine.sync();
 
-  Future<void> signUp({required String email, required String password}) =>
-      _begin(_auth.signUp(email: email.trim(), password: password));
+  /// Creates the account, signs in, and emails the link that confirms the
+  /// address. The account works at once; a failed email only means Settings
+  /// keeps offering to send it.
+  Future<void> signUp({required String email, required String password}) async {
+    await _begin(_auth.signUp(email: email.trim(), password: password));
+    final account = _account;
+    // Signing up again with the same password just signs in (zonai): an
+    // address already confirmed needs no new email.
+    if (account == null || account.verified) return;
+    try {
+      await _auth.sendVerification(account.email);
+    } on Object {
+      // Offline or rate limited: Settings offers to send it again.
+    }
+  }
+
+  /// Emails [email] a password-reset link. Works signed out.
+  Future<void> requestPasswordReset(String email) =>
+      _auth.sendPasswordReset(email.trim());
+
+  /// Emails the signed-in teacher the link that confirms their address.
+  Future<void> sendVerification() async {
+    final account = _account;
+    if (account == null) throw StateError('Not signed in');
+    await _auth.sendVerification(account.email);
+  }
+
+  /// Asks the server whether the address is confirmed yet, and remembers it.
+  /// Only an unverified signed-in account asks; a confirmed address stays
+  /// confirmed.
+  Future<void> refreshVerification() async {
+    final account = _account;
+    if (account == null || account.verified) return;
+    if (!await _auth.isVerified(account.id)) return;
+    // Signed out, or another account, while the request was out: drop it.
+    if (_account?.id != account.id) return;
+    _account = account.copyWith(verified: true);
+    await _session.write(_account);
+    _publish();
+  }
 
   Future<void> signIn({required String email, required String password}) =>
       _begin(_auth.signIn(email: email.trim(), password: password));
@@ -300,10 +371,18 @@ final class ZonaiAuthGateway implements AuthGateway {
   final ZonaiClient _client;
 
   SyncAccount _account(AuthSession? session, String email) {
-    final id = session?.user['id'];
+    final user = session?.user;
+    final id = user?['id'];
     if (id is! String) throw StateError('The server did not return a user');
-    return SyncAccount(id: id, email: email);
+    return SyncAccount(
+      id: id,
+      email: email,
+      verified: _isTrue(user?['is_verified']),
+    );
   }
+
+  /// zonai sends booleans as 0/1.
+  static bool _isTrue(Object? value) => value == true || value == 1;
 
   @override
   Future<SyncAccount> signUp({
@@ -354,6 +433,25 @@ final class ZonaiAuthGateway implements AuthGateway {
       body: DeleteOneBody(table: accountTable, where: Eq('id', id)),
     );
   }
+
+  @override
+  Future<void> sendPasswordReset(String email) =>
+      _client.auth.sendResetPassword(
+        body: SendResetPasswordAuthBody(email: email, table: accountTable),
+      );
+
+  @override
+  Future<void> sendVerification(String email) => _client.auth.sendVerifyEmail(
+    body: VerifyEmailAuthBody(email: email, table: accountTable),
+  );
+
+  /// The teacher's own users row; the server's auth rules let an account
+  /// read itself and nothing else.
+  @override
+  Future<bool> isVerified(String id) => _client.db.get(
+    body: GetBody(table: accountTable, where: Eq('id', id)),
+    fromJson: (row) => _isTrue(row['is_verified']),
+  );
 }
 
 /// Keeps the account in any string key-value store (the keychain in the app).

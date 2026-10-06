@@ -63,6 +63,18 @@ class AccountSection extends ConsumerWidget {
                 size: 18,
               ),
             ),
+          if (!account.verified)
+            SettingsLinkTile(
+              key: const Key('sync.verify'),
+              hint: l.syncVerifyHint,
+              title: l.syncVerifyTitle,
+              onTap: () => _sendVerification(context, sync),
+              trailing: const FaIcon(
+                FontAwesomeIcons.envelopeCircleCheck,
+                color: accent,
+                size: 18,
+              ),
+            ),
           SettingsLinkTile(
             key: const Key('sync.signOut'),
             hint: l.syncSignOutHint,
@@ -139,6 +151,19 @@ class AccountSection extends ConsumerWidget {
     if (sure) await sync.signOut();
   }
 
+  Future<void> _sendVerification(BuildContext context, SyncService sync) async {
+    final l = context.l10n;
+    final email = sync.state.account?.email ?? '';
+    try {
+      await sync.sendVerification();
+      if (context.mounted) showRubricSnack(context, l.syncVerifySent(email));
+    } on Object catch (error) {
+      if (context.mounted) {
+        showRubricSnack(context, authFailureMessage(l, error));
+      }
+    }
+  }
+
   /// Required of any app that lets you create an account (App Store
   /// guideline 5.1.1(v)): deletion from inside the app, not by email.
   Future<void> _deleteAccount(BuildContext context, SyncService sync) async {
@@ -179,6 +204,9 @@ class _AccountSheetState extends ConsumerState<AccountSheet> {
   var _busy = false;
   String? _error;
 
+  /// Good news shown where [_error] would be: the reset link was sent.
+  String? _notice;
+
   @override
   void initState() {
     super.initState();
@@ -216,22 +244,51 @@ class _AccountSheetState extends ConsumerState<AccountSheet> {
       if (widget.reauthenticate) await sync.resume();
       if (mounted) {
         Navigator.of(context).pop();
-        showRubricSnack(context, l.syncSignedInSnack);
+        showRubricSnack(
+          context,
+          _mode == _Mode.create ? l.syncCreatedSnack : l.syncSignedInSnack,
+        );
       }
     } on Object catch (error) {
       if (mounted) {
         setState(() {
           _busy = false;
-          _error = switch (classifyAuthFailure(error)) {
-            AuthFailure.offline => l.syncAuthOffline,
-            AuthFailure.rejected when _mode == _Mode.create =>
-              l.syncCreateFailed,
-            AuthFailure.rejected => l.syncSignInFailed,
-            AuthFailure.rateLimited => l.syncAuthRateLimited,
-            AuthFailure.unknown => l.syncAuthUnknown,
-          };
+          _error = authFailureMessage(
+            l,
+            error,
+            rejected: _mode == _Mode.create
+                ? l.syncCreateFailed
+                : l.syncSignInFailed,
+          );
         });
       }
+    }
+  }
+
+  Future<void> _forgotPassword() async {
+    final l = context.l10n;
+    final sync = ref.read(syncServiceProvider);
+    if (sync == null) return;
+    final email = _email.text.trim();
+    if (!email.contains('@')) {
+      setState(() {
+        _notice = null;
+        _error = l.syncForgotNeedsEmail;
+      });
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+      _notice = null;
+    });
+    try {
+      await sync.requestPasswordReset(email);
+      if (mounted) setState(() => _notice = l.syncForgotSent(email));
+    } on Object catch (error) {
+      if (mounted) setState(() => _error = authFailureMessage(l, error));
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
   }
 
@@ -254,6 +311,7 @@ class _AccountSheetState extends ConsumerState<AccountSheet> {
                 onChanged: (m) => setState(() {
                   _mode = m;
                   _error = null;
+                  _notice = null;
                 }),
               ),
               const SizedBox(height: Insets.lg),
@@ -296,6 +354,22 @@ class _AccountSheetState extends ConsumerState<AccountSheet> {
                 ],
               ),
             ),
+            if (_mode == _Mode.signIn)
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  key: const Key('sync.forgot'),
+                  onPressed: _busy ? null : _forgotPassword,
+                  child: Text(l.syncForgotPassword),
+                ),
+              ),
+            if (_notice != null) ...[
+              const SizedBox(height: Insets.sm),
+              Semantics(
+                liveRegion: true,
+                child: Text(_notice!, style: RubricTextStyles.bodySmall),
+              ),
+            ],
             if (_error != null) ...[
               const SizedBox(height: Insets.md),
               Semantics(
@@ -321,3 +395,17 @@ class _AccountSheetState extends ConsumerState<AccountSheet> {
     );
   }
 }
+
+/// What to tell the teacher when an account request failed. [rejected]
+/// overrides the message for a 401, which means different things signing in
+/// and creating an account.
+String authFailureMessage(
+  AppLocalizations l,
+  Object error, {
+  String? rejected,
+}) => switch (classifyAuthFailure(error)) {
+  AuthFailure.offline => l.syncAuthOffline,
+  AuthFailure.rejected when rejected != null => rejected,
+  AuthFailure.rateLimited => l.syncAuthRateLimited,
+  AuthFailure.rejected || AuthFailure.unknown => l.syncAuthUnknown,
+};

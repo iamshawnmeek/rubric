@@ -13,6 +13,10 @@ WorkingDirectory=/opt/rubric
 # JWT_SECRET and PASSWORD_SECRET, root-only (0600). The bundle carries no
 # secrets and refuses to start without these.
 EnvironmentFile=/etc/rubric/secrets.env
+# SMTP_HOST/PORT/USERNAME/PASSWORD for account email, root-only (0600),
+# written by deploy.sh from .contrib/oci/smtp.env. A release server refuses
+# to start without them (server/lib/src/config/email_env.dart).
+EnvironmentFile=/etc/rubric/smtp.env
 ExecStart=/opt/rubric/zonai serve --release --host 127.0.0.1 --port 8792
 Restart=on-failure
 RestartSec=5

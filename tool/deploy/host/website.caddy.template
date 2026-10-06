@@ -8,7 +8,20 @@ www.__APEX__ {
 __APEX__ {
 	root * /var/www/rubric
 	encode zstd gzip
-	file_server
+
+	# The pages Rubric's emails link to (reset-password.html, verify-email.html)
+	# confirm their one-time token here. Exactly this one API path is
+	# forwarded, so the pages stay same-origin: the CSP keeps
+	# `connect-src 'self'` and the API needs no CORS.
+	handle /api/auth/confirm {
+		rewrite * /auth/confirm
+		reverse_proxy 127.0.0.1:8792
+	}
+	handle {
+		# Extensionless links (/reset-password) find their .html page.
+		try_files {path} {path}.html
+		file_server
+	}
 
 	# Strict by default: everything the page uses is first-party, so nothing
 	# else is allowed to load. Inline style attributes (the CSS custom

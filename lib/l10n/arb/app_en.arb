@@ -2215,6 +2215,27 @@
   "syncFormInvalid": "Enter your email and a password of at least 8 characters.",
   "syncSignInFailed": "That email and password don’t match an account.",
   "syncCreateFailed": "That email already has an account with a different password. Sign in instead.",
+  "syncForgotPassword": "Forgot password?",
+  "syncForgotNeedsEmail": "Enter your email above first.",
+  "syncForgotSent": "If {email} has a Rubric account, a link to choose a new password is on its way. It works for 30 minutes.",
+  "@syncForgotSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "syncCreatedSnack": "Account created. We emailed you a link to confirm your address.",
+  "syncVerifyHint": "Email not confirmed yet",
+  "syncVerifyTitle": "Send confirmation email",
+  "syncVerifySent": "Sent to {email}. Tap the link in it to confirm.",
+  "@syncVerifySent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "syncAuthOffline": "Couldn’t reach Rubric’s server. Check your connection and try again.",
   "syncAuthRateLimited": "Too many tries. Wait a minute, then try again.",
   "syncAuthUnknown": "Something went wrong on our end. Try again in a moment.",

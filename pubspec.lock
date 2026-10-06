@@ -1370,7 +1370,7 @@ packages:
     source: hosted
     version: "0.3.0"
   zonai_schema:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: zonai_schema
       sha256: bbc318b7fe1a6c5c5a3dd9787cf21e741433e01ba39115d109869ac8f49d9e96

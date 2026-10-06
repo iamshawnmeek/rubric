@@ -29,7 +29,11 @@ final class FakeAuth implements AuthGateway {
       throw const SyncRemoteException(FailureKind.unauthorized);
     }
     server.user = id;
-    return SyncAccount(id: id, email: email);
+    return SyncAccount(
+      id: id,
+      email: email,
+      verified: verifiedIds.contains(id),
+    );
   }
 
   @override
@@ -46,6 +50,38 @@ final class FakeAuth implements AuthGateway {
 
   @override
   Future<void> signOut() async {}
+
+  /// Addresses [sendPasswordReset] and [sendVerification] mailed, in order.
+  final resetsSent = <String>[];
+  final verificationsSent = <String>[];
+
+  /// Accounts whose address the server reports as confirmed.
+  final verifiedIds = <String>{};
+
+  /// Thrown by the next reset or verification email instead of sending it.
+  Exception? failNextSend;
+
+  void _maybeFailSend() {
+    if (failNextSend case final error?) {
+      failNextSend = null;
+      throw error;
+    }
+  }
+
+  @override
+  Future<void> sendPasswordReset(String email) async {
+    _maybeFailSend();
+    resetsSent.add(email);
+  }
+
+  @override
+  Future<void> sendVerification(String email) async {
+    _maybeFailSend();
+    verificationsSent.add(email);
+  }
+
+  @override
+  Future<bool> isVerified(String id) async => verifiedIds.contains(id);
 
   /// Account ids [deleteAccount] removed, in order.
   final deleted = <String>[];

@@ -236,6 +236,56 @@ void main() {
     },
   );
 
+  group('account email', () {
+    test('creating an account emails the confirmation link; signing in '
+        'does not', () async {
+      final phone = await device();
+      await phone.sync.signUp(email: ' $email ', password: 'password1');
+      expect(phone.auth.verificationsSent, [email]);
+
+      await phone.sync.signOut();
+      await phone.signIn();
+      expect(phone.auth.verificationsSent, [email], reason: 'no second one');
+    });
+
+    test('an address already confirmed gets no new link', () async {
+      final phone = await device();
+      phone.auth.verifiedIds.add('u1');
+      await phone.sync.signUp(email: email, password: 'password1');
+      expect(phone.auth.verificationsSent, isEmpty);
+      expect(phone.sync.state.account?.verified, isTrue);
+    });
+
+    test('a failed confirmation email does not fail the sign-up', () async {
+      final phone = await device();
+      phone.auth.failNextSend = const SyncRemoteException(FailureKind.offline);
+      await phone.sync.signUp(email: email, password: 'password1');
+      expect(phone.sync.state.signedIn, isTrue);
+    });
+
+    test('confirming on the website shows up after a refresh, and is '
+        'remembered', () async {
+      final session = MemorySession();
+      final phone = await device(session: session);
+      await phone.signIn();
+      expect(phone.sync.state.account?.verified, isFalse);
+
+      await phone.sync.refreshVerification();
+      expect(phone.sync.state.account?.verified, isFalse, reason: 'not yet');
+
+      phone.auth.verifiedIds.add('u1');
+      await phone.sync.refreshVerification();
+      expect(phone.sync.state.account?.verified, isTrue);
+      expect(session.saved?.verified, isTrue);
+    });
+
+    test('a password reset needs no session', () async {
+      final phone = await device();
+      await phone.sync.requestPasswordReset(' $email ');
+      expect(phone.auth.resetsSent, [email]);
+    });
+  });
+
   group('deleting the account', () {
     test('removes it from the server and the device, and only it', () async {
       final session = MemorySession();
