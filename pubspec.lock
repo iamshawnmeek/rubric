@@ -37,10 +37,10 @@ packages:
     dependency: "direct dev"
     description:
       name: app_deploy_screenshots
-      sha256: "09aeed0ae52fb99600397f7759e278c843a1b9bda6251e39c10704f4c31ffd0e"
+      sha256: "6845916161c85a354544b8676bc026aa2db224a809068c471b5854eb44363c7b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   archive:
     dependency: transitive
     description:
