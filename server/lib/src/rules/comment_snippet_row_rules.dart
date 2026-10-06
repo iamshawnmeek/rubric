@@ -5,8 +5,9 @@ import 'package:zonai_schema/zonai_schema.dart';
 CommentSnippetRowRules main() => CommentSnippetRowRules();
 
 /// A teacher sees and changes only their own rows. Ownership is checked on
-/// both sides of an update so a row can't be handed to someone else; hard
-/// deletes are refused (sync deletes are tombstones).
+/// both sides of an update so a row can't be handed to someone else. Hard
+/// deletes are only for account deletion, and only of the caller's own rows;
+/// everyday sync deletes are tombstones.
 final class CommentSnippetRowRules
     extends RowRules<CommentSnippetTable, CommentSnippet> {
   CommentSnippetRowRules() : super(commentSnippets);
@@ -36,5 +37,5 @@ final class CommentSnippetRowRules
   ) async => _owns(jwt, before) && _owns(jwt, after);
 
   @override
-  Future<bool> canDelete(Jwt? jwt, CommentSnippet row) async => false;
+  Future<bool> canDelete(Jwt? jwt, CommentSnippet row) async => _owns(jwt, row);
 }

@@ -18,7 +18,7 @@ final class FakeAuth implements AuthGateway {
       throw const SyncRemoteException(FailureKind.unauthorized);
     }
     final id = accounts[email];
-    if (id == null) throw const SyncRemoteException(FailureKind.unauthorized);
+    if (id == null || deleted.contains(id)) throw const SyncRemoteException(FailureKind.unauthorized);
     server.user = id;
     return SyncAccount(id: id, email: email);
   }
@@ -37,6 +37,22 @@ final class FakeAuth implements AuthGateway {
 
   @override
   Future<void> signOut() async {}
+
+  /// Account ids [deleteAccount] removed, in order.
+  final deleted = <String>[];
+  Exception? failDelete;
+
+  @override
+  Future<void> deleteAccount(String id) async {
+    if (failDelete case final error?) {
+      failDelete = null;
+      throw error;
+    }
+    for (final rows in server.tables.values) {
+      rows.removeWhere((_, row) => row['owner_id'] == id);
+    }
+    deleted.add(id);
+  }
 }
 
 final class MemorySession implements SessionStore {

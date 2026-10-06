@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:rubric/data/database.dart';
 import 'package:rubric/data/sync_writer.dart';
+import 'package:rubric/sync/account_tables.dart';
 import 'package:rubric/sync/sync_tables.dart';
 import 'package:zonai_client/zonai_client.dart';
 import 'package:zonai_sync/zonai_sync.dart';
@@ -29,6 +30,9 @@ abstract interface class AuthGateway {
   Future<SyncAccount> signUp({required String email, required String password});
   Future<SyncAccount> signIn({required String email, required String password});
   Future<void> signOut();
+
+  /// Permanently deletes account [id] and every row it owns on the server.
+  Future<void> deleteAccount(String id);
 }
 
 /// Where the session survives app restarts (the platform keychain in the app).
@@ -167,6 +171,36 @@ final class SyncService implements SyncWriter {
     _publish();
   }
 
+  /// Permanently deletes the account: every row it owns on the server, then
+  /// the account itself, then its data on this device (as [signOut]).
+  ///
+  /// Sync stops first, the same way [signOut] stops it, so no pass can push a
+  /// queued row back after its table was emptied. If the server deletion
+  /// fails (offline, say) nothing is lost: the account is restored and sync
+  /// resumes, and the error reaches the caller to report.
+  Future<void> deleteAccount() async {
+    final account = _account;
+    if (account == null) throw StateError('Not signed in');
+    _account = null;
+    _publish();
+    try {
+      await _auth.deleteAccount(account.id);
+    } on Object {
+      _account = account;
+      _publish();
+      _engine.start();
+      rethrow;
+    }
+    try {
+      await _auth.signOut();
+    } on Object {
+      // The session went with the account; only the local part remains.
+    }
+    await _engine.signOut();
+    await _session.write(null);
+    _publish();
+  }
+
   /// After the session expired ([SyncPhase.needsAuth]) and the teacher
   /// signed in again with the same account.
   Future<void> resume() => _engine.resume();
@@ -277,7 +311,7 @@ final class ZonaiAuthGateway implements AuthGateway {
     required String password,
   }) async => _account(
     await _client.auth.signUp(
-      body: SignUpAuthBody(table: 'users', email: email, password: password),
+      body: SignUpAuthBody(table: accountTable, email: email, password: password),
     ),
     email,
   );
@@ -288,13 +322,30 @@ final class ZonaiAuthGateway implements AuthGateway {
     required String password,
   }) async => _account(
     await _client.auth.signIn(
-      body: SignInAuthBody(table: 'users', email: email, password: password),
+      body: SignInAuthBody(table: accountTable, email: email, password: password),
     ),
     email,
   );
 
   @override
   Future<void> signOut() => _client.auth.logout();
+
+  /// Children first ([accountDeletionOrder]), each table in one request,
+  /// then the user row. The server's rules allow a teacher to delete only
+  /// their own rows (server/lib/src/rules/), so `owner_id` here is a filter,
+  /// not the guard. Re-running after a partial failure is safe: emptied
+  /// tables just match nothing.
+  @override
+  Future<void> deleteAccount(String id) async {
+    for (final table in accountDeletionOrder) {
+      await _client.db.deleteMany(
+        body: DeleteBody(table: table, where: Eq('owner_id', id)),
+      );
+    }
+    await _client.db.delete(
+      body: DeleteOneBody(table: accountTable, where: Eq('id', id)),
+    );
+  }
 }
 
 /// Keeps the account in any string key-value store (the keychain in the app).

@@ -140,8 +140,11 @@ final class {row}TableRules extends TableRules<{tcls}, {row}> {{
   @override
   Future<bool> canUpdate(Jwt? jwt) async => jwt != null;
 
+  /// Deleting is allowed here so a teacher can delete their account (App
+  /// Store guideline 5.1.1(v)); the row rules limit it to their own rows.
+  /// Everyday sync deletes are still tombstones (an update), never these.
   @override
-  Future<bool> canDelete(Jwt? jwt) async => false;
+  Future<bool> canDelete(Jwt? jwt) async => jwt != null;
 }}
 ''', f'''{HEADER}import 'package:rubric_server/src/schemas/{table}.dart';
 import 'package:zonai_schema/zonai_schema.dart';
@@ -149,8 +152,9 @@ import 'package:zonai_schema/zonai_schema.dart';
 {row}RowRules main() => {row}RowRules();
 
 /// A teacher sees and changes only their own rows. Ownership is checked on
-/// both sides of an update so a row can't be handed to someone else; hard
-/// deletes are refused (sync deletes are tombstones).
+/// both sides of an update so a row can't be handed to someone else. Hard
+/// deletes are only for account deletion, and only of the caller's own rows;
+/// everyday sync deletes are tombstones.
 final class {row}RowRules extends RowRules<{tcls}, {row}> {{
   {row}RowRules() : super({camel(table)});
 
@@ -176,7 +180,7 @@ final class {row}RowRules extends RowRules<{tcls}, {row}> {{
       _owns(jwt, before) && _owns(jwt, after);
 
   @override
-  Future<bool> canDelete(Jwt? jwt, {row} row) async => false;
+  Future<bool> canDelete(Jwt? jwt, {row} row) async => _owns(jwt, row);
 }}
 ''')
 

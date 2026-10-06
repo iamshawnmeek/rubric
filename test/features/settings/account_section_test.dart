@@ -31,6 +31,7 @@ Future<void> tapKey(WidgetTester tester, String key) async {
 void main() {
   late FakeZonai server;
   late SyncService sync;
+  late FakeAuth auth;
 
   Future<void> pumpSettings(WidgetTester tester) async {
     server = FakeZonai();
@@ -40,7 +41,7 @@ void main() {
       sync = await SyncService.open(
         db: db,
         remote: server,
-        auth: FakeAuth(server),
+        auth: auth = FakeAuth(server),
         session: MemorySession(),
       );
     });
@@ -113,6 +114,52 @@ void main() {
 
     expect(sync.state.signedIn, isFalse);
     expect(find.byKey(const Key('sync.signIn')), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('delete account asks first, then deletes it everywhere', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+    await signIn(tester);
+
+    await tapKey(tester, 'sync.deleteAccount');
+    expect(find.text(l.syncDeleteAccountConfirmTitle), findsOneWidget);
+    await tester.tap(
+      find.text(
+        MaterialLocalizations.of(
+          tester.element(find.text(l.syncDeleteAccountConfirmTitle)),
+        ).cancelButtonLabel,
+      ),
+    );
+    await settle(tester);
+    expect(auth.deleted, isEmpty, reason: 'cancel deletes nothing');
+
+    await tapKey(tester, 'sync.deleteAccount');
+    await tester.tap(find.text(l.syncDeleteAccountConfirm));
+    await settle(tester);
+
+    expect(auth.deleted, ['u1']);
+    expect(sync.state.signedIn, isFalse);
+    expect(find.text(l.syncDeleteAccountDone), findsOneWidget);
+    expect(find.byKey(const Key('sync.signIn')), findsOneWidget);
+    await dispose(tester);
+  });
+
+  testWidgets('a failed deletion says so and keeps the account', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+    await signIn(tester);
+    auth.failDelete = Exception('offline');
+
+    await tapKey(tester, 'sync.deleteAccount');
+    await tester.tap(find.text(l.syncDeleteAccountConfirm));
+    await settle(tester);
+
+    expect(find.text(l.syncDeleteAccountFailed), findsOneWidget);
+    expect(sync.state.signedIn, isTrue);
+    expect(find.byKey(const Key('sync.deleteAccount')), findsOneWidget);
     await dispose(tester);
   });
 }

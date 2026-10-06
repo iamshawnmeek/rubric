@@ -21,6 +21,9 @@ final class RubricTableRules extends TableRules<RubricTable, Rubric> {
   @override
   Future<bool> canUpdate(Jwt? jwt) async => jwt != null;
 
+  /// Deleting is allowed here so a teacher can delete their account (App
+  /// Store guideline 5.1.1(v)); the row rules limit it to their own rows.
+  /// Everyday sync deletes are still tombstones (an update), never these.
   @override
-  Future<bool> canDelete(Jwt? jwt) async => false;
+  Future<bool> canDelete(Jwt? jwt) async => jwt != null;
 }

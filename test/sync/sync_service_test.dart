@@ -5,6 +5,7 @@ import 'package:rubric/data/course_repository.dart';
 import 'package:rubric/data/database.dart';
 import 'package:rubric/domain/classroom.dart';
 import 'package:rubric/sync/sync_service.dart';
+import 'package:zonai_sync/zonai_sync.dart';
 
 import '../helpers/db.dart';
 import '../helpers/fake_zonai.dart';
@@ -13,25 +14,27 @@ const email = 'teacher@school.test';
 
 /// One phone or tablet: its own database and sync, sharing one server.
 final class Device {
-  new _(this.db, this.sync, this.session)
+  new _(this.db, this.sync, this.session, this.auth)
     : courses = CourseRepository(db, sync);
 
   static Future<Device> open(FakeZonai server, {MemorySession? session}) async {
     final db = testDatabase();
     final saved = session ?? MemorySession();
+    final auth = FakeAuth(server);
     final sync = await SyncService.open(
       db: db,
       remote: server,
-      auth: FakeAuth(server),
+      auth: auth,
       session: saved,
       pullOverlap: Duration.zero,
     );
-    return Device._(db, sync, saved);
+    return Device._(db, sync, saved, auth);
   }
 
   final AppDatabase db;
   final SyncService sync;
   final MemorySession session;
+  final FakeAuth auth;
   final CourseRepository courses;
 
   Future<void> signIn() => sync.signIn(email: email, password: 'password1');
@@ -232,6 +235,52 @@ void main() {
       expect(await phone.courseNames(), ['Biology']);
     },
   );
+
+  group('deleting the account', () {
+    test('removes it from the server and the device, and only it', () async {
+      final session = MemorySession();
+      final phone = await device(session: session);
+      await phone.signIn();
+      await phone.courses.saveCourse(Course.create(name: 'Biology'));
+      await phone.settle();
+      expect(rows('courses'), hasLength(1));
+      server.tables['courses']!['theirs'] = {
+        'id': 'theirs',
+        'owner_id': 'u2',
+        'name': 'Chemistry',
+      };
+
+      await phone.sync.deleteAccount();
+
+      expect(phone.auth.deleted, ['u1']);
+      expect(rows('courses').keys, ['theirs'], reason: "another's survives");
+      expect(phone.sync.state.signedIn, isFalse);
+      expect(session.saved, isNull);
+      expect(await phone.courseNames(), isEmpty);
+      await expectLater(phone.signIn(), throwsA(isA<SyncRemoteException>()));
+    });
+
+    test('that fails keeps the teacher signed in and syncing', () async {
+      final session = MemorySession();
+      final phone = await device(session: session);
+      await phone.signIn();
+      await phone.courses.saveCourse(Course.create(name: 'Biology'));
+      await phone.settle();
+
+      phone.auth.failDelete = const SyncRemoteException(FailureKind.offline);
+      await expectLater(
+        phone.sync.deleteAccount(),
+        throwsA(isA<SyncRemoteException>()),
+      );
+
+      expect(phone.sync.state.signedIn, isTrue);
+      expect(session.saved?.id, 'u1');
+      expect(await phone.courseNames(), ['Biology']);
+      await phone.courses.saveCourse(Course.create(name: 'Physics'));
+      await phone.settle();
+      expect(rows('courses'), hasLength(2), reason: 'sync resumed');
+    });
+  });
 
   test('signing out mid-sync leaves nothing of the account behind', () async {
     final phone = await device();

@@ -73,6 +73,17 @@ class AccountSection extends ConsumerWidget {
               size: 18,
             ),
           ),
+          SettingsLinkTile(
+            key: const Key('sync.deleteAccount'),
+            hint: l.syncDeleteAccountHint,
+            title: l.syncDeleteAccountTitle,
+            onTap: () => _deleteAccount(context, sync),
+            trailing: const FaIcon(
+              FontAwesomeIcons.userXmark,
+              color: primaryLightest,
+              size: 18,
+            ),
+          ),
         ],
       ],
     );
@@ -125,6 +136,25 @@ class AccountSection extends ConsumerWidget {
       confirmLabel: l.syncSignOutTitle,
     );
     if (sure) await sync.signOut();
+  }
+
+  /// Required of any app that lets you create an account (App Store
+  /// guideline 5.1.1(v)): deletion from inside the app, not by email.
+  Future<void> _deleteAccount(BuildContext context, SyncService sync) async {
+    final l = context.l10n;
+    final sure = await confirm(
+      context,
+      title: l.syncDeleteAccountConfirmTitle,
+      message: l.syncDeleteAccountConfirmMessage,
+      confirmLabel: l.syncDeleteAccountConfirm,
+    );
+    if (!sure) return;
+    try {
+      await sync.deleteAccount();
+      if (context.mounted) showRubricSnack(context, l.syncDeleteAccountDone);
+    } on Object {
+      if (context.mounted) showRubricSnack(context, l.syncDeleteAccountFailed);
+    }
   }
 }
 

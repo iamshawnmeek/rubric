@@ -5,8 +5,9 @@ import 'package:zonai_schema/zonai_schema.dart';
 AssignmentRowRules main() => AssignmentRowRules();
 
 /// A teacher sees and changes only their own rows. Ownership is checked on
-/// both sides of an update so a row can't be handed to someone else; hard
-/// deletes are refused (sync deletes are tombstones).
+/// both sides of an update so a row can't be handed to someone else. Hard
+/// deletes are only for account deletion, and only of the caller's own rows;
+/// everyday sync deletes are tombstones.
 final class AssignmentRowRules extends RowRules<AssignmentTable, Assignment> {
   AssignmentRowRules() : super(assignments);
 
@@ -32,5 +33,5 @@ final class AssignmentRowRules extends RowRules<AssignmentTable, Assignment> {
       _owns(jwt, before) && _owns(jwt, after);
 
   @override
-  Future<bool> canDelete(Jwt? jwt, Assignment row) async => false;
+  Future<bool> canDelete(Jwt? jwt, Assignment row) async => _owns(jwt, row);
 }
