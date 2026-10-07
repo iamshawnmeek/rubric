@@ -46,23 +46,17 @@ class AppShell extends StatelessWidget {
             HarborDock.quay(
               debugLabel: 'rail',
               backdrop: backdrop(theme.navigationRailTheme.backgroundColor),
-              // A side dock offers its child the frame's full width, and a
-              // NavigationRail (built for a Row's unbounded width) takes it
-              // all; IntrinsicWidth gives it its own width. Raised in
-              // #harbor_owner; drop this once side docks size like a Row.
-              child: IntrinsicWidth(
-                child: NavigationRail(
-                  selectedIndex: shell.currentIndex,
-                  onDestinationSelected: _go,
-                  labelType: NavigationRailLabelType.all,
-                  destinations: [
-                    for (final (icon, label) in destinations)
-                      NavigationRailDestination(
-                        icon: FaIcon(icon, size: 20),
-                        label: Text(label),
-                      ),
-                  ],
-                ),
+              child: NavigationRail(
+                selectedIndex: shell.currentIndex,
+                onDestinationSelected: _go,
+                labelType: NavigationRailLabelType.all,
+                destinations: [
+                  for (final (icon, label) in destinations)
+                    NavigationRailDestination(
+                      icon: FaIcon(icon, size: 20),
+                      label: Text(label),
+                    ),
+                ],
               ),
             ),
         ],
