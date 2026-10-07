@@ -30,9 +30,13 @@ ln -sf "$lib" "$(dirname "$lib")/libsqlite3.so"
 
 id rubric >/dev/null 2>&1 ||
   useradd --system --home-dir /opt/rubric --shell /usr/sbin/nologin rubric
-install -d -o rubric -g rubric -m 0750 /opt/rubric /opt/rubric/.zonai /opt/rubric/.zonai/data
+# The bundle is root's: the service reads and runs it (group rubric) but can
+# change none of it, not even its own compiled rules. Only the data
+# directory is the service's. deploy.sh re-applies this after every swap.
+install -d -o root -g rubric -m 0750 /opt/rubric /opt/rubric/.zonai
+install -d -o rubric -g rubric -m 0750 /opt/rubric/.zonai/data
 install -d -o rubric -g rubric -m 0750 /var/backups/rubric
-install -d -o root -g root -m 0755 /opt/rubric/ops
+install -d -o root -g rubric -m 0750 /opt/rubric/ops
 install -d -o root -g root -m 0700 /etc/rubric
 
 if [ ! -f /etc/rubric/secrets.env ]; then
@@ -45,7 +49,7 @@ if [ ! -f /etc/rubric/secrets.env ]; then
 fi
 chmod 0600 /etc/rubric/secrets.env
 
-install -m 0755 "$here/../backup.sh" "$here/../restore.sh" /opt/rubric/ops/
+install -o root -g rubric -m 0750 "$here/../backup.sh" "$here/../restore.sh" /opt/rubric/ops/
 install -m 0644 "$here/rubric.service" "$here/rubric-backup.service" \
   "$here/rubric-backup.timer" /etc/systemd/system/
 sed "s/__DOMAIN__/$sites/" "$here/Caddyfile.template" > /etc/caddy/Caddyfile

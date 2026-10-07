@@ -59,11 +59,25 @@ else echo "no database yet: first deploy"; fi'
 
 echo "== 4/5 swap"
 ssh "$target" 'sudo systemctl stop rubric.service || true'
-rsync -a --delete --rsync-path="sudo rsync" \
+# -rlpt, not -a: run as root, -a would also copy this machine's uid and
+# group onto the host (they once owned /opt/rubric itself as uid 501, a user
+# the host doesn't have). Ownership is set below instead, every time.
+rsync -rlpt --delete --rsync-path="sudo rsync" \
   --exclude '/.zonai/data/' --exclude '/ops/' \
   "$bundle/" "$target:/opt/rubric/"
-ssh "$target" 'sudo chown -R rubric:rubric /opt/rubric/.zonai &&
-  sudo chown root:root /opt/rubric/zonai && sudo systemctl start rubric.service'
+# Root owns the bundle, the compiled workers (rules included) and the
+# directories that hold them; the service's group may read and run them,
+# nobody else may read them. Only the data directory is the service's. Then
+# prove it: anything not owned by root outside the data directory, or
+# writable by group or others, fails the deploy before the server starts.
+ssh "$target" 'set -e
+  sudo chown -R root:rubric /opt/rubric
+  sudo chmod -R g-w,o-rwx /opt/rubric
+  sudo chown -R rubric:rubric /opt/rubric/.zonai/data
+  stray="$(sudo find /opt/rubric -path /opt/rubric/.zonai/data -prune -o \
+    ! -type l \( ! -user root -o -perm /022 \) -print)"
+  if [ -n "$stray" ]; then echo "deploy: wrong ownership or mode: $stray" >&2; exit 1; fi
+  sudo systemctl start rubric.service'
 
 echo "== 5/5 verify $url"
 # Resolve through public DNS and pin it. This Mac's resolver can hold a
