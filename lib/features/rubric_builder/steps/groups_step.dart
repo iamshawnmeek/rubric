@@ -185,9 +185,6 @@ class GroupsStep extends ConsumerWidget {
           onAccept: (id) =>
               notifier.moveToNewGroup(id, title: nextGroupTitle(l, groups)),
         ),
-        // Keep the last drop target reachable above the tray (v1's
-        // BottomSheetBacking).
-        SizedBox(height: UngroupedTray.heightFor(context, draft.ungrouped)),
       ],
     );
   }
@@ -195,22 +192,15 @@ class GroupsStep extends ConsumerWidget {
 
 /// The dock of objectives not yet in a group. Replaces the Next button while
 /// it has anything in it; dropping a grouped objective here ungroups it.
+///
+/// It is the page's docked CTA, so RubricPage's fairway keeps the last drop
+/// target clear of it at whatever height it lays out; the step no longer
+/// reserves a guessed height of its own.
 class UngroupedTray extends ConsumerWidget {
   const new({required this.draft, required this.rubricId, super.key});
 
   final RubricDraft draft;
   final String rubricId;
-
-  static const double _cardHeight = 106;
-  static const double _chrome = 100;
-
-  static double heightFor(BuildContext context, List<Objective> ungrouped) =>
-      ungrouped.isEmpty
-      ? 0
-      : math.min(
-          ungrouped.length * _cardHeight + _chrome,
-          MediaQuery.sizeOf(context).height * .45,
-        );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

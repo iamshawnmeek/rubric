@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:harbor/harbor.dart';
 import 'package:rubric/app/router.dart';
 import 'package:rubric/data/providers.dart';
 import 'package:rubric/design_system/design_system.dart';
@@ -48,6 +49,10 @@ class _RubricAppState extends ConsumerState<RubricApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
+      // Every page and sheet below floats on one sea: harbor measures what
+      // covers each edge (system bars, keyboard, our CTA and nav bar) so no
+      // page pads by hand.
+      builder: (context, child) => HarborSea(child: child!),
     );
   }
 }

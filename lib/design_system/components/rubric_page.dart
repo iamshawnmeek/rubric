@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:harbor/harbor.dart';
 import 'package:rubric/design_system/colors.dart';
 import 'package:rubric/design_system/components/small_logo.dart';
 import 'package:rubric/design_system/spacing.dart';
@@ -11,6 +12,11 @@ import 'package:rubric/design_system/typography/headline_one.dart';
 ///
 /// Pass [slivers] for long/lazy lists; otherwise [children] are laid out in a
 /// padded column.
+///
+/// Built on harbor: the CTA is a bottom dock, and the content is a fairway
+/// that runs under it and comes to rest clear of it, the home indicator and
+/// the keyboard, at whatever height the CTA laid out. It replaced a fixed
+/// 130/96pt spacer that ignored the home indicator and the CTA's real size.
 class RubricPage extends StatelessWidget {
   const new({
     required this.title,
@@ -76,29 +82,61 @@ class RubricPage extends StatelessWidget {
       ),
     );
 
+    final button = bottomCta ?? floatingActionButton;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
+      // The Scaffold stays for its surface and the ScaffoldMessenger's
+      // SnackBars only. Harbor owns the keyboard: a resizing Scaffold would
+      // shrink the page before harbor saw it (measured by harbor-owner).
       child: Scaffold(
-        floatingActionButton: bottomCta ?? floatingActionButton,
-        floatingActionButtonLocation: bottomCta != null
-            ? FloatingActionButtonLocation.centerDocked
-            : FloatingActionButtonLocation.endFloat,
-        body: SafeArea(
-          bottom: false,
-          child: CustomScrollView(
+        resizeToAvoidBottomInset: false,
+        body: Harbor(
+          debugLabel: title,
+          bottom: [
+            if (button != null)
+              HarborDock.pier(
+                debugLabel: 'cta',
+                // Rides the keyboard like the old docked FAB did, so the
+                // action stays reachable while typing; the fairway keeps the
+                // focused field clear of it.
+                tide: HarborTideStance.float,
+                // Only the button takes taps; rows beside it stay tappable.
+                hitTestBehavior: HitTestBehavior.deferToChild,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.only(
+                    end: bottomCta == null ? Insets.md : 0,
+                    bottom: bottomCta == null ? Insets.md : 0,
+                  ),
+                  child: Align(
+                    alignment: bottomCta != null
+                        ? Alignment.bottomCenter
+                        : AlignmentDirectional.bottomEnd,
+                    heightFactor: 1,
+                    child: button,
+                  ),
+                ),
+              ),
+          ],
+          body: HarborFairway(
             controller: controller,
             slivers: [
-              header,
+              // The fairway clears the top and bottom; the sides (a notch
+              // in landscape) are each row's, so the page gutter keeps them.
+              SliverSafeArea(top: false, bottom: false, sliver: header),
               if (slivers != null)
-                ...slivers!
+                ...slivers!.map(
+                  (s) => SliverSafeArea(top: false, bottom: false, sliver: s),
+                )
               else
-                SliverPadding(
-                  padding: Insets.page,
-                  sliver: SliverList.list(children: children),
+                SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  sliver: SliverPadding(
+                    padding: Insets.page,
+                    sliver: SliverList.list(children: children),
+                  ),
                 ),
-              SliverToBoxAdapter(
-                child: SizedBox(height: bottomCta != null ? 130 : 96),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: Insets.xl)),
             ],
           ),
         ),

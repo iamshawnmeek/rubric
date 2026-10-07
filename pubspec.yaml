@@ -24,6 +24,13 @@ dependencies:
   flutter_svg: ^2.3.0
   font_awesome_flutter: ^11.0.0
   go_router: ^18.0.2
+  # Keeps content clear of the system bars, the keyboard and our own docked
+  # CTA and nav bar, by measurement (no inset arithmetic). Pinned: not on
+  # pub.dev yet; github.com/SupposedlySam/harbor, owner in #harbor_owner.
+  harbor:
+    git:
+      url: https://github.com/SupposedlySam/harbor
+      ref: 8fbbf20
   intl: ^0.20.3
   meta: ^1.19.0
   path: ^1.9.1

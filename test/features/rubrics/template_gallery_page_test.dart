@@ -84,12 +84,10 @@ void main() {
     await tester.scrollUntilVisible(
       first,
       300,
-      scrollable: find
-          .descendant(
-            of: find.byType(CustomScrollView),
-            matching: find.byType(Scrollable),
-          )
-          .first,
+      // The page's own scroll view (the first Scrollable), whatever widget
+      // builds it: harbor's fairway is a CustomScrollView subclass, which
+      // byType(CustomScrollView) does not match.
+      scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(first);
     await tester.pumpAndSettle();
