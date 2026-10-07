@@ -535,6 +535,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  harbor:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "8fbbf20"
+      resolved-ref: "8fbbf2020ac7cf447a55f336bf7ad171c8a45926"
+      url: "https://github.com/SupposedlySam/harbor"
+    source: git
+    version: "0.1.0"
   hooks:
     dependency: transitive
     description:

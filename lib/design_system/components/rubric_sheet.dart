@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harbor/harbor.dart';
 import 'package:rubric/design_system/colors.dart';
 import 'package:rubric/design_system/spacing.dart';
 import 'package:rubric/design_system/typography/headline_one.dart';
@@ -17,10 +18,12 @@ Future<T?> showRubricSheet<T>({
     useSafeArea: true,
     backgroundColor: Colors.transparent,
     barrierColor: Colors.black.withValues(alpha: .4),
-    builder: (context) => Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.viewInsetsOf(context).bottom + Insets.sm,
-      ),
+    // Clear of the keyboard AND the home indicator, plus our 12pt float.
+    // It used to add the keyboard by hand and nothing else, so with the
+    // keyboard down the sheet sat 12pt over the home indicator.
+    builder: (context) => HarborMoored(
+      edges: const {HarborEdge.bottom},
+      extra: const EdgeInsetsDirectional.only(bottom: Insets.sm),
       child: child,
     ),
   );
