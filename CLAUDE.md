@@ -60,7 +60,13 @@ test/             mirrors lib/
    no information by color alone.
 7. **Tests:** widget tests for each screen's main path (use
    `test/helpers/app_harness.dart`), unit tests for logic. A test must fail when
-   the behaviour it names breaks.
+   the behaviour it names breaks. **Golden tests** (`test/goldens/`, tag
+   `golden`) get their baselines only from the "Golden baselines" GitHub
+   workflow (`gh workflow run goldens.yaml -f branch=<branch>`), which renders
+   on a pinned Ubuntu image with `.fvmrc`'s Flutter and commits the PNGs to the
+   branch. Never commit a golden rendered on a laptop (a Mac's text differs),
+   and `--update-goldens` refuses to run locally. To look at them, run
+   `tool/golden_preview.sh`; ci.yaml's goldens job compares on the pinned image.
 8. Riverpod 3 (`Notifier`, `StreamProvider`), go_router, drift. No new
    dependencies without asking in `#rubric_owner`.
 
