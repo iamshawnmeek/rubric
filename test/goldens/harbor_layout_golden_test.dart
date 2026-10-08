@@ -1,7 +1,11 @@
 @Tags(['golden'])
 library;
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:harbor/harbor.dart';
@@ -125,11 +129,48 @@ Future<void> _scrollToEnd(WidgetTester tester) async {
 String _slug(HarborTrialDevice d) =>
     d.name.toLowerCase().replaceAll(RegExp('[^a-z0-9]+'), '_');
 
-Future<void> _golden(WidgetTester tester, String scene, HarborTrialDevice d) =>
-    expectLater(
-      find.byType(RepaintBoundary).first,
-      matchesGoldenFile('goldens/$scene.${_slug(d)}.png'),
-    );
+Future<void> _golden(
+  WidgetTester tester,
+  String scene,
+  HarborTrialDevice d,
+) async {
+  await _expectRealFonts(tester);
+  await expectLater(
+    find.byType(RepaintBoundary).first,
+    matchesGoldenFile('goldens/$scene.${_slug(d)}.png'),
+  );
+}
+
+/// The font families the app bundles, read once from its font manifest.
+late final Set<String> _shipped;
+
+/// Every piece of text on screen is drawn in a font the app ships (its font
+/// manifest, which flutter_test_config.dart loads), never the test font. A
+/// style with no family, or a family the app doesn't bundle, falls back to
+/// the test font and draws boxes, and the golden would quietly bake them in.
+Future<void> _expectRealFonts(WidgetTester tester) async {
+  final strays = <String>[];
+  for (final paragraph
+      in tester.allRenderObjects.whereType<RenderParagraph>()) {
+    paragraph.text.visitChildren((span) {
+      if (span is TextSpan && (span.text?.trim().isNotEmpty ?? false)) {
+        final family = span.style?.fontFamily;
+        if (family == null || !_shipped.contains(family)) {
+          strays.add('"${span.text}" in ${family ?? 'no family'}');
+        }
+      }
+      return true;
+    });
+  }
+  // Positive control: the screen has text at all, so "no strays" means
+  // something.
+  expect(
+    tester.allRenderObjects.whereType<RenderParagraph>(),
+    isNotEmpty,
+    reason: 'no text on screen to check',
+  );
+  expect(strays, isEmpty, reason: 'text not in a font the app ships');
+}
 
 /// Rubric itself, onboarded, on an empty database: the shell and Home.
 Future<HarborSeaTrial> _pumpRubric(
@@ -176,6 +217,17 @@ const List<HarborTrialDevice> _phones = [
 ];
 
 void main() {
+  // Real I/O, so outside the tests' fake-async zone.
+  setUpAll(() async {
+    final manifest = jsonDecode(
+      await rootBundle.loadString('FontManifest.json'),
+    ) as List<Object?>;
+    _shipped = {
+      for (final entry in manifest.cast<Map<String, Object?>>())
+        entry['family']! as String,
+    };
+  });
+
   group('a page with a docked CTA, scrolled to the end', () {
     for (final device in [..._phones, HarborTrialDevice.iPhone17Landscape]) {
       // The last row rests above the CTA, the CTA above the home indicator
