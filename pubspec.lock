@@ -539,8 +539,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: f778845
-      resolved-ref: f778845d46e4c7375e30b21263baf14feea56f7a
+      ref: "0cdc16f"
+      resolved-ref: "0cdc16fb0d6f0516b739be21f5d3500526c50b88"
       url: "https://github.com/SupposedlySam/harbor"
     source: git
     version: "0.1.0"

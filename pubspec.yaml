@@ -30,7 +30,7 @@ dependencies:
   harbor:
     git:
       url: https://github.com/SupposedlySam/harbor
-      ref: f778845
+      ref: 0cdc16f
   intl: ^0.20.3
   meta: ^1.19.0
   path: ^1.9.1

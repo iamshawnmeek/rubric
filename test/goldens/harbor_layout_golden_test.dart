@@ -32,8 +32,14 @@ const _field = Key('field');
 
 /// Harbor's chart over the whole screen, so the regions being kept clear of
 /// are in the picture, not just the result.
-Widget _charted(Widget app) =>
-    RepaintBoundary(child: HarborChartOverlay(child: app));
+/// Its labels (each dock's name and height) get the app's own font, which
+/// the test loaded; harbor otherwise draws them in the test font's boxes.
+Widget _charted(Widget app) => RepaintBoundary(
+  child: HarborChartOverlay(
+    labelStyle: const TextStyle(fontFamily: 'Avenir-Heavy'),
+    child: app,
+  ),
+);
 
 Widget _app(Widget home) => _charted(
   MaterialApp(
