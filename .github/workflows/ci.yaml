@@ -14,3 +14,27 @@ jobs:
       - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze --fatal-infos
       - run: flutter test --coverage
+
+  # Golden layout tests, compared on the same pinned image and Flutter the
+  # baselines were made on (goldens.yaml). A branch without baselines yet is
+  # told to make them rather than failed.
+  goldens:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3
+      - name: Compare against the baselines
+        run: |
+          if ! compgen -G "test/goldens/goldens/*.png" > /dev/null; then
+            echo "::notice::No golden baselines on this branch yet. Dispatch the Golden baselines workflow for it."
+            exit 0
+          fi
+          flutter pub get
+          flutter test test/goldens --tags golden --run-skipped
+      - name: Keep the diffs of any failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: golden-failures
+          path: test/goldens/failures/
+

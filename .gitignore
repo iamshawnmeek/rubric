@@ -62,3 +62,6 @@ lib/l10n/gen/
 
 # Contribution clones of upstream repos (e.g. zonai), worked on in branches
 .contrib/
+
+# Golden diffs from a failed comparison (CI uploads them as an artifact)
+test/goldens/failures/

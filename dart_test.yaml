@@ -3,3 +3,8 @@
 tags:
   store_screenshots:
     skip: "Writes store images. Run tool/store_screenshots.sh."
+  # Golden layout baselines are made and compared on a pinned Linux image
+  # only (.github/workflows/goldens.yaml, ci.yaml's goldens job). Local
+  # preview: tool/golden_preview.sh.
+  golden:
+    skip: "Goldens run in CI. Preview locally with tool/golden_preview.sh."

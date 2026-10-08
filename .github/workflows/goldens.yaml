@@ -1,0 +1,86 @@
+# Golden baselines: renders every golden test on a pinned machine and commits
+# the images to the branch you name. Dispatch it from the Actions tab (or
+# `gh workflow run goldens.yaml -f branch=<branch>`) whenever a branch adds or
+# changes a golden.
+#
+# Baselines are only ever made here, never on a laptop: the runner image,
+# Flutter (.fvmrc) and the actions are all pinned, so every baseline and every
+# later comparison (ci.yaml's goldens job) renders on the same OS, engine and
+# fonts, and a golden either matches exactly or something really changed.
+# Locally, tool/golden_preview.sh renders them to look at without touching
+# the baselines (test/goldens/flutter_test_config.dart refuses
+# --update-goldens anywhere but here).
+name: Golden baselines
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to render baselines for; the images are committed to it
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goldens-${{ inputs.branch }}
+  cancel-in-progress: false
+
+jobs:
+  baselines:
+    # Pinned image, never ubuntu-latest: a new image can change rendering.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      # Passed through the environment, never interpolated into a script.
+      BRANCH: ${{ inputs.branch }}
+    steps:
+      - name: Check the branch name
+        run: |
+          if ! [[ "$BRANCH" =~ ^[A-Za-z0-9._/-]+$ ]] || [[ "$BRANCH" == -* ]]; then
+            echo "::error::Not a plain branch name: $BRANCH"; exit 1
+          fi
+
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ inputs.branch }}
+
+      # Flutter from .fvmrc (3.47.5), the version the app builds with.
+      - uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3
+
+      - name: Record the toolchain
+        run: |
+          flutter --version
+          lsb_release -ds
+
+      - run: flutter pub get
+
+      - name: Render the baselines
+        env:
+          RUBRIC_GOLDEN_BASELINE: ci
+        run: |
+          if ! compgen -G "test/goldens/*_test.dart" > /dev/null; then
+            echo "::error::$BRANCH has no golden tests (test/goldens/*_test.dart)."; exit 1
+          fi
+          flutter test test/goldens --tags golden --run-skipped --update-goldens
+
+      # A baseline is only worth committing if rendering it again gives the
+      # same pixels: this second run compares against what was just written.
+      - name: Prove they reproduce
+        run: flutter test test/goldens --tags golden --run-skipped
+
+      - name: Commit them to the branch
+        run: |
+          git add -A test/goldens
+          if git diff --cached --quiet; then
+            echo "Baselines are unchanged; nothing to commit."
+            exit 0
+          fi
+          git diff --cached --stat
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          version="$(flutter --version --machine | jq -r .frameworkVersion)"
+          git commit -m "test(goldens): baselines from ubuntu-24.04, Flutter $version" \
+            -m "Rendered by the Golden baselines workflow, run $GITHUB_RUN_ID."
+          git push origin "HEAD:refs/heads/$BRANCH"
