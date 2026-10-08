@@ -17,12 +17,6 @@ pids=()
 cleanup() { for p in "${pids[@]}"; do kill "$p" 2>/dev/null || true; done; }
 trap cleanup EXIT
 
-# `zonai serve` reuses the last compiled config and rules even after their
-# source changed (observed with zonai 0.10.1), so compile first or this would
-# test yesterday's server.
-(cd server && ../.contrib/bin/zonai compile > "$work/compile.log" 2>&1) ||
-  { echo "email flow: zonai compile failed (log: $work/compile.log)" >&2; exit 1; }
-
 tool/email/smtp_sink.py "$sink_port" "$work/mail" & pids+=($!)
 tool/email/site_server.py "$site_port" "$server_port" & pids+=($!)
 

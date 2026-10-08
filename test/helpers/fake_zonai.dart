@@ -75,9 +75,12 @@ final class FakeAuth implements AuthGateway {
   }
 
   @override
-  Future<void> sendVerification(String email) async {
+  Future<void> sendVerification() async {
     _maybeFailSend();
-    verificationsSent.add(email);
+    final id = server.user;
+    verificationsSent.add(
+      accounts.entries.firstWhere((e) => e.value == id).key,
+    );
   }
 
   @override

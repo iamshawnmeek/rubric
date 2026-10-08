@@ -10,12 +10,17 @@ const rubricSender = EmailAddress(
 /// The SMTP settings, read from the process environment when the server
 /// starts rather than compiled in.
 ///
-/// zonai only takes `JWT_SECRET` and `PASSWORD_SECRET` from the environment
-/// (`AppConfig.withSecretsFromEnvironment`); anything else in the config is
-/// baked into the binary as a define, where `strings` recovers it. The config
-/// runs in its own process on the host at startup, so reading the SMTP
-/// password here keeps it in `/etc/rubric/secrets.env` with the other secrets
-/// and out of the bundle.
+/// Since zonai 0.10.2 (#73, which Rubric asked for) zonai itself overrides
+/// `SMTP_USERNAME` and `SMTP_PASSWORD` from the environment, but only on an
+/// email config that is already compiled in, and it accepts them empty. This
+/// reader stays because it does what that doesn't:
+/// - the host and port come from the environment too, so the email flow test
+///   (tool/email/test_email_flow.sh) points a dev server at a local catcher;
+/// - a release server without them refuses to start, instead of failing
+///   every reset and verification email silently;
+/// - plain SMTP is allowed only outside release.
+/// The config runs in its own process on the host at startup, so nothing
+/// here is ever baked into the bundle.
 ///
 /// A release server without mail settings refuses to start: password reset
 /// and email verification would otherwise fail silently for every teacher.

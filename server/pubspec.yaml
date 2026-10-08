@@ -6,7 +6,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  zonai_schema: 0.6.0
+  zonai_schema: 0.6.1
 
 dev_dependencies:
   test: ^1.26.0

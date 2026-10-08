@@ -429,9 +429,9 @@ packages:
     dependency: "direct main"
     description:
       name: zonai_schema
-      sha256: bbc318b7fe1a6c5c5a3dd9787cf21e741433e01ba39115d109869ac8f49d9e96
+      sha256: "515f17551144356ef3953e2627043708d45939a32a689c5e228b5fbf538b3bb1"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "0.6.1"
 sdks:
   dart: ">=3.12.0 <4.0.0"

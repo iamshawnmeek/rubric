@@ -24,8 +24,6 @@ import 'dart:io';
 
 import 'package:rubric/sync/account_tables.dart';
 import 'package:zonai_client/zonai_client.dart';
-import 'package:zonai_schema/payloads.dart'
-    show SendResetPasswordAuthBody, VerifyEmailAuthBody;
 
 const site = 'https://yourrubric.com';
 
@@ -127,10 +125,17 @@ Future<void> main(List<String> args) async {
 
     // Verification.
     var before = seen();
-    await client.auth.sendVerifyEmail(
-      body: VerifyEmailAuthBody(email: email, table: accountTable),
-    );
+    // As the app sends it: no body, so the server picks the signed-in
+    // teacher's own address (zonai #75).
+    await client.auth.sendVerifyEmail();
     final verifyMail = await nextMail(before);
+    var resendRefused = false;
+    try {
+      await client.auth.sendVerifyEmail();
+    } on ServerException catch (e) {
+      resendRefused = e.statusCode == 429;
+    }
+    check('a second link inside a minute is refused (429)', ok: resendRefused);
     final verifyLink = linkIn(verifyMail, '$site/verify-email');
     check(
       'verification mail links to the website',
@@ -217,9 +222,7 @@ Future<void> main(List<String> args) async {
       await page(['missing', '$localSite/reset-password']);
 
       before = seen();
-      await pagesClient.auth.sendVerifyEmail(
-        body: VerifyEmailAuthBody(email: other, table: accountTable),
-      );
+      await pagesClient.auth.sendVerifyEmail();
       final verifyPage = localLink(await nextMail(before), '/verify-email');
       check('a verify link for the pages', ok: verifyPage != null);
       if (verifyPage != null) {

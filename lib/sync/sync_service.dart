@@ -7,8 +7,6 @@ import 'package:rubric/data/sync_writer.dart';
 import 'package:rubric/sync/account_tables.dart';
 import 'package:rubric/sync/sync_tables.dart';
 import 'package:zonai_client/zonai_client.dart';
-import 'package:zonai_schema/payloads.dart'
-    show SendResetPasswordAuthBody, VerifyEmailAuthBody;
 import 'package:zonai_sync/zonai_sync.dart';
 import 'package:zonai_sync_drift/zonai_sync_drift.dart';
 
@@ -56,8 +54,10 @@ abstract interface class AuthGateway {
   /// server answers the same whether or not the address has an account.
   Future<void> sendPasswordReset(String email);
 
-  /// Emails the signed-in teacher a link that confirms [email].
-  Future<void> sendVerification(String email);
+  /// Emails the signed-in teacher the link that confirms their address.
+  /// The server picks the address from the session, so no client can ask
+  /// for another account's link.
+  Future<void> sendVerification();
 
   /// Whether account [id] has confirmed its address, read from the server.
   Future<bool> isVerified(String id);
@@ -179,7 +179,7 @@ final class SyncService implements SyncWriter {
     // address already confirmed needs no new email.
     if (account == null || account.verified) return;
     try {
-      await _auth.sendVerification(account.email);
+      await _auth.sendVerification();
     } on Object {
       // Offline or rate limited: Settings offers to send it again.
     }
@@ -193,7 +193,7 @@ final class SyncService implements SyncWriter {
   Future<void> sendVerification() async {
     final account = _account;
     if (account == null) throw StateError('Not signed in');
-    await _auth.sendVerification(account.email);
+    await _auth.sendVerification();
   }
 
   /// Asks the server whether the address is confirmed yet, and remembers it.
@@ -440,10 +440,10 @@ final class ZonaiAuthGateway implements AuthGateway {
         body: SendResetPasswordAuthBody(email: email, table: accountTable),
       );
 
+  /// No body: the server verifies the caller's own address (zonai 0.10.2,
+  /// #75; before it, a missing body was a 400 and the send went unawaited).
   @override
-  Future<void> sendVerification(String email) => _client.auth.sendVerifyEmail(
-    body: VerifyEmailAuthBody(email: email, table: accountTable),
-  );
+  Future<void> sendVerification() => _client.auth.sendVerifyEmail();
 
   /// The teacher's own users row; the server's auth rules let an account
   /// read itself and nothing else.
