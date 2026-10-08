@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:harbor/harbor.dart';
-import 'package:harbor/testing.dart';
+import 'package:harbor_test/harbor_test.dart';
 import 'package:rubric/app/app.dart';
 import 'package:rubric/app/settings.dart';
 import 'package:rubric/data/providers.dart';
