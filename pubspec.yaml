@@ -27,7 +27,7 @@ dependencies:
   # Keeps content clear of the system bars, the keyboard and our own docked
   # CTA and nav bar, by measurement (no inset arithmetic). Owner in
   # #harbor_owner (github.com/SupposedlySam/harbor).
-  harbor: ^0.3.0
+  harbor: ^0.4.0
   intl: ^0.20.3
   meta: ^1.19.0
   path: ^1.9.1
@@ -61,7 +61,7 @@ dev_dependencies:
   flutter_native_splash: ^2.4.8
   flutter_test:
     sdk: flutter
-  harbor_test: ^0.2.0
+  harbor_test: ^0.2.2
   integration_test:
     sdk: flutter
   mocktail: ^1.0.5
