@@ -167,12 +167,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    // Logical sizes: harbor_test runs devices at their real pixel ratio, so
+    // the view's physical size is no longer the screen's logical width.
+    final screen = HarborTrialDevice.foldableOpen.size.width;
     final rail = tester.getRect(find.byType(NavigationRail));
     // Its own width (128 with labels here), not the screen's (750).
-    expect(rail.width, lessThan(tester.view.physicalSize.width / 5));
+    expect(rail.width, lessThan(screen / 5));
     final page = tester.getRect(find.byType(RubricPage));
     expect(page.left, moreOrLessEquals(rail.right));
-    expect(page.width, greaterThan(tester.view.physicalSize.width / 2));
+    expect(page.width, greaterThan(screen / 2));
 
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 1));
