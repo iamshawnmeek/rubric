@@ -7,6 +7,11 @@ Description=Rubric database backup
 Type=oneshot
 User=rubric
 Group=rubric
+# BACKUP_PAR_URL: the write-only link to the off-host bucket, root-only
+# (0600), written by deploy.sh from .contrib/oci/backup.env. Required: a
+# production backup must also leave the host (backup.sh).
+EnvironmentFile=/etc/rubric/backup.env
+Environment=BACKUP_OFFHOST=required
 ExecStart=/opt/rubric/ops/backup.sh /opt/rubric/.zonai/data /var/backups/rubric 14
 NoNewPrivileges=true
 ProtectSystem=strict

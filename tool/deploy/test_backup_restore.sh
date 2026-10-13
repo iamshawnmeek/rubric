@@ -74,5 +74,60 @@ chmod 755 "$data"
 grep -q '^start rubric$' "$root/systemctl.log" &&
   ok "a failed restore still starts the service again" || bad "service left stopped: $(tr '\n' ';' < "$root/systemctl.log")"
 
+# 5. Off-host: a checked backup is uploaded through the link, byte for byte,
+# under its own name; a failed upload fails the run but keeps the local copy;
+# a required link that is missing fails the run.
+chmod 755 "$data"
+uploads="$root/uploads"; mkdir -p "$uploads"
+port_file="$root/port"
+python3 - "$uploads" "$port_file" <<'PY' &
+import http.server, os, sys
+out, port_file = sys.argv[1], sys.argv[2]
+class H(http.server.BaseHTTPRequestHandler):
+    def do_PUT(self):
+        n = int(self.headers.get('Content-Length', 0))
+        body = self.rfile.read(n)
+        if '/broken/' in self.path:
+            self.send_response(500); self.end_headers(); return
+        with open(os.path.join(out, os.path.basename(self.path)), 'wb') as f:
+            f.write(body)
+        self.send_response(200); self.end_headers()
+    def log_message(self, *a): pass
+s = http.server.HTTPServer(('127.0.0.1', 0), H)
+open(port_file, 'w').write(str(s.server_port))
+s.serve_forever()
+PY
+sink=$!
+for _ in $(seq 1 50); do [ -s "$port_file" ] && break; sleep 0.1; done
+port="$(cat "$port_file")"
+offhost="$root/offhost-backups"
+if BACKUP_PAR_URL="http://127.0.0.1:$port/p/token/n/ns/b/rubric-backups/o/" \
+    "$here/backup.sh" "$data" "$offhost" 2 >/dev/null; then
+  local_copy="$(ls -1t "$offhost"/zonai-*.sqlite.gz | head -1)"
+  uploaded="$uploads/$(basename "$local_copy")"
+  [ -f "$uploaded" ] && cmp -s "$uploaded" "$local_copy" &&
+    ok "the backup is uploaded off-host, byte for byte, under its name" ||
+    bad "upload missing or different ($(ls "$uploads"))"
+else
+  bad "backup with an upload link failed"
+fi
+# Backups are named to the second; wait one so the next is a new file.
+sleep 1
+before="$(ls -1 "$offhost" | wc -l | tr -d ' ')"
+if BACKUP_PAR_URL="http://127.0.0.1:$port/broken/" \
+    "$here/backup.sh" "$data" "$offhost" 5 >/dev/null 2>&1; then
+  bad "a failed upload did not fail the run"
+else
+  after="$(ls -1 "$offhost" | wc -l | tr -d ' ')"
+  [ "$after" -gt "$before" ] && ok "a failed upload fails the run, keeping the local copy" ||
+    bad "a failed upload lost the local copy"
+fi
+if BACKUP_OFFHOST=required "$here/backup.sh" "$data" "$offhost" 5 >/dev/null 2>&1; then
+  bad "a required off-host copy with no link did not fail the run"
+else
+  ok "a required off-host copy with no link fails the run"
+fi
+kill "$sink" 2>/dev/null || true
+
 echo "test_backup_restore: $([ "$fails" = 0 ] && echo passed || echo "$fails FAILED") ($root)"
 [ "$fails" = 0 ]

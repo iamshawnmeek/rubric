@@ -233,10 +233,29 @@ changing anything in this path. It needs Chrome and node 22+.
 - **Daily** at 03:30 UTC, plus one before every deploy: `backup.sh` takes an
   online, WAL-safe `.backup`, rejects it unless `PRAGMA integrity_check` says
   `ok`, gzips it, and keeps the newest 14 in `/var/backups/rubric`.
-- **Off-host copy.** A backup on the same disk doesn't survive losing the
-  host. Pull them somewhere else regularly; it costs nothing:
-  `rsync -a ubuntu@203.0.113.7:/var/backups/rubric/ ~/rubric-backups/` (the
-  directory is `rubric`-owned, so add `--rsync-path="sudo rsync"`).
+- **Off-host copy, every run.** A backup on the same disk doesn't survive
+  losing the host, so each checked backup is also uploaded to the private,
+  versioned `rubric-backups` bucket in the `rubric` compartment (Oracle Object
+  Storage, Always Free). Recipe from gravity-brew-owner.
+  - The host holds no Oracle credentials. It has one write-only
+    pre-authenticated request (`AnyObjectWrite`, expires 2031-10-13) in
+    `/etc/rubric/backup.env` (root, 0600), which `deploy.sh` writes from
+    `.contrib/oci/backup.env`.
+  - Measured: through that link a write is accepted (200), while reading,
+    listing and deleting are refused (404). Versioning means even a leaked
+    link can't destroy earlier backups.
+  - The backup unit requires it (`BACKUP_OFFHOST=required`): a failed upload,
+    or a missing link, fails the run and shows in the timer. The local copy is
+    always kept.
+  - `test_backup_restore.sh` covers the upload (byte for byte), a failed
+    upload, and a missing required link.
+  - **Restore from off-host** (needs Rubric's OCI CLI, `.contrib/oci/o`):
+    `o os object list -bn rubric-backups --namespace <ns>`, then
+    `o os object get -bn rubric-backups --namespace <ns> --name zonai-<time>.sqlite.gz --file x.gz`,
+    copy `x.gz` to the host, and run `restore.sh` on it as below.
+  - Before the link expires, make a new one
+    (`o os preauth-request create --access-type AnyObjectWrite ...`), put it
+    in `.contrib/oci/backup.env` and deploy.
 - **Restore / roll back:**
   `ssh <host> sudo /opt/rubric/ops/restore.sh /var/backups/rubric/zonai-<time>.sqlite.gz`.
   It checks the backup before touching the server, keeps the current

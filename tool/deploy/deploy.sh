@@ -49,6 +49,16 @@ elif ! ssh "$target" 'sudo test -s /etc/rubric/smtp.env'; then
   echo "deploy: no mail settings in $smtp_env or on the host (docs/DEPLOY.md, \"Email\")" >&2
   exit 1
 fi
+# The off-host backup link, the same way: the backup unit requires it.
+backup_env=.contrib/oci/backup.env
+if [ -f "$backup_env" ]; then
+  ssh "$target" 'sudo sh -c "umask 077 && cat > /etc/rubric/backup.env.new" &&
+    sudo mv /etc/rubric/backup.env.new /etc/rubric/backup.env' < "$backup_env"
+  echo "backup link: copied from $backup_env"
+elif ! ssh "$target" 'sudo test -s /etc/rubric/backup.env'; then
+  echo "deploy: no off-host backup link in $backup_env or on the host (docs/DEPLOY.md, \"Backups and restore\")" >&2
+  exit 1
+fi
 rsync -a --delete tool/deploy/ "$target:/tmp/rubric-deploy/"
 ssh "$target" "sudo bash /tmp/rubric-deploy/host/provision.sh $domain ${DEPLOY_EXTRA_DOMAINS:-}"
 
