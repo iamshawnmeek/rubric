@@ -30,8 +30,25 @@ printf '\nbuildSettings:\n  targetOs: linux\n  targetArch: %s\n' "$arch" >> "$sc
 # Not secret: the release switch and the public URL. Secrets stay off disk.
 printf 'RUBRIC_RELEASE=true\nRUBRIC_BASE_URL=%s\n' "$base_url" > "$scratch/.env.prod"
 
-(cd "$scratch" && "$OLDPWD/tool/dart" pub get >/dev/null &&
-  "$OLDPWD/$zonai" build --flavor prod --release)
+(cd "$scratch" && "$OLDPWD/tool/dart" pub get >/dev/null)
+# zonai downloads its linux binary from GitHub during the build, and that
+# download fails now and then with no retry of its own ("Failed to download
+# binary", seen twice in a row on 2026-10-13, then fine). Retry only that
+# failure; anything else fails the build at once.
+for attempt in 1 2 3; do
+  log="$scratch/build-$attempt.log"
+  if (cd "$scratch" && "$OLDPWD/$zonai" build --flavor prod --release) > "$log" 2>&1; then
+    cat "$log"
+    break
+  fi
+  cat "$log" >&2
+  if ! grep -q "Failed to download binary" "$log" || [ "$attempt" = 3 ]; then
+    echo "build: zonai build failed (attempt $attempt)" >&2
+    exit 1
+  fi
+  echo "build: zonai's binary download failed; retrying in 20s (attempt $attempt of 3)" >&2
+  sleep 20
+done
 
 mkdir -p "$(dirname "$out")"
 rsync -a --delete "$scratch/build/" "$out/"
