@@ -27,5 +27,16 @@ AppConfig main() {
       defaultValue: 'http://localhost:8792',
     ),
     email: emailConfigFrom(Platform.environment, release: _release),
+    // A release server sits behind Caddy, so every connection comes from
+    // 127.0.0.1. Without this every client shared ONE rate-limit counter
+    // (seen in production: all of _rate_limit.client_ip was 127.0.0.1), so
+    // one noisy client could 429 every teacher and no bot was ever limited
+    // on its own. Caddy, with no trusted_proxies of its own, discards a
+    // client's X-Forwarded-For and sets the real address, so the rightmost
+    // entry (the default) is the client. A development server has no proxy,
+    // so it trusts no header: a client could otherwise pick its own IP.
+    trustedProxy: _release
+        ? const TrustedProxyConfig(headers: ['x-forwarded-for'])
+        : const TrustedProxyConfig(),
   );
 }
