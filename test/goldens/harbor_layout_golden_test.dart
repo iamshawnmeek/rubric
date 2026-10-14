@@ -22,7 +22,7 @@ import '../helpers/db.dart';
 /// Every place Rubric's layout must keep clear of something (the status bar,
 /// the home indicator, a notch, the keyboard, our own docked CTA and nav
 /// bar), drawn on real device geometry with harbor's chart over the real UI:
-/// teal is a pier (content runs under it), sand is a quay (content ends at
+/// teal is an overlay bar (content runs under it), sand is a solid bar (content ends at
 /// it), blue is the keyboard, and the outline is the clear water left over.
 /// A golden is right when nothing that should be readable or tappable sits
 /// under teal, sand or blue.
@@ -36,10 +36,10 @@ const _field = Key('field');
 
 /// Harbor's chart over the whole screen, so the regions being kept clear of
 /// are in the picture, not just the result.
-/// Its labels (each dock's name and height) get the app's own font, which
+/// Its labels (each bar's name and height) get the app's own font, which
 /// the test loaded; harbor otherwise draws them in the test font's boxes.
 Widget _charted(Widget app) => RepaintBoundary(
-  child: HarborChartOverlay(
+  child: HarborInspectorOverlay(
     labelStyle: const TextStyle(fontFamily: 'Avenir-Heavy'),
     child: app,
   ),
@@ -49,7 +49,7 @@ Widget _app(Widget home) => _charted(
   MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: buildRubricTheme(),
-    builder: (context, child) => HarborSea(child: child!),
+    builder: (context, child) => HarborRoot(child: child!),
     home: home,
   ),
 );
@@ -173,7 +173,7 @@ Future<void> _expectRealFonts(WidgetTester tester) async {
 }
 
 /// Rubric itself, onboarded, on an empty database: the shell and Home.
-Future<HarborSeaTrial> _pumpRubric(
+Future<HarborTrial> _pumpRubric(
   WidgetTester tester,
   HarborTrialDevice device,
 ) async {
@@ -183,7 +183,7 @@ Future<HarborSeaTrial> _pumpRubric(
   final prefs = await SharedPreferences.getInstance();
   final db = testDatabase();
   addTearDown(db.close);
-  final trial = await tester.pumpSeaTrial(
+  final trial = await tester.pumpHarborTrial(
     _charted(
       ProviderScope(
         overrides: [
@@ -233,7 +233,7 @@ void main() {
       // The last row rests above the CTA, the CTA above the home indicator
       // (or the Android nav bar), and in landscape the rows clear the notch.
       testWidgets(device.name, (tester) async {
-        await tester.pumpSeaTrial(_app(_page()), device: device);
+        await tester.pumpHarborTrial(_app(_page()), device: device);
         await _scrollToEnd(tester);
         await _golden(tester, 'page_cta_end', device);
       });
@@ -244,7 +244,7 @@ void main() {
     // The old page reserved 130pt whatever the CTA's height, so rows went
     // under a tray like this one; now the last row rests above it.
     const device = HarborTrialDevice.iPhone17;
-    await tester.pumpSeaTrial(_app(_page(ctaHeight: 300)));
+    await tester.pumpHarborTrial(_app(_page(ctaHeight: 300)));
     await _scrollToEnd(tester);
     await _golden(tester, 'page_tall_cta_end', device);
   });
@@ -257,13 +257,13 @@ void main() {
       // The keyboard (blue) rises; the CTA floats on it, and the field being
       // typed in stays visible above both.
       testWidgets(device.name, (tester) async {
-        final trial = await tester.pumpSeaTrial(
+        final trial = await tester.pumpHarborTrial(
           _app(_page(withField: true)),
           device: device,
         );
         await _scrollToEnd(tester);
         await tester.tap(find.byKey(_field));
-        await trial.raiseTide();
+        await trial.showKeyboard();
         await _frames(tester);
         await _golden(tester, 'page_field_keyboard', device);
       });
@@ -301,13 +301,13 @@ void main() {
       // Keyboard down: the sheet floats 12pt above the home indicator (it
       // used to sit inside it). Keyboard up: 12pt above the keyboard.
       testWidgets('${device.name}, keyboard down then up', (tester) async {
-        final trial = await tester.pumpSeaTrial(opener(), device: device);
+        final trial = await tester.pumpHarborTrial(opener(), device: device);
         await tester.tap(find.text('Add a student'));
         await _frames(tester);
         await _golden(tester, 'sheet_keyboard_down', device);
 
         await tester.tap(find.byType(TextField));
-        await trial.raiseTide();
+        await trial.showKeyboard();
         await _frames(tester);
         await _golden(tester, 'sheet_keyboard_up', device);
       });
@@ -322,8 +322,8 @@ void main() {
       HarborTrialDevice.iPhone17Landscape,
       HarborTrialDevice.foldableOpen,
     ]) {
-      // Phones: the nav bar is a quay, its colour running under the home
-      // indicator. Wide: the rail is a quay at its own width, and Home gets
+      // Phones: the nav bar is a solid bar, its colour running under the home
+      // indicator. Wide: the rail is a solid bar at its own width, and Home gets
       // the rest of the screen.
       testWidgets(device.name, (tester) async {
         await _pumpRubric(tester, device);

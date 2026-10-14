@@ -21,9 +21,9 @@ Future<T?> showRubricSheet<T>({
     // Clear of the keyboard AND the home indicator, plus our 12pt float.
     // It used to add the keyboard by hand and nothing else, so with the
     // keyboard down the sheet sat 12pt over the home indicator.
-    builder: (context) => HarborMoored(
+    builder: (context) => HarborClear(
       edges: const {HarborEdge.bottom},
-      extra: const EdgeInsetsDirectional.only(bottom: Insets.sm),
+      padding: const EdgeInsetsDirectional.only(bottom: Insets.sm),
       child: child,
     ),
   );

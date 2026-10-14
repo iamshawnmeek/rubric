@@ -52,7 +52,7 @@ class _RubricAppState extends ConsumerState<RubricApp> {
       // Every page and sheet below floats on one sea: harbor measures what
       // covers each edge (system bars, keyboard, our CTA and nav bar) so no
       // page pads by hand.
-      builder: (context, child) => HarborSea(child: child!),
+      builder: (context, child) => HarborRoot(child: child!),
     );
   }
 }

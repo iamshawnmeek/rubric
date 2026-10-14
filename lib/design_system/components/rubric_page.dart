@@ -13,7 +13,7 @@ import 'package:rubric/design_system/typography/headline_one.dart';
 /// Pass [slivers] for long/lazy lists; otherwise [children] are laid out in a
 /// padded column.
 ///
-/// Built on harbor: the CTA is a bottom dock, and the content is a fairway
+/// Built on harbor: the CTA is a bottom overlay bar, and the content is a scroll view
 /// that runs under it and comes to rest clear of it, the home indicator and
 /// the keyboard, at whatever height the CTA laid out. It replaced a fixed
 /// 130/96pt spacer that ignored the home indicator and the CTA's real size.
@@ -90,16 +90,16 @@ class RubricPage extends StatelessWidget {
       // shrink the page before harbor saw it (measured by harbor-owner).
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Harbor(
+        body: HarborFrame(
           debugLabel: title,
           bottom: [
             if (button != null)
-              HarborDock.pier(
+              HarborBar.overlay(
                 debugLabel: 'cta',
                 // Rides the keyboard like the old docked FAB did, so the
-                // action stays reachable while typing; the fairway keeps the
+                // action stays reachable while typing; the scroll view keeps the
                 // focused field clear of it.
-                tide: HarborTideStance.float,
+                keyboard: HarborKeyboardStance.rides,
                 // Only the button takes taps; rows beside it stay tappable.
                 hitTestBehavior: HitTestBehavior.deferToChild,
                 child: Padding(
@@ -117,10 +117,10 @@ class RubricPage extends StatelessWidget {
                 ),
               ),
           ],
-          body: HarborFairway(
+          body: HarborScrollView(
             controller: controller,
             slivers: [
-              // The fairway clears the top and bottom; the sides (a notch
+              // The scroll view clears the top and bottom; the sides (a notch
               // in landscape) are each row's, so the page gutter keeps them.
               SliverSafeArea(top: false, bottom: false, sliver: header),
               if (slivers != null)

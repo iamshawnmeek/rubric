@@ -6,9 +6,9 @@ import 'package:rubric/l10n/l10n.dart';
 
 /// Bottom navigation on phones, a rail on tablets.
 ///
-/// Both are quays of one harbor: the branch's pages end where the bar
+/// Both are solid bars of one HarborFrame: the branch's pages end where the bar
 /// begins (and start where the rail ends), and every page inside sees the
-/// bar as part of its coast, so its content clears it once. Previously a
+/// bar as part of its system edges, so its content clears it once. Previously a
 /// Scaffold in a Scaffold, where the rail's side inset could apply twice.
 class AppShell extends StatelessWidget {
   const new({required this.shell, super.key});
@@ -32,18 +32,18 @@ class AppShell extends StatelessWidget {
 
     final wide = MediaQuery.sizeOf(context).width >= railBreakpoint;
     final theme = Theme.of(context);
-    // A dock pads its child clear of the coast (the home indicator, a side
+    // A bar pads its child clear of the system edges (the home indicator, a side
     // cutout) and paints its backdrop under the whole of its ground, so the
     // bar's colour reaches the screen's edge as NavigationBar's own did.
     Widget backdrop(Color? color) =>
         ColoredBox(color: color ?? theme.colorScheme.surfaceContainer);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Harbor(
+      body: HarborFrame(
         debugLabel: 'shell',
         start: [
           if (wide)
-            HarborDock.quay(
+            HarborBar.solid(
               debugLabel: 'rail',
               backdrop: backdrop(theme.navigationRailTheme.backgroundColor),
               child: NavigationRail(
@@ -62,7 +62,7 @@ class AppShell extends StatelessWidget {
         ],
         bottom: [
           if (!wide)
-            HarborDock.quay(
+            HarborBar.solid(
               debugLabel: 'nav bar',
               backdrop: backdrop(theme.navigationBarTheme.backgroundColor),
               // Stays put under the keyboard (pilings), as a tab bar should.
@@ -79,9 +79,9 @@ class AppShell extends StatelessWidget {
               ),
             ),
         ],
-        // The keyboard is each page's to clear (their fairways do), so the
+        // The keyboard is each page's to clear (their scroll views do), so the
         // shell's body runs under it rather than shrinking.
-        bodyClearsTide: false,
+        bodyClearsKeyboard: false,
         body: shell,
       ),
     );

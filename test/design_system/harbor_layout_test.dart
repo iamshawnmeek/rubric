@@ -17,7 +17,7 @@ import '../helpers/db.dart';
 
 Widget _app(Widget home) => MaterialApp(
   theme: buildRubricTheme(),
-  builder: (context, child) => HarborSea(child: child!),
+  builder: (context, child) => HarborRoot(child: child!),
   home: home,
 );
 
@@ -50,7 +50,7 @@ void main() {
   for (final device in HarborTrialDevice.phones) {
     group(device.name, () {
       testWidgets('the last row rests clear of the docked CTA', (tester) async {
-        await tester.pumpSeaTrial(_app(_page()), device: device);
+        await tester.pumpHarborTrial(_app(_page()), device: device);
         await _scrollToEnd(tester);
 
         final last = tester.getRect(find.byKey(_lastKey));
@@ -59,13 +59,16 @@ void main() {
         // And the CTA itself clears the home indicator.
         expect(
           cta.bottom,
-          lessThanOrEqualTo(device.size.height - device.coast.bottom),
+          lessThanOrEqualTo(device.size.height - device.systemEdges.bottom),
         );
       });
 
       testWidgets('...however tall the CTA lays out', (tester) async {
         // The old page reserved a fixed 130pt; a 300pt CTA covered rows.
-        await tester.pumpSeaTrial(_app(_page(ctaHeight: 300)), device: device);
+        await tester.pumpHarborTrial(
+          _app(_page(ctaHeight: 300)),
+          device: device,
+        );
         await _scrollToEnd(tester);
 
         expect(
@@ -79,16 +82,16 @@ void main() {
   testWidgets('a focused field at the end stays clear of the CTA and the '
       'keyboard', (tester) async {
     const field = Key('field');
-    final trial = await tester.pumpSeaTrial(
+    final trial = await tester.pumpHarborTrial(
       _app(_page(last: const TextField(key: field))),
     );
     await _scrollToEnd(tester);
     await tester.tap(find.byKey(field));
-    await trial.raiseTide(settle: true);
+    await trial.showKeyboard(settle: true);
 
     final cta = tester.getRect(find.byKey(_ctaKey));
     // The CTA rides the keyboard, as the docked FAB did...
-    expect(cta.bottom, lessThanOrEqualTo(trial.waterline));
+    expect(cta.bottom, lessThanOrEqualTo(trial.keyboardTop));
     // ...and the field being typed in is not underneath it.
     expect(
       tester.getRect(find.byKey(field)).bottom,
@@ -99,8 +102,8 @@ void main() {
   group('showRubricSheet', () {
     const sheet = Key('sheet');
 
-    Future<HarborSeaTrial> open(WidgetTester tester) async {
-      final trial = await tester.pumpSeaTrial(
+    Future<HarborTrial> open(WidgetTester tester) async {
+      final trial = await tester.pumpHarborTrial(
         _app(
           Builder(
             builder: (context) => Center(
@@ -130,17 +133,19 @@ void main() {
       expect(
         tester.getRect(find.byKey(sheet)).bottom,
         moreOrLessEquals(
-          trial.device.size.height - trial.device.coast.bottom - Insets.sm,
+          trial.device.size.height -
+              trial.device.systemEdges.bottom -
+              Insets.sm,
         ),
       );
     });
 
     testWidgets('and 12pt above the keyboard', (tester) async {
       final trial = await open(tester);
-      await trial.raiseTide(settle: true);
+      await trial.showKeyboard(settle: true);
       expect(
         tester.getRect(find.byKey(sheet)).bottom,
-        moreOrLessEquals(trial.waterline - Insets.sm),
+        moreOrLessEquals(trial.keyboardTop - Insets.sm),
       );
     });
   });
@@ -155,7 +160,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     final db = testDatabase();
     addTearDown(db.close);
-    await tester.pumpSeaTrial(
+    await tester.pumpHarborTrial(
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
@@ -188,7 +193,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     final db = testDatabase();
     addTearDown(db.close);
-    final trial = await tester.pumpSeaTrial(
+    final trial = await tester.pumpHarborTrial(
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
@@ -201,17 +206,20 @@ void main() {
 
     final bar = tester.getRect(find.byType(NavigationBar));
     final height = buildRubricTheme().navigationBarTheme.height!;
-    // The bar sits on the home indicator at its own height: harbor's dock
-    // absorbs the coast, so the bar must not pad for it a second time.
-    expect(bar.bottom, trial.device.size.height - trial.device.coast.bottom);
+    // The bar sits on the home indicator at its own height: harbor's bar
+    // absorbs the system edges, so the bar must not pad for it a second time.
+    expect(
+      bar.bottom,
+      trial.device.size.height - trial.device.systemEdges.bottom,
+    );
     expect(bar.height, height);
-    // And the dock's ground, where its backdrop is painted, runs to the
+    // And the bar's ground, where its backdrop is painted, runs to the
     // screen's edge, so no strip of page shows under the bar.
     final dock = trial
-        .docksAround(find.byType(NavigationBar))
+        .barsAround(find.byType(NavigationBar))
         .singleWhere((d) => d.edge == HarborEdge.bottom);
     expect(dock.rect.bottom, trial.device.size.height);
-    expect(dock.rect.height, height + trial.device.coast.bottom);
+    expect(dock.rect.height, height + trial.device.systemEdges.bottom);
 
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 1));

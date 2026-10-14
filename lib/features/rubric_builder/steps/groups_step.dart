@@ -193,7 +193,7 @@ class GroupsStep extends ConsumerWidget {
 /// The dock of objectives not yet in a group. Replaces the Next button while
 /// it has anything in it; dropping a grouped objective here ungroups it.
 ///
-/// It is the page's docked CTA, so RubricPage's fairway keeps the last drop
+/// It is the page's docked CTA, so RubricPage's scroll view keeps the last drop
 /// target clear of it at whatever height it lays out; the step no longer
 /// reserves a guessed height of its own.
 class UngroupedTray extends ConsumerWidget {
