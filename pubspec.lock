@@ -1365,18 +1365,18 @@ packages:
     dependency: "direct main"
     description:
       name: zonai_client
-      sha256: "70b69ca9d39167517df0e3c8c4aefdf6660947e28889d224e3e2d2848fb71361"
+      sha256: "943c87eedc335ab4911a5bea3bf4126cd0044b92057a0b0a53e7ceb9c6d9882d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.2"
   zonai_schema:
     dependency: transitive
     description:
       name: zonai_schema
-      sha256: "515f17551144356ef3953e2627043708d45939a32a689c5e228b5fbf538b3bb1"
+      sha256: a2dc22f400aa2adb46f8f7a1f525d98329cfa14dc5e02ece7353bbb3c171c8a2
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.0"
   zonai_sync:
     dependency: "direct main"
     description:

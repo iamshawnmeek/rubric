@@ -4,6 +4,13 @@
 # Caddy obtains and renews the certificate itself.
 __DOMAIN__ {
 	encode zstd gzip
+	# zonai serves its admin dashboard at /_. Its data needs an admin
+	# sign-in, but the page and its sign-in form would be public. Rubric has
+	# no admin accounts and no use for it in production, so it isn't
+	# reachable from outside. Reach it through an SSH tunnel:
+	#   ssh -L 8792:127.0.0.1:8792 ubuntu@<host>, then http://127.0.0.1:8792/_
+	@admin path /_ /_/*
+	respond @admin 404
 	reverse_proxy 127.0.0.1:8792
 	log {
 		output file /var/log/caddy/rubric.log {

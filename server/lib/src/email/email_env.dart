@@ -10,10 +10,10 @@ const rubricSender = EmailAddress(
 /// The SMTP settings, read from the process environment when the server
 /// starts rather than compiled in.
 ///
-/// Since zonai 0.10.2 (#73, which Rubric asked for) zonai itself overrides
-/// `SMTP_USERNAME` and `SMTP_PASSWORD` from the environment, but only on an
-/// email config that is already compiled in, and it accepts them empty. This
-/// reader stays because it does what that doesn't:
+/// Since zonai 0.10.2 (#73) zonai itself overrides `SMTP_USERNAME` and
+/// `SMTP_PASSWORD` from the environment onto a compiled-in email config, and
+/// since 0.10.3 (#84) it refuses to start with them empty. Both were asked for
+/// by Rubric. This reader stays because it does what those don't:
 /// - the host and port come from the environment too, so the email flow test
 ///   (tool/email/test_email_flow.sh) points a dev server at a local catcher;
 /// - a release server without them refuses to start, instead of failing
