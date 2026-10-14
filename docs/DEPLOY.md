@@ -96,14 +96,27 @@ ingress for TCP 22/80/443, the subnet, the A1 instance (it retries every
 availability domain on "Out of host capacity", and checks by name after
 each attempt so it can never launch a duplicate), and the reserved IP.
 
-It uses the OCI CLI and an API key, both in `.contrib/oci/` (gitignored;
-the private key never leaves the dev machine). To set it up on another
-machine:
+**OCI access: two keys, least privilege** (since 2026-10-14):
+
+| Key | Where | Can do | Used for |
+|---|---|---|---|
+| `rubric-ops` (user and group, policy `rubric-ops`) | `.contrib/oci/config` + `rubric_ops.pem` (gitignored, 0600) | manage everything in compartment `rubric`; inspect compartments and read the Object Storage namespace in the tenancy. Nothing else. | all of Rubric's day-to-day: provisioning, email domain, backup bucket, metrics (`.contrib/oci/o`) |
+| tenancy admin | `~/.oci/config` profile `[TENANCY_ADMIN]` (outside every repo, shared with gravity_brew, no `[DEFAULT]`) | anything | rare IAM steps only, each with Jonah's OK: creating the compartment, users, groups, policies, SMTP credentials |
+
+Measured: `rubric-ops` reads Rubric's instances, bucket, email domain and
+metrics, and is refused (NotAuthorizedOrNotFound) listing IAM users, creating
+a group, and listing gravity_brew's instances. The admin key is currently on
+Jonah's own login user; a dedicated admin user was offered and declined for now.
+
+To set up `rubric-ops` on another machine:
 1. Create a venv: `python3 -m venv .contrib/oci/venv && .contrib/oci/venv/bin/pip install oci-cli`.
-2. Generate a key pair with openssl into `.contrib/oci/`.
-3. In the console, add the public key under My profile → API keys.
-4. Write `.contrib/oci/config` from the preview it shows, setting
-   `key_file` to the private key.
+2. Generate a key pair into `.contrib/oci/` (`openssl genrsa`, then
+   `openssl rsa -pubout`), and append a line `OCI_API_KEY` to the private
+   key. Otherwise the CLI prints a warning on stdout that corrupts JSON
+   output.
+3. Upload the public key to the `rubric-ops` user, using the admin profile:
+   `oci --config-file ~/.oci/config --profile TENANCY_ADMIN iam user api-key upload ...`.
+4. Write `.contrib/oci/config` with a `[DEFAULT]` profile for `rubric-ops`.
 
 A new key takes a few minutes to reach every Oracle identity server. The
 script retries `NotAuthenticated` (and `NotAuthorizedOrNotFound`, for a

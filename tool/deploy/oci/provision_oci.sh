@@ -6,8 +6,12 @@
 #   tool/deploy/oci/provision_oci.sh [ssh public key]
 #   default key: ~/.ssh/id_supposedlysam.pub
 #
-# Needs the OCI CLI and an API key, both in .contrib/oci/ (gitignored); see
-# docs/DEPLOY.md. Creates, in a dedicated `rubric` compartment:
+# Needs the OCI CLI in .contrib/oci/venv and an API key (docs/DEPLOY.md, "OCI
+# access"). By default it runs as `rubric-ops` (.contrib/oci/config), which
+# can manage the `rubric` compartment and nothing outside it. Only the very
+# first run, which creates that compartment, needs the tenancy admin:
+#   OCI_CONFIG_FILE=~/.oci/config OCI_PROFILE=TENANCY_ADMIN tool/deploy/oci/provision_oci.sh
+# Creates, in a dedicated `rubric` compartment:
 #   - VCN 10.0.0.0/16, an internet gateway, and a default route to it
 #   - security list: TCP 22, 80 and 443 in; everything out
 #   - public subnet 10.0.0.0/24
@@ -19,7 +23,8 @@
 # Prints the IP and the sslip.io domain for tool/deploy/deploy.sh.
 set -euo pipefail
 repo="$(cd "$(dirname "$0")/../../.." && pwd)"
-cfg="$repo/.contrib/oci/config"
+cfg="${OCI_CONFIG_FILE:-$repo/.contrib/oci/config}"
+profile="${OCI_PROFILE:-DEFAULT}"
 cli="$repo/.contrib/oci/venv/bin/oci"
 ssh_key="${1:-$HOME/.ssh/id_supposedlysam.pub}"
 [ -x "$cli" ] && [ -f "$cfg" ] || { echo "oci: CLI or config missing in .contrib/oci (docs/DEPLOY.md)" >&2; exit 1; }
@@ -37,7 +42,7 @@ O() {
   err="$(mktemp)"
   for attempt in 1 2 3 4 5 6 7 8 9 10; do
     rc=0
-    out="$("$cli" --config-file "$cfg" "$@" 2>"$err")" || rc=$?
+    out="$("$cli" --config-file "$cfg" --profile "$profile" "$@" 2>"$err")" || rc=$?
     if [ "$rc" = 0 ]; then rm -f "$err"; printf '%s\n' "$out"; return 0; fi
     if grep -q -e '"NotAuthenticated"' -e '"NotAuthorizedOrNotFound"' "$err" && [ "$attempt" -lt 10 ]; then
       echo "oci: $(grep -o -m1 -e NotAuthenticated -e NotAuthorizedOrNotFound "$err") on '$1 $2 $3' (attempt $attempt); retrying in $((attempt * 6))s" >&2
@@ -117,7 +122,7 @@ if [ -z "$inst" ]; then
     for ad in "${ads[@]}"; do
       say "launching in $ad (round $round)"
       err="$(mktemp)"; rc=0
-      out="$("$cli" --config-file "$cfg" compute instance launch -c "$comp" --availability-domain "$ad" \
+      out="$("$cli" --config-file "$cfg" --profile "$profile" compute instance launch -c "$comp" --availability-domain "$ad" \
           --display-name rubric-prod --shape VM.Standard.A1.Flex \
           --shape-config '{"ocpus":1,"memoryInGBs":6}' --image-id "$image" \
           --subnet-id "$subnet" --assign-public-ip false \
