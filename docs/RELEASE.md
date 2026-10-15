@@ -1,13 +1,26 @@
 # Releasing Rubric
 
 Releases run on Codemagic (app `6ac468dff0be487e13eb3bb4`, repo
-`SupposedlySam/rubric`), set up like Flyby: **pushing a version tag builds
-both stores.**
+`SupposedlySam/rubric`), set up like Flyby. One command releases both stores
+from an up-to-date, clean `main`:
 
 ```bash
-git tag 2.0.1          # *.*.*, the version name users see
-git push origin 2.0.1  # origin pushes to the fork and the original
+tool/release.sh 2.0.3   # *.*.*, the version name users see
 ```
+
+It tags `main`, pushes the tag (origin pushes to the fork and the original)
+and starts the `production-deploy` workflow for that tag through Codemagic's
+API, with the token in `.contrib/codemagic/token`. It refuses a dirty tree, a
+branch other than `main`, a `main` that differs from origin's, and a version
+that is already tagged. `tool/test_release.sh` (run by `tool/check.sh`)
+covers each refusal.
+
+**A pushed tag alone does not start a build.** `codemagic.yaml` declares a
+`*.*.*` tag trigger, but this app was created in Codemagic's workflow-editor
+flow, and no tag push has ever started a build for it; every release from
+2.0.0 on was started through the API. If tag pushes start firing one day,
+`cancel_previous_builds` stops the duplicate. Check a build's progress with
+`python3 .contrib/codemagic/status.py <buildId>`.
 
 The `production-deploy` workflow (`codemagic.yaml`) then:
 

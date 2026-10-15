@@ -21,3 +21,6 @@ tool/email/templates.py --check
 
 # Server operations scripts (backup and restore), against a real SQLite database
 tool/deploy/test_backup_restore.sh
+
+# The release script, against a throwaway clone and a fake Codemagic
+tool/test_release.sh
