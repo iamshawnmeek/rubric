@@ -539,18 +539,18 @@ packages:
     dependency: "direct main"
     description:
       name: harbor
-      sha256: "50d0b98f7b290a9b2b1fd6e379b032f11a2b0b9a9f95e8111d607fd02678f05f"
+      sha256: d2d9cbf7e607a50ae739eeead93cdb27bfdadb16d8086c08ae6fdcb3f806c589
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.3"
+    version: "1.0.1"
   harbor_test:
     dependency: "direct dev"
     description:
       name: harbor_test
-      sha256: f4108893f0be75db79aea98ca521907c1f4c3174ac5e1aef727105ab10ef858a
+      sha256: aac374549b1f3b25e46bae2fe32f756dc23cefed40f992237001ff331a872902
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.3"
+    version: "1.0.0"
   hooks:
     dependency: transitive
     description:
