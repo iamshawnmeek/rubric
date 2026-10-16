@@ -136,6 +136,25 @@ void main() {
       await shot(tester, 'settings');
     });
 
+    await leg('sheet + keyboard', () async {
+      // The one place a real device shows what widget tests can only
+      // simulate: a sheet whose field autofocuses, so the software keyboard
+      // rises under it. The sheet must clear the home indicator and ride
+      // above the keyboard, with Save visible.
+      await tap(tester, find.text('Your name'));
+      await settle(tester, 1500);
+      await shot(tester, 'sheet_keyboard');
+      // The screenshot holds only Flutter's surface, not the system
+      // keyboard, so prove the layout from what the device reported: the
+      // keyboard is really up, and Save sits above its top edge.
+      final view = tester.view;
+      final keyboard = view.viewInsets.bottom / view.devicePixelRatio;
+      final screen = view.physicalSize.height / view.devicePixelRatio;
+      expect(keyboard, greaterThan(0), reason: 'no software keyboard rose');
+      final save = tester.getRect(find.text('Save'));
+      expect(save.bottom, lessThanOrEqualTo(screen - keyboard));
+    });
+
     expect(failures, isEmpty, reason: failures.join('\n'));
   });
 }
